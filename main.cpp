@@ -2,6 +2,9 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <string>
+
+#include "src/ShaderManager.h"
 
 using std::cout, std::endl;
 
@@ -19,7 +22,7 @@ GLfloat colors[] = {
     0.0f, 0.0f, 1.0f,
 };
 
-const char* vertex_shader = 
+const char* vertex_shader_code = 
 "#version 460\n"
 "layout(location = 0) in vec3 vertex_position;"
 "layout(location = 1) in vec3 vertex_color;"
@@ -29,7 +32,7 @@ const char* vertex_shader =
 "   gl_Position = vec4(vertex_position, 1.0);"
 "}";
 
-const char* fragment_shader =
+const char* fragment_shader_code =
 "#version 460\n" 
 "in vec3 color;"
 "out vec4 frag_color;"
@@ -108,21 +111,30 @@ int main(void)
 
     glClearColor(1, 1, 0, 1);
 
-    GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vs, 1, &vertex_shader, nullptr);
-    glCompileShader(vs);
+    // GLuint vs = glCreateShader(GL_VERTEX_SHADER);
+    // glShaderSource(vs, 1, &vertex_shader, nullptr);
+    // glCompileShader(vs);
 
-    GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fs, 1, &fragment_shader, nullptr);
-    glCompileShader(fs);
+    // GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
+    // glShaderSource(fs, 1, &fragment_shader, nullptr);
+    // glCompileShader(fs); 
 
-    GLuint shader_program = glCreateProgram();
-    glAttachShader(shader_program, vs);
-    glAttachShader(shader_program, fs);
-    glLinkProgram(shader_program);
+    // GLuint shader_program = glCreateProgram();
+    // glAttachShader(shader_program, vs);
+    // glAttachShader(shader_program, fs);
+    // glLinkProgram(shader_program);
     
-    glDeleteShader(vs);
-    glDeleteShader(fs);
+    // glDeleteShader(vs);
+    // glDeleteShader(fs);
+
+    std::string vertex_shader(vertex_shader_code);
+    std::string fragment_shader(fragment_shader_code);
+    Renderer::ShaderManager shader_manager(vertex_shader, fragment_shader);
+    if (!shader_manager.is_compiled())
+    {
+        std::cerr << "Can't create shader manager!" << std::endl;
+        return -1;
+    }
 
     GLuint poitns_vbo = 0;
     glGenBuffers(1,&poitns_vbo);
@@ -152,7 +164,8 @@ int main(void)
         // Render here 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shader_program);
+        //glUseProgram(shader_program);
+        shader_manager.use();
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
