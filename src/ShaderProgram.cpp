@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "ShaderManager.h"
+#include "ShaderProgram.h"
 
 namespace Renderer { 
 
-    ShaderManager::ShaderManager(const std::string& vertex_shader_code, const std::string& fragment_shader_code)
+    ShaderProgram::ShaderProgram(const std::string& vertex_shader_code, const std::string& fragment_shader_code)
     {
         GLuint vertex_shader_ID;
         if (!create_shader(vertex_shader_code, GL_VERTEX_SHADER, vertex_shader_ID))
@@ -41,7 +41,7 @@ namespace Renderer {
         glDeleteShader(fragment_shader_ID);
     }
 
-    bool ShaderManager::create_shader(const std::string& source, const GLenum shader_type, GLuint& shaderID)
+    bool ShaderProgram::create_shader(const std::string& source, const GLenum shader_type, GLuint& shaderID)
     {
         shaderID = glCreateShader(shader_type);
         const char* source_code = source.c_str();
@@ -61,34 +61,34 @@ namespace Renderer {
         return true;
     }
 
-    ShaderManager::~ShaderManager()
+    ShaderProgram::~ShaderProgram()
     {
         glDeleteProgram(shader_program_ID);
     }
 
-    void ShaderManager::use() const
+    void ShaderProgram::use() const
     {
         glUseProgram(shader_program_ID);
     }
 
-    ShaderManager& ShaderManager::operator=(ShaderManager&& shader_manager) noexcept
+    ShaderProgram& ShaderProgram::operator=(ShaderProgram&& shader_program) noexcept
     {
         glDeleteProgram(shader_program_ID);
-        shader_program_ID = shader_manager.shader_program_ID;
-        m_isCompiled = shader_manager.m_isCompiled;
+        shader_program_ID = shader_program.shader_program_ID;
+        m_isCompiled = shader_program.m_isCompiled;
 
-        shader_manager.shader_program_ID = 0;
-        shader_manager.m_isCompiled = false;
+        shader_program.shader_program_ID = 0;
+        shader_program.m_isCompiled = false;
 
         return *this;
     }
-    ShaderManager::ShaderManager(ShaderManager&& shader_manager) noexcept
+    ShaderProgram::ShaderProgram(ShaderProgram&& shader_program) noexcept
     {
-        shader_program_ID = shader_manager.shader_program_ID;
-        m_isCompiled = shader_manager.m_isCompiled;
+        shader_program_ID = shader_program.shader_program_ID;
+        m_isCompiled = shader_program.m_isCompiled;
 
-        shader_manager.shader_program_ID = 0;
-        shader_manager.m_isCompiled = false;
+        shader_program.shader_program_ID = 0;
+        shader_program.m_isCompiled = false;
     }
 
 };

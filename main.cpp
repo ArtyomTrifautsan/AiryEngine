@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include "src/ShaderManager.h"
+#include "src/ShaderProgram.h"
 
 using std::cout, std::endl;
 
@@ -129,10 +129,10 @@ int main(void)
 
     std::string vertex_shader(vertex_shader_code);
     std::string fragment_shader(fragment_shader_code);
-    Renderer::ShaderManager shader_manager(vertex_shader, fragment_shader);
-    if (!shader_manager.is_compiled())
+    Renderer::ShaderProgram shader_program(vertex_shader, fragment_shader);
+    if (!shader_program.is_compiled())
     {
-        std::cerr << "Can't create shader manager!" << std::endl;
+        std::cerr << "Can't create shader program!" << std::endl;
         return -1;
     }
 
@@ -165,7 +165,7 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
 
         //glUseProgram(shader_program);
-        shader_manager.use();
+        shader_program.use();
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
