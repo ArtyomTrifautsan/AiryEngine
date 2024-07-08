@@ -9,6 +9,8 @@ add_executable(${PROJECT_NAME}
     main.cpp
     src/ShaderProgram.cpp
     src/ShaderProgram.h
+    src/ResourceManager.cpp
+    src/ResourceManager.h
 )
 
 add_subdirectory(external/glfw)

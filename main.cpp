@@ -5,6 +5,7 @@
 #include <string>
 
 #include "src/ShaderProgram.h"
+#include "src/ResourceManager.h"
 
 using std::cout, std::endl;
 
@@ -21,24 +22,6 @@ GLfloat colors[] = {
     0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 1.0f,
 };
-
-const char* vertex_shader_code = 
-"#version 460\n"
-"layout(location = 0) in vec3 vertex_position;"
-"layout(location = 1) in vec3 vertex_color;"
-"out vec3 color;"
-"void main() {"
-"   color = vertex_color;"
-"   gl_Position = vec4(vertex_position, 1.0);"
-"}";
-
-const char* fragment_shader_code =
-"#version 460\n" 
-"in vec3 color;"
-"out vec4 frag_color;"
-"void main() {"
-"   frag_color = vec4(color, 1.0);"
-"}";
 
 int init(GLFWwindow* *window)
 {
@@ -101,8 +84,16 @@ void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int 
 
 }
 
-int main(void)
+int main(int argc, char** argv)
 {
+    ResourceManager resource_manager(argv[0]);
+    auto p_default_shader_program = resource_manager.load_shaders("Default", "shaders/vertex_shader.txt", "shaders/fragment_shader_txt");
+    if (!p_default_shader_program)
+    {
+        std::cerr << "Can't create shader program: " << "Default shader" << std::endl;
+        return -1;
+    }
+
     GLFWwindow* window = nullptr;
     init(&window);
 
@@ -110,31 +101,6 @@ int main(void)
     glfwSetKeyCallback(window, glfwKeyCallback);
 
     glClearColor(1, 1, 0, 1);
-
-    // GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-    // glShaderSource(vs, 1, &vertex_shader, nullptr);
-    // glCompileShader(vs);
-
-    // GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-    // glShaderSource(fs, 1, &fragment_shader, nullptr);
-    // glCompileShader(fs); 
-
-    // GLuint shader_program = glCreateProgram();
-    // glAttachShader(shader_program, vs);
-    // glAttachShader(shader_program, fs);
-    // glLinkProgram(shader_program);
-    
-    // glDeleteShader(vs);
-    // glDeleteShader(fs);
-
-    std::string vertex_shader(vertex_shader_code);
-    std::string fragment_shader(fragment_shader_code);
-    Renderer::ShaderProgram shader_program(vertex_shader, fragment_shader);
-    if (!shader_program.is_compiled())
-    {
-        std::cerr << "Can't create shader program!" << std::endl;
-        return -1;
-    }
 
     GLuint poitns_vbo = 0;
     glGenBuffers(1,&poitns_vbo);
@@ -165,7 +131,7 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
 
         //glUseProgram(shader_program);
-        shader_program.use();
+        p_default_shader_program->use();
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
