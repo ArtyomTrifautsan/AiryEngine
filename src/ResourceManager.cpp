@@ -3,13 +3,18 @@
 #include <fstream>
 #include <iostream>
 
+#define STB_IMAGE_IMPLEMENTATION
+#define STBI_ONLY_PNG
+#include "stb_image.h"
+
 #include "ResourceManager.h"
 #include "ShaderProgram.h"
 
 ResourceManager::ResourceManager(const std::string& path_to_executable)
 {
     size_t found = path_to_executable.find_last_of("/\\");
-    std::string executable_path = path_to_executable.substr(0, found);
+    //std::string executable_path = path_to_executable.substr(0, found);
+    this->executable_path = path_to_executable.substr(0, found);
 }
 
 std::string ResourceManager::get_file_string(const std::string& relative_file_path) const
@@ -59,7 +64,23 @@ std::shared_ptr<Renderer::ShaderProgram> ResourceManager::get_shader_program(con
     ShaderProgramMap::const_iterator it = shader_programs.find(shader_name);
     if (it != shader_programs.end())
         return it->second;
-    
+
     std::cerr << "Can't find the shader program: " << shader_name << std::endl;
     return nullptr;
+}
+
+void ResourceManager::load_texture(const std::string& texture_name, const std::string& texture_path)
+{
+    int channel = 0;
+    int width = 0, height = 0;
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char* pixels = stbi_load(std::string(executable_path + "/" + texture_name).c_str(), &width, &height, &channel, 0);
+
+    if (!pixels)
+    {
+        std::cerr << "Can't load image: " << texture_path << std::endl;
+        return;
+    }
+
+    stbi_image_free(pixels);
 }

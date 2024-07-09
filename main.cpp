@@ -1,3 +1,12 @@
+#ifdef WIN32
+#include <windows.h>
+extern "C"
+{
+    __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+    __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+}
+#endif
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -86,13 +95,15 @@ void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int 
 
 int main(int argc, char** argv)
 {
-    ResourceManager resource_manager(argv[0]);
-    auto p_default_shader_program = resource_manager.load_shaders("Default", "shaders/vertex_shader.txt", "shaders/fragment_shader_txt");
+    ResourceManager* resource_manager = new ResourceManager(argv[0]);
+    auto p_default_shader_program = resource_manager->load_shaders("Default", "resources/shaders/vertex_shader.txt", "resources/shaders/fragment_shader.txt");
     if (!p_default_shader_program)
     {
         std::cerr << "Can't create shader program: " << "Default shader" << std::endl;
         return -1;
     }
+
+    //resource_manager->load_texture("DefaultTexture", "resources/textures/sphere.png");
 
     GLFWwindow* window = nullptr;
     init(&window);
@@ -141,6 +152,8 @@ int main(int argc, char** argv)
         // Poll for and process events 
         glfwPollEvents();
     }
+
+    delete resource_manager;
 
     glfwTerminate();
     return 0;

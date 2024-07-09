@@ -11,6 +11,7 @@ add_executable(${PROJECT_NAME}
     src/ShaderProgram.h
     src/ResourceManager.cpp
     src/ResourceManager.h
+    src/stb_image.h
 )
 
 add_subdirectory(external/glfw)
@@ -23,4 +24,4 @@ set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAK
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
                     COMMAND ${CMAKE_COMMAND} -E copy_directory
-                    ${CMAKE_SOURCE_DIR}/shaders $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders)
+                    ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)

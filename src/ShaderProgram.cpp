@@ -21,7 +21,7 @@ namespace Renderer {
             return;
         }
 
-        shader_program_ID = glCreateProgram();
+        this->shader_program_ID = glCreateProgram();
         glAttachShader(shader_program_ID, vertex_shader_ID);
         glAttachShader(shader_program_ID, fragment_shader_ID);
         glLinkProgram(shader_program_ID);
@@ -35,7 +35,7 @@ namespace Renderer {
             std::cerr << "ERROR::SHADER: Link-time error:\n" << info_log << std::endl;
         }
         else 
-            m_isCompiled = true; 
+            this->m_isCompiled = true; 
 
         glDeleteShader(vertex_shader_ID);
         glDeleteShader(fragment_shader_ID);
