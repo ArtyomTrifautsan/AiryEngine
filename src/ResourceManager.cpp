@@ -74,11 +74,12 @@ void ResourceManager::load_texture(const std::string& texture_name, const std::s
     int channel = 0;
     int width = 0, height = 0;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char* pixels = stbi_load(std::string(executable_path + "/" + texture_name).c_str(), &width, &height, &channel, 0);
+    unsigned char* pixels = stbi_load(std::string(executable_path + "/" + texture_path).c_str(), &width, &height, &channel, 0);
 
     if (!pixels)
     {
-        std::cerr << "Can't load image: " << texture_path << std::endl;
+        //std::cerr << "Can't load image: " << texture_path << std::endl;
+        std::cerr << "Can't load image: " << executable_path + "/" + texture_path << std::endl;
         return;
     }
 

@@ -103,7 +103,8 @@ int main(int argc, char** argv)
 
     glClearColor(1, 1, 0, 1);
 
-    ResourceManager* resource_manager = new ResourceManager(argv[0]);
+    {       // Область видимости для Resource Manager
+    auto resource_manager = std::make_shared<ResourceManager>(argv[0]);
     auto p_default_shader_program = resource_manager->load_shaders("Default", "resources/shaders/vertex_shader.txt", "resources/shaders/fragment_shader.txt");
     if (!p_default_shader_program)
     {
@@ -111,7 +112,7 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    //resource_manager->load_texture("DefaultTexture", "resources/textures/sphere.png");
+    resource_manager->load_texture("DefaultTexture", "resources/textures/sphere.png");
 
     GLuint poitns_vbo = 0;
     glGenBuffers(1,&poitns_vbo);
@@ -153,7 +154,7 @@ int main(int argc, char** argv)
         glfwPollEvents();
     }
 
-    delete resource_manager;
+    }
 
     glfwTerminate();
     return 0;
