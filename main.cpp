@@ -95,6 +95,14 @@ void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int 
 
 int main(int argc, char** argv)
 {
+    GLFWwindow* window = nullptr;
+    init(&window);
+
+    glfwSetWindowSizeCallback(window, glfwWindowSizeCallback);
+    glfwSetKeyCallback(window, glfwKeyCallback);
+
+    glClearColor(1, 1, 0, 1);
+
     ResourceManager* resource_manager = new ResourceManager(argv[0]);
     auto p_default_shader_program = resource_manager->load_shaders("Default", "resources/shaders/vertex_shader.txt", "resources/shaders/fragment_shader.txt");
     if (!p_default_shader_program)
@@ -104,14 +112,6 @@ int main(int argc, char** argv)
     }
 
     //resource_manager->load_texture("DefaultTexture", "resources/textures/sphere.png");
-
-    GLFWwindow* window = nullptr;
-    init(&window);
-
-    glfwSetWindowSizeCallback(window, glfwWindowSizeCallback);
-    glfwSetKeyCallback(window, glfwKeyCallback);
-
-    glClearColor(1, 1, 0, 1);
 
     GLuint poitns_vbo = 0;
     glGenBuffers(1,&poitns_vbo);
