@@ -1,0 +1,3 @@
+namespace AiryEngine {
+    void sayHello();
+}

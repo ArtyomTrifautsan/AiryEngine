@@ -1,13 +1,8 @@
-cmake_minimum_required(VERSION 3.27.7 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12)
 
 set(PROJECT_NAME 3DgameCpp)
 
-project(${PROJECT_NAME})
+add_subdirectory(AiryEngineCore)
+add_subdirectory(AiryEngineEditor)
 
-add_executable(${PROJECT_NAME} main.cpp)
-
-add_subdirectory(external/glfw)
-target_link_libraries(${PROJECT_NAME} glfw)
-
-add_subdirectory(external/glad)
-target_link_libraries(${PROJECT_NAME} glad)
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT AiryEngineEditor)
