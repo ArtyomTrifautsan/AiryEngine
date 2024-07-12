@@ -1,3 +1,0 @@
-namespace AiryEngine {
-    int checkGlfw();
-}
