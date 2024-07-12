@@ -7,6 +7,6 @@ using std::endl;
 int main(int argc, char const *argv[])
 {
     cout << "Program run" << endl;
-    AiryEngine::sayHello();
+    AiryEngine::checkGlfw();
     return 0;
 }

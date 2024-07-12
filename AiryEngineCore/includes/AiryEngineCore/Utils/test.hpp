@@ -1,3 +1,3 @@
 namespace AiryEngine {
-    void sayHello();
+    int checkGlfw();
 }
