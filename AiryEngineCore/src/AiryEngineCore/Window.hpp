@@ -1,6 +1,9 @@
 #pragma once
 
 #include <string>
+#include <functional>
+
+#include "AiryEngineCore/Event.hpp"
 
 struct GLFWwindow;
 
@@ -9,6 +12,8 @@ namespace AiryEngine {
     class Window
     {
     public:
+        using EventCallbackFn = std::function<void(Event&)>;
+
         Window(std::string title, const unsigned int width, const unsigned int height);
         ~Window();
 
@@ -18,17 +23,25 @@ namespace AiryEngine {
         Window& operator=(Window&&) = delete;
 
         void on_update();
-        unsigned int get_width() const { return this->width; }
-        unsigned int get_height() const { return this->height; }
+        unsigned int get_width() const { return this->data.width; }
+        unsigned int get_height() const { return this->data.height; }
+
+        void set_enevt_callback(const EventCallbackFn& callback) { this->data.eventCallbackFn = callback; }
     
     private:
+        struct WindowData
+        {
+            std::string title;
+            unsigned int width;
+            unsigned int height;
+            EventCallbackFn eventCallbackFn;
+        };
+
         int init();
         void shutdown();
 
-        GLFWwindow* window;
-        std::string title;
-        unsigned int width;
-        unsigned int height;
+        GLFWwindow* window = nullptr;
+        WindowData data;
     };
 
 }

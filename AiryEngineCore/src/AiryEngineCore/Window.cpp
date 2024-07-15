@@ -9,9 +9,7 @@ namespace AiryEngine {
     static bool GLFW_initializated = false;
 
     Window::Window(std::string title, const unsigned int width, const unsigned int height):
-        title(std::move(title)),
-        width(width),
-        height(height)
+        data({std::move(title), width, height})
     {
         int resultCode = init();
     }
@@ -23,7 +21,7 @@ namespace AiryEngine {
 
     int Window::init()
     {
-        LOG_INFO("Creating widnow \"{0}\" size {1}x{2}", this->title, this->width, this->height);
+        LOG_INFO("Creating widnow \"{0}\" size {1}x{2}", this->data.title, this->data.width, this->data.height);
 
         /* Initialize the library */
         if (!GLFW_initializated)
@@ -38,10 +36,10 @@ namespace AiryEngine {
         }
 
         /* Create a windowed mode window and its OpenGL context */
-        this->window = glfwCreateWindow(this->width, this->height, this->title.c_str(), NULL, NULL);
+        this->window = glfwCreateWindow(this->data.width, this->data.height, this->data.title.c_str(), NULL, NULL);
         if (!this->window)
         {
-            LOG_CRITICAL("Can't create widnow \"{0}\" size {1}x{2}!", this->title, this->width, this->height);
+            LOG_CRITICAL("Can't create widnow \"{0}\" size {1}x{2}!", this->data.title, this->data.width, this->data.height);
             glfwTerminate();
             return -2;
         }
@@ -56,6 +54,22 @@ namespace AiryEngine {
             LOG_CRITICAL("Failed to initialize GLAD");
             return -1;
         }
+
+        glfwSetWindowUserPointer(this->window, &this->data);
+
+        glfwSetWindowSizeCallback(this->window, 
+            [](GLFWwindow* pWindow, int width, int height)
+            {
+                WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(pWindow));
+                data.width = width;
+                data.height = height;
+
+                Event event;
+                event.width = width;
+                event.height = height;
+                data.eventCallbackFn(event);
+            }
+        );
 
         return 0;
     }

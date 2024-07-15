@@ -20,6 +20,12 @@ namespace AiryEngine {
     int Application::start(unsigned int window_width, unsigned int window_height, const char* title)
     {
         this->window = std::make_unique<Window>(title, window_width, window_height);
+        this->window->set_enevt_callback(
+            [](Event& event)
+            {
+                LOG_INFO("[EVENT] Changed size to {0}x{1}", event.width, event.height);
+            }
+        );
 
         while (true)
         {

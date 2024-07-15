@@ -4,6 +4,7 @@ set(ENGINE_PROJECT_NAME AiryEngineCore)
 
 set(ENGINE_PUBLIC_INCLUDES
     includes/AiryEngineCore/Application.hpp
+    includes/AiryEngineCore/Event.hpp
     includes/AiryEngineCore/Log.hpp
 )
 
