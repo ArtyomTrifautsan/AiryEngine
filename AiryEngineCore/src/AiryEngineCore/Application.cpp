@@ -20,14 +20,37 @@ namespace AiryEngine {
     int Application::start(unsigned int window_width, unsigned int window_height, const char* title)
     {
         this->window = std::make_unique<Window>(title, window_width, window_height);
-        this->window->set_enevt_callback(
-            [](Event& event)
+
+        this->eventDispatcher.add_event_listener<EventMouseMoved>(
+            [](EventMouseMoved& event)
             {
-                LOG_INFO("[EVENT] Changed size to {0}x{1}", event.width, event.height);
+                LOG_INFO("[MouseMoved] Mouse moved to {0}x{1}", event.x, event.y);
             }
         );
 
-        while (true)
+        this->eventDispatcher.add_event_listener<EventWindowResize>(
+            [](EventWindowResize& event)
+            {
+                LOG_INFO("[WindowResize] Changed window size to {0}x{1}", event.width, event.height);
+            }
+        );
+
+        this->eventDispatcher.add_event_listener<EventWindowClose>(
+            [&](EventWindowClose& event)
+            {
+                LOG_INFO("[WindowClose]");
+                this->closeWindow = true;
+            }
+        );
+
+        this->window->set_enevt_callback(
+            [&](BaseEvent& event)
+            {
+                this->eventDispatcher.dispatch(event);
+            }
+        );
+
+        while (!this->closeWindow)
         {
             this->window->on_update();
             on_update();

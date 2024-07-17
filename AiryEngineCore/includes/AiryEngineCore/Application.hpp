@@ -2,6 +2,8 @@
 
 #include <memory>
 
+#include "AiryEngineCore/Event.hpp"
+
 namespace AiryEngine {
 
     class Application
@@ -20,6 +22,9 @@ namespace AiryEngine {
     
     private:
         std::unique_ptr<class Window> window;
+
+        EventDispatcher eventDispatcher;
+        bool closeWindow = false;
     };
 
 }
