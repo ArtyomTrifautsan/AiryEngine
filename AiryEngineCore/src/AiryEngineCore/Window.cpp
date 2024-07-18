@@ -10,6 +10,7 @@
 #include <AiryEngineCore/Log.hpp>
 #include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp"
+#include "AiryEngineCore/Rendering/OpenGL/VertexArray.hpp"
 
 namespace AiryEngine {
 
@@ -48,7 +49,7 @@ namespace AiryEngine {
     std::unique_ptr<ShaderProgram> shaderProgram;
     std::unique_ptr<VertexBuffer> points_vbo;
     std::unique_ptr<VertexBuffer> colors_vbo;
-    GLuint vao;
+    std::unique_ptr<VertexArray> vao;
 
     Window::Window(std::string title, const unsigned int width, const unsigned int height):
         data({std::move(title), width, height})
@@ -150,18 +151,10 @@ namespace AiryEngine {
 
         points_vbo = std::make_unique<VertexBuffer>(points, sizeof(points));
         colors_vbo = std::make_unique<VertexBuffer>(colors, sizeof(colors));
+        vao = std::make_unique<VertexArray>();
 
-        glGenVertexArrays(1, &vao);
-        glBindVertexArray(vao);
-        
-        glEnableVertexAttribArray(0);
-        points_vbo->bind();
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-        glEnableVertexAttribArray(1);
-        colors_vbo->bind();
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
+        vao->add_buffer(*points_vbo);
+        vao->add_buffer(*colors_vbo);
 
         return 0;
     }
@@ -186,7 +179,7 @@ namespace AiryEngine {
         glClear(GL_COLOR_BUFFER_BIT);
 
         shaderProgram->bind();
-        glBindVertexArray(vao);
+        vao->bind();
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
 
