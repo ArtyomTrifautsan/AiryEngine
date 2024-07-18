@@ -1,9 +1,12 @@
+#include <memory>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <imgui/imgui.h>
 #include <imgui/backends/imgui_impl_opengl3.h>
 #include <imgui/backends/imgui_impl_glfw.h>
 
+#include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
 #include <AiryEngineCore/Window.hpp>
 #include <AiryEngineCore/Log.hpp>
 
@@ -23,7 +26,7 @@ namespace AiryEngine {
         0.0f, 0.0f, 1.0f,
     };
 
-    const char* vertex_shader = 
+    const char* vertex_shader_src = 
         "#version 460\n"
         "layout(location = 0) in vec3 vertex_position;"
         "layout(location = 1) in vec3 vertex_color;"
@@ -33,7 +36,7 @@ namespace AiryEngine {
         "   gl_Position = vec4(vertex_position, 1.0);"
         "};";
     
-    const char* fragment_shader = 
+    const char* fragment_shader_src = 
         "#version 460\n"
         "in vec3 color;"
         "out vec4 fragment_color;"
@@ -41,7 +44,7 @@ namespace AiryEngine {
         "   fragment_color = vec4(color, 1.0);"
         "};";
 
-    GLuint shader_program;
+    std::unique_ptr<ShaderProgram> shaderProgram;
     GLuint vao;
 
     Window::Window(std::string title, const unsigned int width, const unsigned int height):
@@ -138,21 +141,9 @@ namespace AiryEngine {
         );
 
 
-        GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vs, 1, &vertex_shader, nullptr);
-        glCompileShader(vs);
-
-        GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fs, 1, &fragment_shader, nullptr);
-        glCompileShader(fs);
-
-        shader_program = glCreateProgram();
-        glAttachShader(shader_program, vs);
-        glAttachShader(shader_program, fs);
-        glLinkProgram(shader_program);
-
-        glDeleteShader(vs);
-        glDeleteShader(fs);
+        shaderProgram = std::make_unique<ShaderProgram>(vertex_shader_src, fragment_shader_src);
+        if (!shaderProgram->is_compiled()) 
+            return false;
 
         GLuint points_vbo = 0;
         glGenBuffers(1, &points_vbo);
@@ -198,7 +189,7 @@ namespace AiryEngine {
          /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shader_program);
+        shaderProgram->bind();
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
