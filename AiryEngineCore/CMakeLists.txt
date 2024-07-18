@@ -11,12 +11,16 @@ set(ENGINE_PUBLIC_INCLUDES
 set(ENGINE_PRIVATE_INCLUDES
     src/AiryEngineCore/Window.hpp
     src/AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp
+    src/AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp
+    src/AiryEngineCore/Rendering/OpenGL/VertexArray.hpp
 )
 
 set(ENGINE_PRIVATE_SOURCES
     src/AiryEngineCore/Application.cpp
     src/AiryEngineCore/Window.cpp
     src/AiryEngineCore/Rendering/OpenGL/ShaderProgram.cpp
+    src/AiryEngineCore/Rendering/OpenGL/VertexBuffer.cpp
+    src/AiryEngineCore/Rendering/OpenGL/VertexArray.cpp
 )
 
 set(ENGINE_ALL_SOURCES
