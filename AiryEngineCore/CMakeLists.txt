@@ -12,6 +12,7 @@ set(ENGINE_PRIVATE_INCLUDES
     src/AiryEngineCore/Window.hpp
     src/AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp
     src/AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp
+    src/AiryEngineCore/Rendering/OpenGL/IndexBuffer.hpp
     src/AiryEngineCore/Rendering/OpenGL/VertexArray.hpp
 )
 
@@ -20,6 +21,7 @@ set(ENGINE_PRIVATE_SOURCES
     src/AiryEngineCore/Window.cpp
     src/AiryEngineCore/Rendering/OpenGL/ShaderProgram.cpp
     src/AiryEngineCore/Rendering/OpenGL/VertexBuffer.cpp
+    src/AiryEngineCore/Rendering/OpenGL/IndexBuffer.cpp
     src/AiryEngineCore/Rendering/OpenGL/VertexArray.cpp
 )
 
@@ -49,6 +51,9 @@ target_link_libraries(${ENGINE_PROJECT_NAME} PRIVATE spdlog)
 
 add_subdirectory(../external/glad ${CMAKE_CURRENT_BINARY_DIR}/glad)
 target_link_libraries(${ENGINE_PROJECT_NAME} PRIVATE glad)
+
+add_subdirectory(../external/glm ${CMAKE_CURRENT_BINARY_DIR}/glm)
+target_link_libraries(${ENGINE_PROJECT_NAME} PRIVATE glm)
 
 
 set(IMGUI_INCLUDES

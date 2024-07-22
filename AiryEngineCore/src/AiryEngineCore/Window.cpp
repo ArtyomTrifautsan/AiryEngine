@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/mat3x3.hpp>
 #include <imgui/imgui.h>
 #include <imgui/backends/imgui_impl_opengl3.h>
 #include <imgui/backends/imgui_impl_glfw.h>
@@ -10,42 +11,32 @@
 #include <AiryEngineCore/Log.hpp>
 #include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp"
+#include "AiryEngineCore/Rendering/OpenGL/IndexBuffer.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/VertexArray.hpp"
 
 namespace AiryEngine {
 
     static bool GLFW_initializated = false;
 
-
-    const int vertex_row = 100;
-    const int vertex_column = 100;
-    const int vertex_count = vertex_row * vertex_column * 6;
-    GLfloat points[vertex_count * 3];
-    GLfloat colors[vertex_count * 3];
-    
-
-    // GLfloat points[] = {
-    //     0.0f, 0.5f, 0.0f,
-    //     0.5f, 0.0f, 0.0f,
-    //     -0.5f, 0.0f, 0.0f,
-    //     -0.5f, 0.0f, 0.0f,
-    //     0.5f, 0.0f, 0.0f,
-    //     0.0f, -0.5f, 0.0f,
-    // };
-
-    // GLfloat colors[] = {
-    //     1.0f, 0.0f, 0.0f,
-    //     0.0f, 1.0f, 0.0f,
-    //     0.0f, 0.0f, 1.0f,
-    //     0.0f, 0.0f, 1.0f,
-    //     0.0f, 1.0f, 0.0f,
-    //     1.0f, 0.0f, 0.0f,
-    // };
-
     GLfloat positions_colors[] = {
-        0.0f, 0.5f, 0.0f,       1.0f, 1.0f, 0.0f,
-        0.5f, -0.5f, 0.0f,      0.0f, 1.0f, 1.0f,
-        -0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f,  0.0f,    1.0f, 1.0f, 0.0f,
+         0.5f, -0.5f,  0.0f,    0.0f, 1.0f, 1.0f,
+        -0.5f,  0.5f,  0.0f,    1.0f, 0.0f, 1.0f,
+
+         0.5f,  0.5f,  0.0f,    1.0f, 0.0f, 0.0f,
+        -0.5f,  0.5f,  0.0f,    1.0f, 0.0f, 1.0f,
+         0.5f, -0.5f,  0.0f,    0.0f, 1.0f, 1.0f,
+    };
+
+    GLfloat positions_colors2[] = {
+        -0.5f, -0.5f,  0.0f,    1.0f, 1.0f, 0.0f,
+         0.5f, -0.5f,  0.0f,    0.0f, 1.0f, 1.0f,
+        -0.5f,  0.5f,  0.0f,    1.0f, 0.0f, 1.0f,
+         0.5f,  0.5f,  0.0f,    1.0f, 0.0f, 0.0f,
+    };
+
+    GLint indices[] = {
+        0, 1, 2, 3, 2, 1
     };
 
     const char* vertex_shader_src = 
@@ -67,12 +58,9 @@ namespace AiryEngine {
         "};";
 
     std::unique_ptr<ShaderProgram> shaderProgram;
-    std::unique_ptr<VertexBuffer> points_vbo;
-    std::unique_ptr<VertexBuffer> colors_vbo;
-    std::unique_ptr<VertexArray> vao_2buffers;
-
+    std::unique_ptr<IndexBuffer> index_buffer;
     std::unique_ptr<VertexBuffer> positions_colors_vbo;
-    std::unique_ptr<VertexArray> vao_1buffer;
+    std::unique_ptr<VertexArray> vao;
 
     Window::Window(std::string title, const unsigned int width, const unsigned int height):
         data({std::move(title), width, height})
@@ -171,122 +159,10 @@ namespace AiryEngine {
         );
 
 
-        const int triangle_side_length = 50;
-        bool is_up = true;
-        int devider = 1000; 
-        int x_offset = - devider / 2 - vertex_column * triangle_side_length / 2;
-        int y_offset = - devider / 2 - vertex_row * triangle_side_length / 2;
-
-        int count = 0;
-        for (int r = 0; r < vertex_row; r++)
-        {
-            for (int c = 0; c < vertex_column; c++)
-            {
-                points[count + 0] = (float)(x_offset + c * triangle_side_length) / (float)devider;
-                points[count + 1] = (float)(y_offset + r * triangle_side_length) / (float)devider;
-                points[count + 2] = 0.0f;
-
-                points[count + 3] = (float)(x_offset + c * triangle_side_length + triangle_side_length) / (float)devider;
-                points[count + 4] = (float)(y_offset + r * triangle_side_length) / (float)devider;
-                points[count + 5] = 0.0f;
-
-                points[count + 6] = (float)(x_offset + c * triangle_side_length) / (float)devider;
-                points[count + 7] = (float)(y_offset + r * triangle_side_length + triangle_side_length) / (float)devider;
-                points[count + 8] = 0.0f;
-
-                if ((c + r) % 2 == 0)
-                {
-                    colors[count + 0] = 1.0f;
-                    colors[count + 1] = 0.0f;
-                    colors[count + 2] = 0.0f;
-
-                    colors[count + 3] = 0.0f;
-                    colors[count + 4] = 0.0f;
-                    colors[count + 5] = 1.0f;
-                
-                    colors[count + 6] = 0.0f;
-                    colors[count + 7] = 0.0f;
-                    colors[count + 8] = 1.0f;
-                }
-                else
-                {
-                    colors[count + 0] = 0.0f;
-                    colors[count + 1] = 0.0f;
-                    colors[count + 2] = 1.0f;
-
-                    colors[count + 3] = 1.0f;
-                    colors[count + 4] = 0.0f;
-                    colors[count + 5] = 0.0f;
-                
-                    colors[count + 6] = 1.0f;
-                    colors[count + 7] = 0.0f;
-                    colors[count + 8] = 0.0f;
-                }
-
-                count += 9;
-
-                points[count + 0] = (float)(x_offset + c * triangle_side_length + triangle_side_length) / (float)devider;
-                points[count + 1] = (float)(y_offset + r * triangle_side_length + triangle_side_length) / (float)devider;
-                points[count + 2] = 0.0f;
-
-                points[count + 3] = (float)(x_offset + c * triangle_side_length + triangle_side_length) / (float)devider;
-                points[count + 4] = (float)(y_offset + r * triangle_side_length) / (float)devider;
-                points[count + 5] = 0.0f;
-
-                points[count + 6] = (float)(x_offset + c * triangle_side_length) / (float)devider;
-                points[count + 7] = (float)(y_offset + r * triangle_side_length + triangle_side_length) / (float)devider;
-                points[count + 8] = 0.0f;
-
-                if ((c + r) % 2 == 0)
-                {
-                    colors[count + 0] = 1.0f;
-                    colors[count + 1] = 0.0f;
-                    colors[count + 2] = 0.0f;
-                    
-                    colors[count + 3] = 0.0f;
-                    colors[count + 4] = 0.0f;
-                    colors[count + 5] = 1.0f;
-                    
-                    colors[count + 6] = 0.0f;
-                    colors[count + 7] = 0.0f;
-                    colors[count + 8] = 1.0f;
-                }
-                else
-                {
-                    colors[count + 0] = 0.0f;
-                    colors[count + 1] = 0.0f;
-                    colors[count + 2] = 1.0f;
-
-                    colors[count + 3] = 1.0f;
-                    colors[count + 4] = 0.0f;
-                    colors[count + 5] = 0.0f;
-                
-                    colors[count + 6] = 1.0f;
-                    colors[count + 7] = 0.0f;
-                    colors[count + 8] = 0.0f;
-                }
-
-                count += 9;
-            }
-        }
-
-
         shaderProgram = std::make_unique<ShaderProgram>(vertex_shader_src, fragment_shader_src);
         if (!shaderProgram->is_compiled()) 
             return false;
-
-        BufferLayout bufferLayout_1vec3
-        {
-            ShaderDataType::Float3
-        };
-
-        vao_2buffers = std::make_unique<VertexArray>();
-        points_vbo = std::make_unique<VertexBuffer>(points, sizeof(points), bufferLayout_1vec3);
-        colors_vbo = std::make_unique<VertexBuffer>(colors, sizeof(colors), bufferLayout_1vec3);
-
-        vao_2buffers->add_buffer(*points_vbo);
-        vao_2buffers->add_buffer(*colors_vbo);
-
+        
 
         BufferLayout bufferLayout_2vec3
         {
@@ -294,10 +170,24 @@ namespace AiryEngine {
             ShaderDataType::Float3,
         };
 
-        vao_1buffer = std::make_unique<VertexArray>();
-        positions_colors_vbo = std::make_unique<VertexBuffer>(positions_colors, sizeof(positions_colors), bufferLayout_2vec3);
+        vao = std::make_unique<VertexArray>();
+        positions_colors_vbo = std::make_unique<VertexBuffer>(positions_colors2, sizeof(positions_colors2), bufferLayout_2vec3);
+        index_buffer = std::make_unique<IndexBuffer>(indices, sizeof(indices) / sizeof(GLuint));
 
-        vao_1buffer->add_buffer(*positions_colors_vbo);
+        vao->add_vertex_buffer(*positions_colors_vbo);
+        vao->set_index_buffer(*index_buffer);
+
+
+        glm::mat3 matrix1(4, 0, 0, 2, 8, 1, 0, 1, 0);
+        glm::mat3 matrix2(4, 2, 9, 2, 0, 4, 1, 4, 2);
+        glm::mat3 result_matrix = matrix1 * matrix2;
+
+        LOG_INFO("");
+        LOG_INFO("|{0:3} {1:3} {2:3}|", result_matrix[0][0], result_matrix[1][0], result_matrix[2][0]);
+        LOG_INFO("|{0:3} {1:3} {2:3}|", result_matrix[0][1], result_matrix[1][1], result_matrix[2][1]);
+        LOG_INFO("|{0:3} {1:3} {2:3}|", result_matrix[0][2], result_matrix[1][2], result_matrix[2][2]);
+        LOG_INFO("");
+
 
         return 0;
     }
@@ -321,9 +211,10 @@ namespace AiryEngine {
          /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // shaderProgram->bind();
-        // vao_1buffer->bind();
-        // glDrawArrays(GL_TRIANGLES, 0, 3);
+        shaderProgram->bind();
+        vao->bind();
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(vao->get_indices_count()), GL_UNSIGNED_INT, nullptr);
 
 
         ImGuiIO& io = ImGui::GetIO();
@@ -339,21 +230,6 @@ namespace AiryEngine {
         ImGui::Begin("Backgroun Color Window");
 
         ImGui::ColorEdit4("Background Color", this->background_color);
-
-        static bool use_2_buffers = true;
-        ImGui::Checkbox("2 Buffers", &use_2_buffers);
-        if (use_2_buffers)
-        {
-            shaderProgram->bind();
-            vao_2buffers->bind();
-            glDrawArrays(GL_TRIANGLES, 0, vertex_count * 3);
-        }
-        else
-        {
-            shaderProgram->bind();
-            vao_1buffer->bind();
-            glDrawArrays(GL_TRIANGLES, 0, 3);
-        }
 
         ImGui::End();
 

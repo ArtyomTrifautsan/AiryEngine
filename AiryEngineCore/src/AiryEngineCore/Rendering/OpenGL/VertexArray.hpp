@@ -3,6 +3,7 @@
 #include <iostream>     // is included for using size_t
 
 #include "VertexBuffer.hpp"
+#include "IndexBuffer.hpp"
 
 namespace AiryEngine {
 
@@ -17,13 +18,16 @@ namespace AiryEngine {
         VertexArray& operator=(VertexArray&& vertexArray) noexcept;  
         VertexArray(VertexArray&& vertexArray) noexcept;  
 
-        void add_buffer(VertexBuffer& vertexBuffer);
+        void add_vertex_buffer(VertexBuffer& vertexBuffer);
+        void set_index_buffer(IndexBuffer& vertexBuffer);
         void bind() const;
         static void unbind();
+        size_t get_indices_count() const { return this->indicesCount; }
     
     private:
         unsigned int id = 0;
         unsigned int elementsCount = 0;
+        size_t indicesCount = 0;
     };
 
 }

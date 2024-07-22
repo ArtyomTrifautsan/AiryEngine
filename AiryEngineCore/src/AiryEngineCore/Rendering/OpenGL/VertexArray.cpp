@@ -2,6 +2,7 @@
 
 #include "VertexArray.hpp" 
 #include "VertexBuffer.hpp" 
+#include "IndexBuffer.hpp"
 #include "AiryEngineCore/Log.hpp"
 
 namespace AiryEngine {
@@ -31,7 +32,7 @@ namespace AiryEngine {
 
     void VertexArray::unbind() { glBindVertexArray(0); }
 
-    void VertexArray::add_buffer(VertexBuffer& vertexBuffer)
+    void VertexArray::add_vertex_buffer(VertexBuffer& vertexBuffer)
     {
         bind();
         vertexBuffer.bind();
@@ -49,6 +50,14 @@ namespace AiryEngine {
             );
             this->elementsCount += 1;
         }
+    }
+
+    void VertexArray::set_index_buffer(IndexBuffer& indexBuffer)
+    {
+        bind();
+        indexBuffer.bind();
+        this->indicesCount = indexBuffer.get_count();
+        
     }
 
 }
