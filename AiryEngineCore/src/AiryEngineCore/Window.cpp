@@ -17,8 +17,8 @@ namespace AiryEngine {
     static bool GLFW_initializated = false;
 
 
-    const int vertex_row = 20;
-    const int vertex_column = 20;
+    const int vertex_row = 100;
+    const int vertex_column = 100;
     const int vertex_count = vertex_row * vertex_column * 6;
     GLfloat points[vertex_count * 3];
     GLfloat colors[vertex_count * 3];
@@ -171,64 +171,102 @@ namespace AiryEngine {
         );
 
 
-        const int triangle_side_length = 15;
+        const int triangle_side_length = 50;
         bool is_up = true;
-        int x_offset = 100, y_offset = 100;
         int devider = 1000; 
+        int x_offset = - devider / 2 - vertex_column * triangle_side_length / 2;
+        int y_offset = - devider / 2 - vertex_row * triangle_side_length / 2;
 
         int count = 0;
         for (int r = 0; r < vertex_row; r++)
         {
             for (int c = 0; c < vertex_column; c++)
             {
-                if (is_up)
+                points[count + 0] = (float)(x_offset + c * triangle_side_length) / (float)devider;
+                points[count + 1] = (float)(y_offset + r * triangle_side_length) / (float)devider;
+                points[count + 2] = 0.0f;
+
+                points[count + 3] = (float)(x_offset + c * triangle_side_length + triangle_side_length) / (float)devider;
+                points[count + 4] = (float)(y_offset + r * triangle_side_length) / (float)devider;
+                points[count + 5] = 0.0f;
+
+                points[count + 6] = (float)(x_offset + c * triangle_side_length) / (float)devider;
+                points[count + 7] = (float)(y_offset + r * triangle_side_length + triangle_side_length) / (float)devider;
+                points[count + 8] = 0.0f;
+
+                if ((c + r) % 2 == 0)
                 {
-                    points[count] = (float)x_offset / (float)devider;
-                    points[count + 1] = (float)y_offset / (float)devider;
-                    points[count + 2] = 0.0f;
-                    colors[count] = 1.0f;
+                    colors[count + 0] = 1.0f;
                     colors[count + 1] = 0.0f;
                     colors[count + 2] = 0.0f;
-                    
-                    points[count] = (float)(x_offset + c * triangle_side_length) / (float)devider;
-                    points[count + 1] = (float)y_offset / (float)devider;
-                    points[count + 2] = 0.0f;
-                    colors[count] = 0.0f;
-                    colors[count + 1] = 0.0f;
-                    colors[count + 2] = 1.0f;
 
-                    points[count] = (float)x_offset / (float)devider;
-                    points[count + 1] = (float)(y_offset + r * triangle_side_length) / (float)devider;
-                    points[count + 2] = 0.0f;
-                    colors[count] = 0.0f;
-                    colors[count + 1] = 0.0f;
-                    colors[count + 2] = 1.0f;
+                    colors[count + 3] = 0.0f;
+                    colors[count + 4] = 0.0f;
+                    colors[count + 5] = 1.0f;
+                
+                    colors[count + 6] = 0.0f;
+                    colors[count + 7] = 0.0f;
+                    colors[count + 8] = 1.0f;
                 }
                 else
                 {
-                    points[count] = (float)(x_offset + c * triangle_side_length) / (float)devider;
-                    points[count + 1] = (float)(y_offset + r * triangle_side_length) / (float)devider;
-                    points[count + 2] = 0.0f;
-                    colors[count] = 1.0f;
+                    colors[count + 0] = 0.0f;
+                    colors[count + 1] = 0.0f;
+                    colors[count + 2] = 1.0f;
+
+                    colors[count + 3] = 1.0f;
+                    colors[count + 4] = 0.0f;
+                    colors[count + 5] = 0.0f;
+                
+                    colors[count + 6] = 1.0f;
+                    colors[count + 7] = 0.0f;
+                    colors[count + 8] = 0.0f;
+                }
+
+                count += 9;
+
+                points[count + 0] = (float)(x_offset + c * triangle_side_length + triangle_side_length) / (float)devider;
+                points[count + 1] = (float)(y_offset + r * triangle_side_length + triangle_side_length) / (float)devider;
+                points[count + 2] = 0.0f;
+
+                points[count + 3] = (float)(x_offset + c * triangle_side_length + triangle_side_length) / (float)devider;
+                points[count + 4] = (float)(y_offset + r * triangle_side_length) / (float)devider;
+                points[count + 5] = 0.0f;
+
+                points[count + 6] = (float)(x_offset + c * triangle_side_length) / (float)devider;
+                points[count + 7] = (float)(y_offset + r * triangle_side_length + triangle_side_length) / (float)devider;
+                points[count + 8] = 0.0f;
+
+                if ((c + r) % 2 == 0)
+                {
+                    colors[count + 0] = 1.0f;
                     colors[count + 1] = 0.0f;
                     colors[count + 2] = 0.0f;
                     
-                    points[count] = (float)(x_offset + c * triangle_side_length) / (float)devider;
-                    points[count + 1] = (float)y_offset / (float)devider;
-                    points[count + 2] = 0.0f;
-                    colors[count] = 0.0f;
+                    colors[count + 3] = 0.0f;
+                    colors[count + 4] = 0.0f;
+                    colors[count + 5] = 1.0f;
+                    
+                    colors[count + 6] = 0.0f;
+                    colors[count + 7] = 0.0f;
+                    colors[count + 8] = 1.0f;
+                }
+                else
+                {
+                    colors[count + 0] = 0.0f;
                     colors[count + 1] = 0.0f;
                     colors[count + 2] = 1.0f;
 
-                    points[count] = (float)x_offset / (float)devider;
-                    points[count + 1] = (float)(y_offset + r * triangle_side_length) / (float)devider;
-                    points[count + 2] = 0.0f;
-                    colors[count] = 0.0f;
-                    colors[count + 1] = 0.0f;
-                    colors[count + 2] = 1.0f;
+                    colors[count + 3] = 1.0f;
+                    colors[count + 4] = 0.0f;
+                    colors[count + 5] = 0.0f;
+                
+                    colors[count + 6] = 1.0f;
+                    colors[count + 7] = 0.0f;
+                    colors[count + 8] = 0.0f;
                 }
 
-                count += 3;
+                count += 9;
             }
         }
 

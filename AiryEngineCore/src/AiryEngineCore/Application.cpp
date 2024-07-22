@@ -31,7 +31,7 @@ namespace AiryEngine {
         this->eventDispatcher.add_event_listener<EventWindowResize>(
             [](EventWindowResize& event)
             {
-                LOG_INFO("[WindowResize] Changed window size to {0}x{1}", event.width, event.height);
+                //LOG_INFO("[WindowResize] Changed window size to {0}x{1}", event.width, event.height);
             }
         );
 
