@@ -36,10 +36,19 @@ namespace AiryEngine {
         bind();
         vertexBuffer.bind();
 
-        glEnableVertexAttribArray(this->elementsCount);
-        glVertexAttribPointer(this->elementsCount, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-        this->elementsCount += 1;
+        for (const BufferElement& currentElement : vertexBuffer.get_layout().get_elements())
+        {
+            glEnableVertexAttribArray(this->elementsCount);
+            glVertexAttribPointer( 
+                this->elementsCount, 
+                static_cast<GLint>(currentElement.components_count), 
+                currentElement.component_type, 
+                GL_FALSE, 
+                static_cast<GLsizei>(vertexBuffer.get_layout().get_stride()), 
+                reinterpret_cast<const void*>(currentElement.offset) 
+            );
+            this->elementsCount += 1;
+        }
     }
 
 }

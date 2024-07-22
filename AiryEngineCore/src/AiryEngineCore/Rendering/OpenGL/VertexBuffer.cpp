@@ -5,6 +5,73 @@
 
 namespace AiryEngine {
 
+    constexpr unsigned int shader_data_type_to_components_count(const ShaderDataType type)
+    {
+        switch (type)
+        {
+            case ShaderDataType::Float:
+            case ShaderDataType::Int:
+                return 1;
+            
+            case ShaderDataType::Float2:
+            case ShaderDataType::Int2:
+                return 2;
+            
+            case ShaderDataType::Float3:
+            case ShaderDataType::Int3:
+                return 3;
+            
+            case ShaderDataType::Float4:
+            case ShaderDataType::Int4:
+                return 4;
+        }
+
+        LOG_ERROR("shader_data_type_to_components_count: unkwown ShaderDatatype!");
+        return 0;
+    }
+
+    constexpr size_t shader_data_type_size(const ShaderDataType type)
+    {
+        switch(type)
+        {
+            case ShaderDataType::Float:
+            case ShaderDataType::Float2:
+            case ShaderDataType::Float3:
+            case ShaderDataType::Float4:
+                return sizeof(GLfloat) * shader_data_type_to_components_count(type);
+            
+            case ShaderDataType::Int:
+            case ShaderDataType::Int2:
+            case ShaderDataType::Int3:
+            case ShaderDataType::Int4:
+                return sizeof(GLint) * shader_data_type_to_components_count(type);
+        }
+
+        LOG_ERROR("shader_data_type_size: unkwown ShaderDatatype!");
+        return GL_FLOAT; 
+    }
+
+    constexpr unsigned int shader_data_type_to_component_type(const ShaderDataType type)
+    {
+        switch(type)
+        {
+            case ShaderDataType::Float:
+            case ShaderDataType::Float2:
+            case ShaderDataType::Float3:
+            case ShaderDataType::Float4:
+                return GL_FLOAT;
+            
+            case ShaderDataType::Int:
+            case ShaderDataType::Int2:
+            case ShaderDataType::Int3:
+            case ShaderDataType::Int4:
+                return GL_INT;
+        }
+
+        LOG_ERROR("shader_data_type_to_components_type: unkwown ShaderDatatype!");
+        return 0; 
+    }
+
     constexpr GLenum usage_to_GLenum(const VertexBuffer::EUsage usage)
     {
         switch (usage)
@@ -19,7 +86,18 @@ namespace AiryEngine {
     }
 
 
-    VertexBuffer::VertexBuffer(const void* data, const size_t size)
+    BufferElement::BufferElement(const ShaderDataType _type):
+        type(_type),
+        component_type(shader_data_type_to_component_type(_type)),
+        components_count(shader_data_type_to_components_count(_type)),
+        size(shader_data_type_size(_type)),
+        offset(0)
+    {
+
+    }
+
+    VertexBuffer::VertexBuffer(const void* data, const size_t size, BufferLayout buffer_layout):
+        bufferLayout(std::move(buffer_layout))
     {
         glGenBuffers(1, &this->id);
         glBindBuffer(GL_ARRAY_BUFFER, this->id);
@@ -27,7 +105,8 @@ namespace AiryEngine {
         glBufferData(GL_ARRAY_BUFFER, size, data, usage_to_GLenum(usage));
     }
 
-    VertexBuffer::VertexBuffer(const void* data, const size_t size, const EUsage usage)
+    VertexBuffer::VertexBuffer(const void* data, const size_t size, BufferLayout buffer_layout, const EUsage usage):
+        bufferLayout(std::move(buffer_layout))
     {
         glGenBuffers(1, &this->id);
         glBindBuffer(GL_ARRAY_BUFFER, this->id);
@@ -43,9 +122,10 @@ namespace AiryEngine {
         return *this;
     }
 
-    VertexBuffer::VertexBuffer(VertexBuffer&& vertexBuffer) noexcept
+    VertexBuffer::VertexBuffer(VertexBuffer&& vertexBuffer) noexcept:
+        id(vertexBuffer.id),
+        bufferLayout(std::move(vertexBuffer.bufferLayout))
     {
-        this->id = vertexBuffer.id;
         vertexBuffer.id = 0;
     }
 
