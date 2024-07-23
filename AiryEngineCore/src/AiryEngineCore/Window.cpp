@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/mat3x3.hpp>
+#include <glm/trigonometric.hpp>
 #include <imgui/imgui.h>
 #include <imgui/backends/imgui_impl_opengl3.h>
 #include <imgui/backends/imgui_impl_glfw.h>
@@ -40,27 +41,35 @@ namespace AiryEngine {
     };
 
     const char* vertex_shader_src = 
-        "#version 460\n"
-        "layout(location = 0) in vec3 vertex_position;"
-        "layout(location = 1) in vec3 vertex_color;"
-        "out vec3 color;"
-        "void main() {"
-        "   color = vertex_color;"
-        "   gl_Position = vec4(vertex_position, 1.0);"
-        "};";
+        R"(
+            #version 460
+            layout(location = 0) in vec3 vertex_position;
+            layout(location = 1) in vec3 vertex_color;
+            uniform mat4 model_matrix;
+            out vec3 color;
+            void main() {
+                color = vertex_color;
+                gl_Position = model_matrix * vec4(vertex_position, 1.0);
+            };
+        )";
     
     const char* fragment_shader_src = 
-        "#version 460\n"
-        "in vec3 color;"
-        "out vec4 fragment_color;"
-        "void main() {"
-        "   fragment_color = vec4(color, 1.0);"
-        "};";
+        R"(
+            #version 460
+            in vec3 color;
+            out vec4 fragment_color;
+            void main() {
+                fragment_color = vec4(color, 1.0);
+            };
+        )";
 
     std::unique_ptr<ShaderProgram> shaderProgram;
     std::unique_ptr<IndexBuffer> index_buffer;
     std::unique_ptr<VertexBuffer> positions_colors_vbo;
     std::unique_ptr<VertexArray> vao;
+    float scale[3] = { 1.0f, 1.0f, 1.0f };
+    float rotate = 0.0f;
+    float translate[3] = { 0.0f, 0.0f, 0.0f };
 
     Window::Window(std::string title, const unsigned int width, const unsigned int height):
         data({std::move(title), width, height})
@@ -178,15 +187,15 @@ namespace AiryEngine {
         vao->set_index_buffer(*index_buffer);
 
 
-        glm::mat3 matrix1(4, 0, 0, 2, 8, 1, 0, 1, 0);
-        glm::mat3 matrix2(4, 2, 9, 2, 0, 4, 1, 4, 2);
-        glm::mat3 result_matrix = matrix1 * matrix2;
+        // glm::mat3 matrix1(4, 0, 0, 2, 8, 1, 0, 1, 0);
+        // glm::mat3 matrix2(4, 2, 9, 2, 0, 4, 1, 4, 2);
+        // glm::mat3 result_matrix = matrix1 * matrix2;
 
-        LOG_INFO("");
-        LOG_INFO("|{0:3} {1:3} {2:3}|", result_matrix[0][0], result_matrix[1][0], result_matrix[2][0]);
-        LOG_INFO("|{0:3} {1:3} {2:3}|", result_matrix[0][1], result_matrix[1][1], result_matrix[2][1]);
-        LOG_INFO("|{0:3} {1:3} {2:3}|", result_matrix[0][2], result_matrix[1][2], result_matrix[2][2]);
-        LOG_INFO("");
+        // LOG_INFO("");
+        // LOG_INFO("|{0:3} {1:3} {2:3}|", result_matrix[0][0], result_matrix[1][0], result_matrix[2][0]);
+        // LOG_INFO("|{0:3} {1:3} {2:3}|", result_matrix[0][1], result_matrix[1][1], result_matrix[2][1]);
+        // LOG_INFO("|{0:3} {1:3} {2:3}|", result_matrix[0][2], result_matrix[1][2], result_matrix[2][2]);
+        // LOG_INFO("");
 
 
         return 0;
@@ -211,12 +220,6 @@ namespace AiryEngine {
          /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        shaderProgram->bind();
-        vao->bind();
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(vao->get_indices_count()), GL_UNSIGNED_INT, nullptr);
-
-
         ImGuiIO& io = ImGui::GetIO();
         io.DisplaySize.x = static_cast<float>(get_width());
         io.DisplaySize.y = static_cast<float>(get_height());
@@ -228,8 +231,36 @@ namespace AiryEngine {
         //ImGui::ShowDemoWindow();
 
         ImGui::Begin("Backgroun Color Window");
-
         ImGui::ColorEdit4("Background Color", this->background_color);
+        ImGui::SliderFloat3("scale", scale, 0.f, 2.f);
+        ImGui::SliderFloat("rotate", &rotate, 0.f, 360.f);
+        ImGui::SliderFloat3("translate", translate, -1.f, 1.f);
+
+
+        shaderProgram->bind();
+
+        glm::mat4 scale_matrix(scale[0], 0,        0,        0,
+                               0,        scale[1], 0,        0,
+                               0,        0,        scale[2], 0,
+                               0,        0,        0,        1);
+        
+        float rotate_in_radians = glm::radians(rotate);
+        glm::mat4 rotate_matrix( cos(rotate_in_radians), sin(rotate_in_radians), 0, 0,
+                                -sin(rotate_in_radians), cos(rotate_in_radians), 0, 0,
+                                 0,                      0,                      1, 0,
+                                 0,                      0,                      0, 1);
+        
+        glm::mat4 translate_matrix(1,            0,            0,            0,
+                                   0,            1,            0,            0,
+                                   0,            0,            1,            0, 
+                                   translate[0], translate[1], translate[2], 1);
+
+        glm::mat4 model_matrix = translate_matrix * rotate_matrix * scale_matrix; 
+        shaderProgram->set_matrix4("model_matrix", model_matrix);
+
+        vao->bind();
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(vao->get_indices_count()), GL_UNSIGNED_INT, nullptr);
 
         ImGui::End();
 

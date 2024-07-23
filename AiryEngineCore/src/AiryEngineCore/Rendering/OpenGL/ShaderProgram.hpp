@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/mat4x4.hpp>
+
 namespace AiryEngine {
 
     class ShaderProgram
@@ -17,6 +19,7 @@ namespace AiryEngine {
         void bind() const;
         static void unbind();
         bool is_compiled() const { return isCompiled; }
+        void set_matrix4(const char* name, const glm::mat4& matrix) const;
 
     private:
         unsigned int id = 0;

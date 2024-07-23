@@ -1,4 +1,5 @@
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "ShaderProgram.hpp"
 #include "AiryEngineCore/Log.hpp"
@@ -102,6 +103,11 @@ namespace AiryEngine
 
         shaderProgram.id = 0;
         shaderProgram.isCompiled = false;
+    }
+
+    void ShaderProgram::set_matrix4(const char* name, const glm::mat4& matrix) const
+    {
+        glUniformMatrix4fv(glGetUniformLocation(this->id, name), 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
 }
