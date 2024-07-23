@@ -1,4 +1,5 @@
 #include <memory>
+#include <iostream>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -8,8 +9,9 @@
 #include <imgui/backends/imgui_impl_opengl3.h>
 #include <imgui/backends/imgui_impl_glfw.h>
 
-#include <AiryEngineCore/Window.hpp>
-#include <AiryEngineCore/Log.hpp>
+#include "AiryEngineCore/Window.hpp"
+#include "AiryEngineCore/Log.hpp"
+#include "AiryEngineCore/Camera.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/IndexBuffer.hpp"
@@ -46,10 +48,11 @@ namespace AiryEngine {
             layout(location = 0) in vec3 vertex_position;
             layout(location = 1) in vec3 vertex_color;
             uniform mat4 model_matrix;
+            uniform mat4 view_projection_matrix;
             out vec3 color;
             void main() {
                 color = vertex_color;
-                gl_Position = model_matrix * vec4(vertex_position, 1.0);
+                gl_Position = view_projection_matrix* model_matrix * vec4(vertex_position, 1.0);
             };
         )";
     
@@ -70,6 +73,11 @@ namespace AiryEngine {
     float scale[3] = { 1.0f, 1.0f, 1.0f };
     float rotate = 0.0f;
     float translate[3] = { 0.0f, 0.0f, 0.0f };
+
+    float camera_position[3] = { 0.0f, 0.0f, 1.0f };
+    float camera_rotation[3] = { 0.0f, 0.0f, 0.0f };
+    bool perspective_camera = false;
+    Camera camera;
 
     Window::Window(std::string title, const unsigned int width, const unsigned int height):
         data({std::move(title), width, height})
@@ -236,6 +244,10 @@ namespace AiryEngine {
         ImGui::SliderFloat("rotate", &rotate, 0.f, 360.f);
         ImGui::SliderFloat3("translate", translate, -1.f, 1.f);
 
+        ImGui::SliderFloat3("camera position", camera_position, -10.0f, 10.0f);
+        ImGui::SliderFloat3("camera rotation", camera_rotation, 0.0f, 360.0f);
+        ImGui::Checkbox("Perspective camera", &perspective_camera);
+
 
         shaderProgram->bind();
 
@@ -257,6 +269,11 @@ namespace AiryEngine {
 
         glm::mat4 model_matrix = translate_matrix * rotate_matrix * scale_matrix; 
         shaderProgram->set_matrix4("model_matrix", model_matrix);
+
+        camera.set_position_rotation(glm::vec3(camera_position[0], camera_position[1], camera_position[2]),
+                                     glm::vec3(camera_rotation[0], camera_rotation[1], camera_rotation[2]));
+        camera.set_projection_mode(perspective_camera ? Camera::ProjectionMode::Perspective : Camera::ProjectionMode::Orthographic);
+        shaderProgram->set_matrix4("view_projection_matrix", camera.get_projection_matrix() * camera.get_view_matrix());
 
         vao->bind();
         glDrawArrays(GL_TRIANGLES, 0, 6);
