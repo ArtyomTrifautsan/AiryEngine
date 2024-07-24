@@ -1,7 +1,6 @@
 #include <memory>
 #include <iostream>
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/mat3x3.hpp>
 #include <glm/trigonometric.hpp>
@@ -12,14 +11,13 @@
 #include "AiryEngineCore/Window.hpp"
 #include "AiryEngineCore/Log.hpp"
 #include "AiryEngineCore/Camera.hpp"
+#include "AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/IndexBuffer.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/VertexArray.hpp"
 
 namespace AiryEngine {
-
-    static bool GLFW_initializated = false;
 
     GLfloat positions_colors[] = {
         -0.5f, -0.5f,  0.0f,    1.0f, 1.0f, 0.0f,
@@ -99,16 +97,17 @@ namespace AiryEngine {
     {
         LOG_INFO("Creating widnow \"{0}\" size {1}x{2}", this->data.title, this->data.width, this->data.height);
 
-        /* Initialize the library */
-        if (!GLFW_initializated)
-        {
-            if (!glfwInit())
+        glfwSetErrorCallback([](int error_code, const char* description)
             {
-                LOG_CRITICAL("Can't initialize GLFW!");
-                return -1;
+                LOG_CRITICAL("GLFW error: {}", description);
             }
-            
-            GLFW_initializated = true;
+        );
+
+        /* Initialize the library */
+        if (!glfwInit())
+        {
+            LOG_CRITICAL("Can't initialize GLFW!");
+            return -1;
         }
 
         /* Create a windowed mode window and its OpenGL context */
@@ -116,23 +115,14 @@ namespace AiryEngine {
         if (!this->window)
         {
             LOG_CRITICAL("Can't create widnow \"{0}\" size {1}x{2}!", this->data.title, this->data.width, this->data.height);
-            glfwTerminate();
             return -2;
         }
 
-        /* Make the window's context current */
-        glfwMakeContextCurrent(this->window);
-
-        // initialize GLAD
-        // This function gives access to all opengl functions
-        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        if (!Renderer_OpenGL::init(window))
         {
-            LOG_CRITICAL("Failed to initialize GLAD");
-            return -1;
+            LOG_CRITICAL("Failed to initialize OpenGL renderer");
+            return -3;
         }
-
-        //LOG_INFO("Renderer: {}", glGetString(GL_RENDERER));
-        //LOG_INFO("OpenGL version: {}", glGetString(GL_VERSION));
 
         glfwSetWindowUserPointer(this->window, &this->data);
 
@@ -171,7 +161,7 @@ namespace AiryEngine {
         glfwSetFramebufferSizeCallback(this->window,
             [](GLFWwindow* pWindow, int width, int height)
             {
-                glViewport(0, 0, width, height);
+                Renderer_OpenGL::set_viewport(width, height);
             }
         );
 
@@ -194,39 +184,29 @@ namespace AiryEngine {
         vao->add_vertex_buffer(*positions_colors_vbo);
         vao->set_index_buffer(*index_buffer);
 
-
-        // glm::mat3 matrix1(4, 0, 0, 2, 8, 1, 0, 1, 0);
-        // glm::mat3 matrix2(4, 2, 9, 2, 0, 4, 1, 4, 2);
-        // glm::mat3 result_matrix = matrix1 * matrix2;
-
-        // LOG_INFO("");
-        // LOG_INFO("|{0:3} {1:3} {2:3}|", result_matrix[0][0], result_matrix[1][0], result_matrix[2][0]);
-        // LOG_INFO("|{0:3} {1:3} {2:3}|", result_matrix[0][1], result_matrix[1][1], result_matrix[2][1]);
-        // LOG_INFO("|{0:3} {1:3} {2:3}|", result_matrix[0][2], result_matrix[1][2], result_matrix[2][2]);
-        // LOG_INFO("");
-
-
         return 0;
     }
 
     void Window::shutdown()
     {
+        if (ImGui::GetCurrentContext())
+        {
+            ImGui::DestroyContext();
+        }
+
         glfwDestroyWindow(this->window);
         glfwTerminate();
     }
     
     void Window::on_update()
     {
-        // Set buffer fill color 
-        glClearColor(
+        Renderer_OpenGL::set_clear_color(
             this->background_color[0],
             this->background_color[1],
             this->background_color[2],
             this->background_color[3]
         );
-
-         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+        Renderer_OpenGL::clear();
 
         ImGuiIO& io = ImGui::GetIO();
         io.DisplaySize.x = static_cast<float>(get_width());
@@ -275,9 +255,8 @@ namespace AiryEngine {
         camera.set_projection_mode(perspective_camera ? Camera::ProjectionMode::Perspective : Camera::ProjectionMode::Orthographic);
         shaderProgram->set_matrix4("view_projection_matrix", camera.get_projection_matrix() * camera.get_view_matrix());
 
+        Renderer_OpenGL::draw(*vao);
         vao->bind();
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(vao->get_indices_count()), GL_UNSIGNED_INT, nullptr);
 
         ImGui::End();
 

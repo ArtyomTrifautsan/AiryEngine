@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.12)
 set(ENGINE_PROJECT_NAME AiryEngineCore)
 
 set(ENGINE_PUBLIC_INCLUDES
+    src/AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.hpp
     includes/AiryEngineCore/Application.hpp
     includes/AiryEngineCore/Camera.hpp
     includes/AiryEngineCore/Event.hpp
@@ -21,6 +22,7 @@ set(ENGINE_PRIVATE_SOURCES
     src/AiryEngineCore/Application.cpp
     src/AiryEngineCore/Camera.cpp
     src/AiryEngineCore/Window.cpp
+    src/AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.cpp
     src/AiryEngineCore/Rendering/OpenGL/ShaderProgram.cpp
     src/AiryEngineCore/Rendering/OpenGL/VertexBuffer.cpp
     src/AiryEngineCore/Rendering/OpenGL/IndexBuffer.cpp
