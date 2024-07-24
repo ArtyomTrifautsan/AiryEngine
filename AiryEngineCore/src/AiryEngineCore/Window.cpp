@@ -11,6 +11,7 @@
 #include "AiryEngineCore/Window.hpp"
 #include "AiryEngineCore/Log.hpp"
 #include "AiryEngineCore/Camera.hpp"
+#include "AiryEngineCore/Modules/UIModule.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp"
@@ -81,11 +82,6 @@ namespace AiryEngine {
         data({std::move(title), width, height})
     {
         int resultCode = init();
-
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGui_ImplOpenGL3_Init();
-        ImGui_ImplGlfw_InitForOpenGL(this->window, true);
     }
 
     Window::~Window()
@@ -165,6 +161,8 @@ namespace AiryEngine {
             }
         );
 
+        UIModule::on_window_create(window);
+
 
         shaderProgram = std::make_unique<ShaderProgram>(vertex_shader_src, fragment_shader_src);
         if (!shaderProgram->is_compiled()) 
@@ -189,10 +187,7 @@ namespace AiryEngine {
 
     void Window::shutdown()
     {
-        if (ImGui::GetCurrentContext())
-        {
-            ImGui::DestroyContext();
-        }
+        UIModule::on_window_close();
 
         glfwDestroyWindow(this->window);
         glfwTerminate();
@@ -207,27 +202,6 @@ namespace AiryEngine {
             this->background_color[3]
         );
         Renderer_OpenGL::clear();
-
-        ImGuiIO& io = ImGui::GetIO();
-        io.DisplaySize.x = static_cast<float>(get_width());
-        io.DisplaySize.y = static_cast<float>(get_height());
-
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        //ImGui::ShowDemoWindow();
-
-        ImGui::Begin("Backgroun Color Window");
-        ImGui::ColorEdit4("Background Color", this->background_color);
-        ImGui::SliderFloat3("scale", scale, 0.f, 2.f);
-        ImGui::SliderFloat("rotate", &rotate, 0.f, 360.f);
-        ImGui::SliderFloat3("translate", translate, -1.f, 1.f);
-
-        ImGui::SliderFloat3("camera position", camera_position, -10.0f, 10.0f);
-        ImGui::SliderFloat3("camera rotation", camera_rotation, 0.0f, 360.0f);
-        ImGui::Checkbox("Perspective camera", &perspective_camera);
-
 
         shaderProgram->bind();
 
@@ -256,13 +230,23 @@ namespace AiryEngine {
         shaderProgram->set_matrix4("view_projection_matrix", camera.get_projection_matrix() * camera.get_view_matrix());
 
         Renderer_OpenGL::draw(*vao);
-        vao->bind();
 
+        UIModule::on_window_draw_begin();
+        bool show = true;
+        UIModule::ShowExampleAppDockSpace(&show);
+        ImGui::ShowDemoWindow();
+
+        ImGui::Begin("Backgroun Color Window");
+        ImGui::ColorEdit4("Background Color", this->background_color);
+        ImGui::SliderFloat3("scale", scale, 0.f, 2.f);
+        ImGui::SliderFloat("rotate", &rotate, 0.f, 360.f);
+        ImGui::SliderFloat3("translate", translate, -1.f, 1.f);
+
+        ImGui::SliderFloat3("camera position", camera_position, -10.0f, 10.0f);
+        ImGui::SliderFloat3("camera rotation", camera_rotation, 0.0f, 360.0f);
+        ImGui::Checkbox("Perspective camera", &perspective_camera);
         ImGui::End();
-
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
+        UIModule::on_window_draw_end();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(this->window);  

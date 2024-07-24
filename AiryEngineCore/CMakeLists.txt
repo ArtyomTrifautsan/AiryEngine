@@ -12,6 +12,7 @@ set(ENGINE_PUBLIC_INCLUDES
 
 set(ENGINE_PRIVATE_INCLUDES
     src/AiryEngineCore/Window.hpp
+    src/AiryEngineCore/Modules/UIModule.hpp
     src/AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp
     src/AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp
     src/AiryEngineCore/Rendering/OpenGL/IndexBuffer.hpp
@@ -22,6 +23,7 @@ set(ENGINE_PRIVATE_SOURCES
     src/AiryEngineCore/Application.cpp
     src/AiryEngineCore/Camera.cpp
     src/AiryEngineCore/Window.cpp
+    src/AiryEngineCore/Modules/UIModule.cpp
     src/AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.cpp
     src/AiryEngineCore/Rendering/OpenGL/ShaderProgram.cpp
     src/AiryEngineCore/Rendering/OpenGL/VertexBuffer.cpp
