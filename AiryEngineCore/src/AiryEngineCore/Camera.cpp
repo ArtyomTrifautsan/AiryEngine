@@ -51,9 +51,9 @@ namespace AiryEngine {
             float f = 10;
             float n = 0.1f;
             m_projection_matrix = glm::mat4(n / r, 0, 0, 0,
-                                                0, n / t, 0, 0,
-                                                0, 0, (-f - n) / (f - n), -1,
-                                                0, 0, -2 * f * n / (f - n), 0);
+                                            0, n / t, 0, 0,
+                                            0, 0, (-f - n) / (f - n), -1,
+                                            0, 0, -2 * f * n / (f - n), 0);
         }
         else
         {
@@ -62,9 +62,9 @@ namespace AiryEngine {
             float f = 100;
             float n = 0.1f;
             m_projection_matrix = glm::mat4(1 / r, 0, 0, 0,
-                                                0, 1 / t, 0, 0,
-                                                0, 0, -2 / (f - n), 0,
-                                                0, 0, (-f - n) / (f - n), -1);
+                                            0, 1 / t, 0, 0,
+                                            0, 0, -2 / (f - n), 0,
+                                            0, 0, (-f - n) / (f - n), 1);
         }
     }
         
