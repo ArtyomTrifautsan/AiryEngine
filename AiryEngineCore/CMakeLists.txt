@@ -8,6 +8,8 @@ set(ENGINE_PUBLIC_INCLUDES
     includes/AiryEngineCore/Camera.hpp
     includes/AiryEngineCore/Event.hpp
     includes/AiryEngineCore/Log.hpp
+    includes/AiryEngineCore/Keys.hpp
+    includes/AiryEngineCore/Input.hpp
 )
 
 set(ENGINE_PRIVATE_INCLUDES
@@ -23,6 +25,7 @@ set(ENGINE_PRIVATE_SOURCES
     src/AiryEngineCore/Application.cpp
     src/AiryEngineCore/Camera.cpp
     src/AiryEngineCore/Window.cpp
+    src/AiryEngineCore/Input.cpp
     src/AiryEngineCore/Modules/UIModule.cpp
     src/AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.cpp
     src/AiryEngineCore/Rendering/OpenGL/ShaderProgram.cpp

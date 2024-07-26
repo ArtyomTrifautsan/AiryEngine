@@ -64,6 +64,61 @@ namespace AiryEngine {
 
         glfwSetWindowUserPointer(this->window, &this->data);
 
+        glfwSetKeyCallback(this->window, [](GLFWwindow* pWindow, int key, int scancode, int action, int mods)
+            {
+                WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(pWindow));
+                switch (action)
+                {
+                    case GLFW_PRESS:
+                    {
+                        EventKeyPressed event(static_cast<KeyCode>(key), false);
+                        data.eventCallbackFn(event);
+                        break;
+                    }
+                    
+                    case GLFW_RELEASE:
+                    {
+                        EventKeyReleased event(static_cast<KeyCode>(key));
+                        data.eventCallbackFn(event);
+                        break;
+                    }
+                    
+                    case GLFW_REPEAT:
+                    {
+                        EventKeyPressed event(static_cast<KeyCode>(key), true);
+                        data.eventCallbackFn(event);
+                        break;
+                    }
+                }
+            }
+        );
+
+        glfwSetMouseButtonCallback(this->window, [](GLFWwindow* pWindow, 
+            int button, int action, int mods)
+            {
+                WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(pWindow));
+                double x_pos;
+                double y_pos;
+                glfwGetCursorPos(pWindow, &x_pos, &y_pos);
+                switch (action)
+                {
+                    case GLFW_PRESS:
+                    {
+                        EventMouseButtonPressed event(static_cast<MouseButtonCode>(button), x_pos, y_pos);
+                        data.eventCallbackFn(event);
+                        break;
+                    }
+                    
+                    case GLFW_RELEASE:
+                    {
+                        EventMouseButtonReleased event(static_cast<MouseButtonCode>(button), x_pos, y_pos);
+                        data.eventCallbackFn(event);
+                        break;
+                    }
+                }
+            }
+        );
+
         glfwSetWindowSizeCallback(this->window, 
             [](GLFWwindow* pWindow, int width, int height)
             {
@@ -123,6 +178,14 @@ namespace AiryEngine {
 
         /* Poll for and process events */
         glfwPollEvents();
+    }
+
+    glm::vec2 Window::get_current_cursor_position() const
+    {
+        double x_pos;
+        double y_pos;
+        glfwGetCursorPos(this->window, &x_pos, &y_pos);
+        return {x_pos, y_pos};
     }
 
 }

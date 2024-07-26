@@ -10,7 +10,7 @@ namespace AiryEngine {
     class Application
     {
     public:
-        Application();
+        Application();  
         virtual ~Application();
 
         Application(const Application&) = delete;
@@ -21,11 +21,17 @@ namespace AiryEngine {
         virtual int start(unsigned int window_width, unsigned int window_height, const char* title);
         virtual void on_update() {}
         virtual void on_ui_draw() {}
+        virtual void on_mouse_button_pressed(const MouseButtonCode mouse_button_code, 
+                                            const double x_pos, 
+                                            const double y_pos, 
+                                            const bool pressed) {}
+
+        glm::vec2 get_current_cursor_position() const;
 
         float camera_position[3] = { 0.0f, 0.0f, 1.0f };
         float camera_rotation[3] = { 0.0f, 0.0f, 0.0f };
-        bool perspective_camera = false;
-        Camera camera;
+        bool perspective_camera = true;
+        Camera camera{glm::vec3(-5, 0, 0)};
     
     private:
         std::unique_ptr<class Window> window;

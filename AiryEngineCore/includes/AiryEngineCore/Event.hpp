@@ -3,6 +3,8 @@
 #include <functional>
 #include <array>
 
+#include "Keys.hpp"
+
 namespace AiryEngine {
 
     enum class EventType
@@ -92,5 +94,65 @@ namespace AiryEngine {
 
         static const EventType type = EventType::WindowClose;
     };
+
+    struct EventKeyPressed : public BaseEvent
+    {
+        EventKeyPressed(const KeyCode key_code, const bool repeated):
+            key_code(key_code),
+            repeated(repeated)
+        { }
+
+        virtual EventType get_type() const override { return type; }
+
+        KeyCode key_code;
+        bool repeated;
+        static const EventType type = EventType::KeyPressed;
+    };
+
+    struct EventKeyReleased : public BaseEvent
+    {
+        EventKeyReleased(const KeyCode key_code):
+            key_code(key_code)
+        { }
+
+        virtual EventType get_type() const override { return type; }
+
+        KeyCode key_code;
+        static const EventType type = EventType::KeyReleased;
+    };
+
+    struct EventMouseButtonPressed : public BaseEvent
+    {
+        EventMouseButtonPressed(const MouseButtonCode mouse_button_code, const double x_pos, const double y_pos)
+            : mouse_button_code(mouse_button_code)
+            , x_pos(x_pos)
+            , y_pos(y_pos)
+        {
+        }
+
+        virtual EventType get_type() const override { return type; }
+
+        MouseButtonCode mouse_button_code;
+        const double x_pos;
+        const double y_pos;
+        static const EventType type = EventType::MouseButtonPressed;
+    };
+
+    struct EventMouseButtonReleased : public BaseEvent
+    {
+        EventMouseButtonReleased(const MouseButtonCode mouse_button_code, const double x_pos, const double y_pos)
+            : mouse_button_code(mouse_button_code)
+            , x_pos(x_pos)
+            , y_pos(y_pos)
+        { 
+        }
+
+        virtual EventType get_type() const override { return type; }
+
+        MouseButtonCode mouse_button_code;
+        const double x_pos;
+        const double y_pos;
+        static const EventType type = EventType::MouseButtonReleased;
+    }; 
 
 }

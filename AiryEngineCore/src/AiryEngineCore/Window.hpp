@@ -2,6 +2,7 @@
 
 #include <string>
 #include <functional>
+#include <glm/ext/vector_float2.hpp>
 
 #include "AiryEngineCore/Event.hpp"
 
@@ -25,6 +26,7 @@ namespace AiryEngine {
         void on_update();
         unsigned int get_width() const { return this->data.width; }
         unsigned int get_height() const { return this->data.height; }
+        glm::vec2 get_current_cursor_position() const;
 
         void set_enevt_callback(const EventCallbackFn& callback) { this->data.eventCallbackFn = callback; }
     
