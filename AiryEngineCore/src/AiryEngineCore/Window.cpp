@@ -2,21 +2,11 @@
 #include <iostream>
 
 #include <GLFW/glfw3.h>
-#include <glm/mat3x3.hpp>
-#include <glm/trigonometric.hpp>
-#include <imgui/imgui.h>
-#include <imgui/backends/imgui_impl_opengl3.h>
-#include <imgui/backends/imgui_impl_glfw.h>
 
 #include "AiryEngineCore/Window.hpp"
 #include "AiryEngineCore/Log.hpp"
-#include "AiryEngineCore/Camera.hpp"
 #include "AiryEngineCore/Modules/UIModule.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.hpp"
-#include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
-#include "AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp"
-#include "AiryEngineCore/Rendering/OpenGL/IndexBuffer.hpp"
-#include "AiryEngineCore/Rendering/OpenGL/VertexArray.hpp"
 
 namespace AiryEngine {
 

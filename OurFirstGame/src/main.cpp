@@ -151,7 +151,7 @@ class GameApplication : public AiryEngine::Application
 int main(int argc, char const *argv[])
 {
     auto game_application = std::make_unique<GameApplication>();
-    game_application->set_executable_path(argv[0]);
+    game_application->init(argv[0]);
     int returnCode = game_application->start(1024, 768, "OurFirstGame");
 
     return returnCode;

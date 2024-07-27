@@ -18,12 +18,6 @@ namespace AiryEngine {
         this->path_to_executable = executable_path;
     }
 
-    // void ResourceManager::set_executable_path(const std::string& executable_path)
-    // {
-    //     size_t found = executable_path.find_last_of("/\\");
-    //     this->path_to_executable = executable_path.substr(0, found);
-    // }
-
     std::string ResourceManager::get_file_string(const std::string& relative_file_path)
     {
         std::ifstream f;

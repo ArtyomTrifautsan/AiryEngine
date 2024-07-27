@@ -1,5 +1,3 @@
-#include "AiryEngineCore/Application.hpp"
-
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -8,68 +6,34 @@ using std::endl;
 #include <glm/trigonometric.hpp>
 #include <imgui/imgui.h>
 
+#include "AiryEngineCore/Application.hpp"
+
 #include "AiryEngineCore/Camera.hpp"
 #include "AiryEngineCore/Window.hpp"
 #include "AiryEngineCore/Log.hpp"
 #include "AiryEngineCore/Input.hpp"
 
 #include "AiryEngineCore/ResourceManaging/ResourceManager.hpp"
-
 #include "AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.hpp"
-#include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
-#include "AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp"
-#include "AiryEngineCore/Rendering/OpenGL/IndexBuffer.hpp"
-#include "AiryEngineCore/Rendering/OpenGL/VertexArray.hpp"
 #include "AiryEngineCore/Modules/UIModule.hpp"
 
 namespace AiryEngine {
 
-    GLfloat positions_colors2[] = {
-        0.0f, -0.5f, -0.5f,     1.0f, 1.0f, 0.0f,
-        0.0f,  0.5f, -0.5f,     0.0f, 1.0f, 1.0f,
-        0.0f, -0.5f,  0.5f,     1.0f, 0.0f, 1.0f,
-        0.0f,  0.5f,  0.5f,     1.0f, 0.0f, 0.0f,
-    };
+    extern float scale[];
+    extern float rotate;
+    extern float translate[];
 
-    GLint indices[] = {
-        0, 1, 2, 3, 2, 1
-    };
-
-    // const char* vertex_shader_src = 
-    //     R"(
-    //         #version 460
-    //         layout(location = 0) in vec3 vertex_position;
-    //         layout(location = 1) in vec3 vertex_color;
-    //         uniform mat4 model_matrix;
-    //         uniform mat4 view_projection_matrix;
-    //         out vec3 color;
-    //         void main() {
-    //             color = vertex_color;
-    //             gl_Position = view_projection_matrix* model_matrix * vec4(vertex_position, 1.0);
-    //         };
-    //     )";
-    
-    // const char* fragment_shader_src = 
-    //     R"(
-    //         #version 460
-    //         in vec3 color;
-    //         out vec4 fragment_color;
-    //         void main() {
-    //             fragment_color = vec4(color, 1.0);
-    //         };
-    //     )";
-
-    std::shared_ptr<ShaderProgram> shaderProgram;
-    std::unique_ptr<IndexBuffer> index_buffer;
-    std::unique_ptr<VertexBuffer> positions_colors_vbo;
-    std::unique_ptr<VertexArray> vao;
-    float scale[3] = { 1.0f, 1.0f, 1.0f };
-    float rotate = 0.0f;
-    float translate[3] = { 0.0f, 0.0f, 0.0f };
 
     Application::Application() 
     {
         LOG_INFO("Starting Application");
+    }
+
+    void Application::init(const std::string& executable_path)
+    {
+        set_executable_path(executable_path);
+
+        this->resource_manager = std::make_shared<ResourceManager>(this->path_to_executable);
     }
 
     Application::~Application() 
@@ -80,6 +44,8 @@ namespace AiryEngine {
     int Application::start(unsigned int window_width, unsigned int window_height, const char* title)
     {
         this->window = std::make_unique<Window>(title, window_width, window_height);
+
+        this->renderer = std::make_unique<Renderer_OpenGL>(this->window->get_GLFWwindow(), this->resource_manager);
 
         this->eventDispatcher.add_event_listener<EventMouseMoved>(
             [](EventMouseMoved& event)
@@ -153,64 +119,9 @@ namespace AiryEngine {
         );
 
 
-        //------------------------------------------------------------//
-        // shaderProgram = std::make_unique<ShaderProgram>(vertex_shader_src, fragment_shader_src);
-        shaderProgram = this->resource_manager->load_shaders("DefaultShaders", "Resources/Shaders/vertex_shader.txt", "Resources/Shaders/fragment_shader.txt");
-        if (!shaderProgram->is_compiled()) 
-            return false;
-        
-
-        BufferLayout bufferLayout_2vec3
-        {
-            ShaderDataType::Float3,
-            ShaderDataType::Float3,
-        };
-
-        vao = std::make_unique<VertexArray>();
-        positions_colors_vbo = std::make_unique<VertexBuffer>(positions_colors2, sizeof(positions_colors2), bufferLayout_2vec3);
-        index_buffer = std::make_unique<IndexBuffer>(indices, sizeof(indices) / sizeof(GLuint));
-
-        vao->add_vertex_buffer(*positions_colors_vbo);
-        vao->set_index_buffer(*index_buffer);
-        //------------------------------------------------------------//
-
         while (!this->closeWindow)
         {
-            Renderer_OpenGL::set_clear_color(
-                this->background_color[0],
-                this->background_color[1],
-                this->background_color[2],
-                this->background_color[3]
-            );
-            Renderer_OpenGL::clear();
-
-            shaderProgram->bind();
-
-            glm::mat4 scale_matrix(scale[0], 0,        0,        0,
-                                0,        scale[1], 0,        0,
-                                0,        0,        scale[2], 0,
-                                0,        0,        0,        1);
-            
-            float rotate_in_radians = glm::radians(rotate);
-            glm::mat4 rotate_matrix( cos(rotate_in_radians), sin(rotate_in_radians), 0, 0,
-                                    -sin(rotate_in_radians), cos(rotate_in_radians), 0, 0,
-                                    0,                      0,                      1, 0,
-                                    0,                      0,                      0, 1);
-            
-            glm::mat4 translate_matrix(1,            0,            0,            0,
-                                    0,            1,            0,            0,
-                                    0,            0,            1,            0, 
-                                    translate[0], translate[1], translate[2], 1);
-
-            glm::mat4 model_matrix = translate_matrix * rotate_matrix * scale_matrix; 
-            shaderProgram->set_matrix4("model_matrix", model_matrix);
-
-            
-            camera.set_projection_mode(perspective_camera ? Camera::ProjectionMode::Perspective : Camera::ProjectionMode::Orthographic);
-            shaderProgram->set_matrix4("view_projection_matrix", camera.get_projection_matrix() * camera.get_view_matrix());
-
-            Renderer_OpenGL::draw(*vao);
-
+            this->renderer->rendering(this->camera, true);
 
             //------------------------------------------------------------//
             UIModule::on_window_draw_begin();
@@ -250,8 +161,6 @@ namespace AiryEngine {
     {
         size_t found = executable_path.find_last_of("/\\");
         this->path_to_executable = executable_path.substr(0, found);
-
-        this->resource_manager = std::make_unique<ResourceManager>(this->path_to_executable);
     }
 
 }

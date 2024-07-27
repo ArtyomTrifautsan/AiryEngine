@@ -68,7 +68,7 @@ namespace AiryEngine {
                 return GL_INT;
         }
 
-        LOG_ERROR("shader_data_type_to_components_type: unkwown ShaderDatatype!");
+        LOG_ERROR("shader_data_type_to_components_type: unkwown ShaderDataType!");
         return 0; 
     }
 
@@ -93,7 +93,6 @@ namespace AiryEngine {
         size(shader_data_type_size(_type)),
         offset(0)
     {
-
     }
 
     VertexBuffer::VertexBuffer(const void* data, const size_t size, BufferLayout buffer_layout):

@@ -27,6 +27,7 @@ namespace AiryEngine {
         unsigned int get_width() const { return this->data.width; }
         unsigned int get_height() const { return this->data.height; }
         glm::vec2 get_current_cursor_position() const;
+        GLFWwindow* get_GLFWwindow() { return this->window; }
 
         void set_enevt_callback(const EventCallbackFn& callback) { this->data.eventCallbackFn = callback; }
     
