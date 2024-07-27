@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include "AiryEngineCore/Camera.hpp"
 #include "AiryEngineCore/Event.hpp"
@@ -10,7 +11,7 @@ namespace AiryEngine {
     class Application
     {
     public:
-        Application();  
+        Application(const std::string& executable_path);  
         virtual ~Application();
 
         Application(const Application&) = delete;
@@ -34,11 +35,17 @@ namespace AiryEngine {
         Camera camera{glm::vec3(-5, 0, 0)};
     
     private:
+        void set_executable_path(const std::string& executable_path);
+
         std::unique_ptr<class Window> window;
+        std::unique_ptr<class ResourceManager> resource_manager;
+        std::shared_ptr<class ShaderProgram> shader_program;
 
         EventDispatcher eventDispatcher;
         bool closeWindow = false;
         float background_color[4] = {0.33f, 0.33f, 0.33f, 0.f};
+
+        std::string path_to_executable;
     };
 
 }

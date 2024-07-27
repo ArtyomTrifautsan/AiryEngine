@@ -70,7 +70,7 @@ namespace AiryEngine
             return;
         }
         else
-            this->isCompiled = true;
+            this->is_shader_compiled = true;
 
         glDetachShader(this->id, vertex_shader_id);
         glDetachShader(this->id, fragment_shader_id);
@@ -88,10 +88,10 @@ namespace AiryEngine
     {
         glDeleteProgram(this->id);
         this->id = shaderProgram.id;
-        this->isCompiled = shaderProgram.isCompiled;
+        this->is_shader_compiled = shaderProgram.is_shader_compiled;
 
         shaderProgram.id = 0;
-        shaderProgram.isCompiled = false;
+        shaderProgram.is_shader_compiled = false;
 
         return *this;
     }
@@ -99,10 +99,10 @@ namespace AiryEngine
     ShaderProgram::ShaderProgram(ShaderProgram&& shaderProgram)
     {
         this->id = shaderProgram.id;
-        this->isCompiled = shaderProgram.isCompiled;
+        this->is_shader_compiled = shaderProgram.is_shader_compiled;
 
         shaderProgram.id = 0;
-        shaderProgram.isCompiled = false;
+        shaderProgram.is_shader_compiled = false;
     }
 
     void ShaderProgram::set_matrix4(const char* name, const glm::mat4& matrix) const

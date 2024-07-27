@@ -18,12 +18,12 @@ namespace AiryEngine {
 
         void bind() const;
         static void unbind();
-        bool is_compiled() const { return isCompiled; }
+        bool is_compiled() const { return is_shader_compiled; }
         void set_matrix4(const char* name, const glm::mat4& matrix) const;
 
     private:
         unsigned int id = 0;
-        bool isCompiled = false;
+        bool is_shader_compiled = false;
     };
 
 }

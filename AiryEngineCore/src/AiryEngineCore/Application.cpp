@@ -13,6 +13,8 @@ using std::endl;
 #include "AiryEngineCore/Log.hpp"
 #include "AiryEngineCore/Input.hpp"
 
+#include "AiryEngineCore/ResourceManaging/ResourceManager.hpp"
+
 #include "AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp"
@@ -33,31 +35,31 @@ namespace AiryEngine {
         0, 1, 2, 3, 2, 1
     };
 
-    const char* vertex_shader_src = 
-        R"(
-            #version 460
-            layout(location = 0) in vec3 vertex_position;
-            layout(location = 1) in vec3 vertex_color;
-            uniform mat4 model_matrix;
-            uniform mat4 view_projection_matrix;
-            out vec3 color;
-            void main() {
-                color = vertex_color;
-                gl_Position = view_projection_matrix* model_matrix * vec4(vertex_position, 1.0);
-            };
-        )";
+    // const char* vertex_shader_src = 
+    //     R"(
+    //         #version 460
+    //         layout(location = 0) in vec3 vertex_position;
+    //         layout(location = 1) in vec3 vertex_color;
+    //         uniform mat4 model_matrix;
+    //         uniform mat4 view_projection_matrix;
+    //         out vec3 color;
+    //         void main() {
+    //             color = vertex_color;
+    //             gl_Position = view_projection_matrix* model_matrix * vec4(vertex_position, 1.0);
+    //         };
+    //     )";
     
-    const char* fragment_shader_src = 
-        R"(
-            #version 460
-            in vec3 color;
-            out vec4 fragment_color;
-            void main() {
-                fragment_color = vec4(color, 1.0);
-            };
-        )";
+    // const char* fragment_shader_src = 
+    //     R"(
+    //         #version 460
+    //         in vec3 color;
+    //         out vec4 fragment_color;
+    //         void main() {
+    //             fragment_color = vec4(color, 1.0);
+    //         };
+    //     )";
 
-    std::unique_ptr<ShaderProgram> shaderProgram;
+    std::shared_ptr<ShaderProgram> shaderProgram;
     std::unique_ptr<IndexBuffer> index_buffer;
     std::unique_ptr<VertexBuffer> positions_colors_vbo;
     std::unique_ptr<VertexArray> vao;
@@ -65,9 +67,13 @@ namespace AiryEngine {
     float rotate = 0.0f;
     float translate[3] = { 0.0f, 0.0f, 0.0f };
 
-    Application::Application() 
+    Application::Application(const std::string& executable_path) 
     {
         LOG_INFO("Starting Application");
+
+        set_executable_path(executable_path);
+
+        this->resource_manager = std::make_unique<ResourceManager>(this->path_to_executable);
     }
 
     Application::~Application() 
@@ -152,7 +158,8 @@ namespace AiryEngine {
 
 
         //------------------------------------------------------------//
-        shaderProgram = std::make_unique<ShaderProgram>(vertex_shader_src, fragment_shader_src);
+        // shaderProgram = std::make_unique<ShaderProgram>(vertex_shader_src, fragment_shader_src);
+        shaderProgram = this->resource_manager->load_shaders("DefaultShaders", "Resources/Shaders/vertex_shader.txt", "Resources/Shaders/fragment_shader.txt");
         if (!shaderProgram->is_compiled()) 
             return false;
         
@@ -241,6 +248,12 @@ namespace AiryEngine {
     glm::vec2 Application::get_current_cursor_position() const
     {
         return this->window->get_current_cursor_position();
+    }
+
+    void Application::set_executable_path(const std::string& executable_path)
+    {
+        size_t found = executable_path.find_last_of("/\\");
+        this->path_to_executable = executable_path.substr(0, found);
     }
 
 }
