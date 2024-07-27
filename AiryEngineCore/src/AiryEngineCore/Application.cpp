@@ -67,13 +67,9 @@ namespace AiryEngine {
     float rotate = 0.0f;
     float translate[3] = { 0.0f, 0.0f, 0.0f };
 
-    Application::Application(const std::string& executable_path) 
+    Application::Application() 
     {
         LOG_INFO("Starting Application");
-
-        set_executable_path(executable_path);
-
-        this->resource_manager = std::make_unique<ResourceManager>(this->path_to_executable);
     }
 
     Application::~Application() 
@@ -254,6 +250,8 @@ namespace AiryEngine {
     {
         size_t found = executable_path.find_last_of("/\\");
         this->path_to_executable = executable_path.substr(0, found);
+
+        this->resource_manager = std::make_unique<ResourceManager>(this->path_to_executable);
     }
 
 }

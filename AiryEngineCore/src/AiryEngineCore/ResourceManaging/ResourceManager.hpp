@@ -12,7 +12,7 @@ namespace AiryEngine {
     {
     public:
         ResourceManager(const std::string& executable_path);
-        ~ResourceManager();
+        //~ResourceManager();
         //void set_executable_path(const std::string& executable_path);
         std::shared_ptr<ShaderProgram> load_shaders(const std::string& shader_name, const std::string& vertex_path, const std::string& fragment_path);
         std::shared_ptr<ShaderProgram> get_shader_program(const std::string& shader_name);
@@ -28,9 +28,7 @@ namespace AiryEngine {
     private:
         std::string get_file_string(const std::string& relative_file_path);
 
-        std::string path_to_executable;
-
-        
+        std::string path_to_executable;        
     };
 
 }

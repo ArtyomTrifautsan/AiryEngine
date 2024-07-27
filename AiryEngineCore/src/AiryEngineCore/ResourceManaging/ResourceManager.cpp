@@ -50,15 +50,16 @@ namespace AiryEngine {
             return nullptr;
         }
 
-        std::string fragmentx_string = get_file_string(fragment_path);
-        if (fragmentx_string.empty())
+        std::string fragment_string = get_file_string(fragment_path);
+        if (fragment_string.empty())
         {
             LOG_CRITICAL("No fragment shader. Path: {}", fragment_path);
             //std::cerr << "No  shader!" << std::endl;
             return nullptr;
         }
 
-        std::shared_ptr<ShaderProgram>& new_shader = this->shader_programs.emplace(shader_name, std::make_shared<ShaderProgram>(vertex_string, fragmentx_string)).first->second;
+        std::shared_ptr<ShaderProgram>& new_shader = this->shader_programs.emplace(shader_name, std::make_shared<ShaderProgram>(vertex_string.c_str(), fragment_string.c_str())).first->second;
+        //std::shared_ptr<ShaderProgram> new_shader = std::make_shared<ShaderProgram>(vertex_string.c_str(), fragment_string.c_str());
         if (new_shader->is_compiled())
         {
             return new_shader;

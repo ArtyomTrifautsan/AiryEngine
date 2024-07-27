@@ -11,7 +11,7 @@ namespace AiryEngine {
     class Application
     {
     public:
-        Application(const std::string& executable_path);  
+        Application();  
         virtual ~Application();
 
         Application(const Application&) = delete;
@@ -29,13 +29,14 @@ namespace AiryEngine {
 
         glm::vec2 get_current_cursor_position() const;
 
+        void set_executable_path(const std::string& executable_path);
+
         float camera_position[3] = { 0.0f, 0.0f, 1.0f };
         float camera_rotation[3] = { 0.0f, 0.0f, 0.0f };
         bool perspective_camera = true;
         Camera camera{glm::vec3(-5, 0, 0)};
     
     private:
-        void set_executable_path(const std::string& executable_path);
 
         std::unique_ptr<class Window> window;
         std::unique_ptr<class ResourceManager> resource_manager;
