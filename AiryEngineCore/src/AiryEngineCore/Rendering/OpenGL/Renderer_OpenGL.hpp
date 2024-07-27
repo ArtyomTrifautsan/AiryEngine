@@ -18,7 +18,7 @@ namespace AiryEngine {
     class Renderer_OpenGL
     {
     public:
-        Renderer_OpenGL(GLFWwindow* window, std::shared_ptr<ResourceManager> resource_manager);
+        Renderer_OpenGL(std::shared_ptr<ResourceManager> resource_manager);
         void rendering(class Camera& camera, bool perspective_camera);
 
         static bool init(GLFWwindow* window);  //  Нельзя убирать этот метод, он инициализирует glad в Window.cpp

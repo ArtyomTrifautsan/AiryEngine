@@ -45,7 +45,7 @@ namespace AiryEngine {
     {
         this->window = std::make_unique<Window>(title, window_width, window_height);
 
-        this->renderer = std::make_unique<Renderer_OpenGL>(this->window->get_GLFWwindow(), this->resource_manager);
+        this->renderer = std::make_unique<Renderer_OpenGL>(this->resource_manager);
 
         this->eventDispatcher.add_event_listener<EventMouseMoved>(
             [](EventMouseMoved& event)

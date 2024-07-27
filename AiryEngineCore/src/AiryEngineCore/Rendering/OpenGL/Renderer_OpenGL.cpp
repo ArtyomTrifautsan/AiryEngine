@@ -26,15 +26,15 @@ namespace AiryEngine {
 
     float background_color[4] = {0.33f, 0.33f, 0.33f, 0.f};
 
-    Renderer_OpenGL::Renderer_OpenGL(GLFWwindow* window, std::shared_ptr<ResourceManager> resource_manager)
+    Renderer_OpenGL::Renderer_OpenGL(std::shared_ptr<ResourceManager> resource_manager)
     {
-        glfwMakeContextCurrent(window);
+        // glfwMakeContextCurrent(window);
 
-        if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
-        {
-            LOG_CRITICAL("Failed to initialize GLAD");
-            return;
-        }
+        // if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
+        // {
+        //     LOG_CRITICAL("Failed to initialize GLAD");
+        //     return;
+        // }
 
         // LOG_INFO("OpenGL context initializited:");
         // LOG_INFO("  Vendor: {}", get_vendor_str());
