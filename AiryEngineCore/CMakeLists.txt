@@ -15,11 +15,13 @@ set(ENGINE_PUBLIC_INCLUDES
 set(ENGINE_PRIVATE_INCLUDES
     src/AiryEngineCore/Window.hpp
     src/AiryEngineCore/ResourceManaging/ResourceManager.hpp
+    src/AiryEngineCore/ResourceManaging/stb_image.h
     src/AiryEngineCore/Modules/UIModule.hpp
     src/AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp
     src/AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp
     src/AiryEngineCore/Rendering/OpenGL/IndexBuffer.hpp
     src/AiryEngineCore/Rendering/OpenGL/VertexArray.hpp
+    src/AiryEngineCore/Rendering/OpenGL/Texture2D.hpp
 )
 
 set(ENGINE_PRIVATE_SOURCES
@@ -34,6 +36,7 @@ set(ENGINE_PRIVATE_SOURCES
     src/AiryEngineCore/Rendering/OpenGL/VertexBuffer.cpp
     src/AiryEngineCore/Rendering/OpenGL/IndexBuffer.cpp
     src/AiryEngineCore/Rendering/OpenGL/VertexArray.cpp
+    src/AiryEngineCore/Rendering/OpenGL/Texture2D.cpp
 )
 
 set(ENGINE_ALL_SOURCES

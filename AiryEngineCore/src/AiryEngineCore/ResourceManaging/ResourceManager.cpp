@@ -5,11 +5,16 @@
 #include <string>
 #include <memory>
 #include <map>
+#include <iostream>
+//#include <glad/glad.h>
 
 #include "ResourceManager.hpp"
 
 #include "AiryEngineCore/Log.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 namespace AiryEngine {
 
@@ -77,5 +82,28 @@ namespace AiryEngine {
         LOG_CRITICAL("Can't find the shader program: {}", shader_name);
         //std::cerr << "Can't find the shader program: " << shaderName << std::endl;
         return nullptr;
+    }
+
+    std::shared_ptr<Texture2D> ResourceManager::load_texture(const std::string& texture_path)
+    {
+        int width = 0;
+        int height = 0;
+        int channels = 0;
+        unsigned char* pixels = nullptr;
+
+        stbi_set_flip_vertically_on_load(true);
+        pixels = stbi_load(std::string(this->path_to_executable + "/" + texture_path).c_str(), &width, &height, &channels, 0);
+
+        if (nullptr == pixels)
+        {
+            LOG_CRITICAL("Can't load texture: {}", texture_path);
+        }
+        // LOG_INFO("Created image: {}", texture_path);
+        // LOG_INFO("  width: {}", width);
+        // LOG_INFO("  height: {}", height);
+        // LOG_INFO("  channels: {}", channels);
+        std::shared_ptr<Texture2D> new_texture = std::make_shared<Texture2D>(pixels, width, height, channels);
+
+        return new_texture;
     }
 }

@@ -72,7 +72,7 @@ namespace AiryEngine {
         this->eventDispatcher.add_event_listener<EventMouseButtonPressed>(
             [&](EventMouseButtonPressed& event)
             {
-                LOG_INFO("[Mouse button pressed] {0}, at ({1}, {2})", static_cast<char>(event.mouse_button_code), event.x_pos, event.y_pos); 
+                //LOG_INFO("[Mouse button pressed] {0}, at ({1}, {2})", static_cast<char>(event.mouse_button_code), event.x_pos, event.y_pos); 
                 Input::PressMouseButton(event.mouse_button_code); 
                 on_mouse_button_pressed(event.mouse_button_code, event.x_pos, event.y_pos, true);
             }
@@ -81,7 +81,7 @@ namespace AiryEngine {
         this->eventDispatcher.add_event_listener<EventMouseButtonReleased>(
             [&](EventMouseButtonReleased& event)
             {
-                LOG_INFO("[Mouse button released] {0}, at ({1}, {2})", static_cast<char>(event.mouse_button_code), event.x_pos, event.y_pos); 
+                //LOG_INFO("[Mouse button released] {0}, at ({1}, {2})", static_cast<char>(event.mouse_button_code), event.x_pos, event.y_pos); 
                 Input::ReleaseMouseButton(event.mouse_button_code);
                 on_mouse_button_pressed(event.mouse_button_code, event.x_pos, event.y_pos, false);
             }
@@ -92,10 +92,10 @@ namespace AiryEngine {
             {
                 if (event.key_code <= KeyCode::KEY_Z)
                 {
-                    if (event.repeated)
-                        LOG_INFO("[Key pressed] {} repeated", static_cast<char>(event.key_code));
-                    else
-                        LOG_INFO("[Key pressed] {}", static_cast<char>(event.key_code));
+                    if (event.repeated) {}
+                        //LOG_INFO("[Key pressed] {} repeated", static_cast<char>(event.key_code));
+                    else {}
+                        //LOG_INFO("[Key pressed] {}", static_cast<char>(event.key_code));
                 }
                 
                 Input::PressKey(event.key_code);
@@ -105,8 +105,8 @@ namespace AiryEngine {
         this->eventDispatcher.add_event_listener<EventKeyReleased>(
             [&](EventKeyReleased& event)
             {
-                if (event.key_code <= KeyCode::KEY_Z)
-                    LOG_INFO("[Key released] {}", static_cast<char>(event.key_code));
+                if (event.key_code <= KeyCode::KEY_Z) {}
+                    //LOG_INFO("[Key released] {}", static_cast<char>(event.key_code));
                 Input::ReleaseKey(event.key_code);
             }
         );
