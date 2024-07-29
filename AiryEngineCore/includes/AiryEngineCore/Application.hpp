@@ -11,9 +11,10 @@ namespace AiryEngine {
     class Application
     {
     public:
-        Application();  
+        //Application();
+        Application(const std::string& executable_path);  
         virtual ~Application();
-        void init(const std::string& executable_path);
+        // void init(const std::string& executable_path);
         void set_executable_path(const std::string& executable_path);
 
         Application(const Application&) = delete;

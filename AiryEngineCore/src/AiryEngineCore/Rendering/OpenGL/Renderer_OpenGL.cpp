@@ -74,15 +74,20 @@ namespace AiryEngine {
 
 
     GLfloat positions_colors2[] = {
-        0.0f, -0.5f, -0.5f,     1.0f, 1.0f, 0.0f,   1.0f, 0.0f,
-        0.0f,  0.5f, -0.5f,     0.0f, 1.0f, 1.0f,   0.0f, 0.0f,
-        0.0f, -0.5f,  0.5f,     1.0f, 0.0f, 1.0f,   1.0f, 1.0f,
-        0.0f,  0.5f,  0.5f,     1.0f, 0.0f, 0.0f,   0.0f, 1.0f
+         1.0f, -0.5f, -0.5f,     1.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+         1.0f,  0.5f, -0.5f,     0.0f, 1.0f, 1.0f,   0.0f, 0.0f,
+         1.0f, -0.5f,  0.5f,     1.0f, 0.0f, 1.0f,   1.0f, 1.0f,
+         1.0f,  0.5f,  0.5f,     1.0f, 0.0f, 0.0f,   0.0f, 1.0f,
+
+        -1.0f, -0.5f, -0.5f,     1.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+        -1.0f,  0.5f, -0.5f,     0.0f, 1.0f, 1.0f,   0.0f, 0.0f,
+        -1.0f, -0.5f,  0.5f,     1.0f, 0.0f, 1.0f,   1.0f, 1.0f,
+        -1.0f,  0.5f,  0.5f,     1.0f, 0.0f, 0.0f,   0.0f, 1.0f
     };
 
-    GLint indices[] = {
-        0, 1, 2, 3, 2, 1
-    };
+    // GLint indices[] = {
+    //     0, 1, 2, 3, 2, 1
+    // };
 
     // GLfloat positions_colors2[] = {
     //      0.0f, -0.5f, -0.5f,     1.0f, 1.0f, 0.0f,
@@ -96,14 +101,14 @@ namespace AiryEngine {
     //     -1.0f,  0.5f,  0.5f,     1.0f, 0.0f, 0.0f,
     // };
 
-    // GLint indices[] = {
-    //     0, 1, 2, 3, 2, 1,
-    //     4, 5, 6, 7, 6, 5,
-    //     4, 0, 2, 4, 6, 2,
-    //     5, 1, 3, 5, 7, 3,
-    //     7, 3, 2, 7, 6, 2,
-    //     4, 0, 1, 4, 5, 1
-    // };
+    GLint indices[] = {
+        0, 1, 2, 3, 2, 1,
+        4, 5, 6, 7, 6, 5,
+        4, 0, 2, 4, 6, 2,
+        5, 1, 3, 5, 7, 3,
+        7, 3, 2, 7, 6, 2,
+        4, 0, 1, 4, 5, 1
+    };
 
     float scale[3] = { 1.0f, 1.0f, 1.0f };
     float rotate = 0.0f;
@@ -245,7 +250,7 @@ namespace AiryEngine {
 
     void Renderer_OpenGL::set_clear_color(const float r, const float g, const float b, const float a) { glClearColor(r, g, b, a); }
 
-    void Renderer_OpenGL::clear() { glClear(GL_COLOR_BUFFER_BIT); }
+    void Renderer_OpenGL::clear() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); }
 
     void Renderer_OpenGL::set_viewport(
         const unsigned int width, 
@@ -253,6 +258,10 @@ namespace AiryEngine {
         const unsigned int left_offset, 
         const unsigned bottom_offset
     ) { glViewport(left_offset, bottom_offset, width, height); }
+
+    void Renderer_OpenGL::enable_depth_testing() { glEnable(GL_DEPTH_TEST); }
+
+    void Renderer_OpenGL::disable_depth_testing() { glDisable(GL_DEPTH_TEST); }
 
     const char* Renderer_OpenGL::get_vendor_str() { return reinterpret_cast<const char*>(glGetString(GL_VENDOR)); }
 

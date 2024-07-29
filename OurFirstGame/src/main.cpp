@@ -13,6 +13,12 @@ class GameApplication : public AiryEngine::Application
     double m_initial_mouse_pos_x = 0.0;
     double m_initial_mouse_pos_y = 0.0;
 
+public:
+    GameApplication(const std::string& executable_path) : AiryEngine::Application(executable_path)
+    {
+        // set_executable_path(executable_path);
+    }
+
     virtual void on_update() override
     {
         glm::vec3 movement_delta{ 0, 0, 0 };
@@ -150,8 +156,8 @@ class GameApplication : public AiryEngine::Application
 
 int main(int argc, char const *argv[])
 {
-    auto game_application = std::make_unique<GameApplication>();
-    game_application->init(argv[0]);
+    auto game_application = std::make_unique<GameApplication>(argv[0]);
+    //game_application->init(argv[0]);
     int returnCode = game_application->start(1024, 768, "OurFirstGame");
 
     return returnCode;

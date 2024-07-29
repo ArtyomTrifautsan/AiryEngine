@@ -23,14 +23,10 @@ namespace AiryEngine {
     extern float rotate;
     extern float translate[];
 
-
-    Application::Application() 
+    Application::Application(const std::string& executable_path) 
     {
         LOG_INFO("Starting Application");
-    }
-
-    void Application::init(const std::string& executable_path)
-    {
+        
         set_executable_path(executable_path);
 
         this->resource_manager = std::make_shared<ResourceManager>(this->path_to_executable);
@@ -118,7 +114,7 @@ namespace AiryEngine {
             }
         );
 
-
+        Renderer_OpenGL::enable_depth_testing();
         while (!this->closeWindow)
         {
             this->renderer->rendering(this->camera, true);
