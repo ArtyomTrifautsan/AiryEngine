@@ -40,6 +40,7 @@ namespace AiryEngine {
     int Application::start(unsigned int window_width, unsigned int window_height, const char* title)
     {
         this->window = std::make_unique<Window>(title, window_width, window_height);
+        this->camera.set_viewport_size(static_cast<float>(window_width), static_cast<float>(window_height));
 
         this->renderer = std::make_unique<Renderer_OpenGL>(this->resource_manager);
 
@@ -51,9 +52,10 @@ namespace AiryEngine {
         );
 
         this->eventDispatcher.add_event_listener<EventWindowResize>(
-            [](EventWindowResize& event)
+            [&](EventWindowResize& event)
             {
                 //LOG_INFO("[WindowResize] Changed window size to {0}x{1}", event.width, event.height);
+                this->camera.set_viewport_size(event.width, event.height);
             }
         );
 
@@ -61,7 +63,7 @@ namespace AiryEngine {
             [&](EventWindowClose& event)
             {
                 LOG_INFO("[WindowClose]");
-                this->closeWindow = true;
+                close();
             }
         );
 
@@ -92,7 +94,7 @@ namespace AiryEngine {
                         //LOG_INFO("[Key pressed] {} repeated", static_cast<char>(event.key_code));
                     else {}
                         //LOG_INFO("[Key pressed] {}", static_cast<char>(event.key_code));
-                }
+                }   
                 
                 Input::PressKey(event.key_code);
             }
@@ -119,25 +121,8 @@ namespace AiryEngine {
         {
             this->renderer->rendering(this->camera, true);
 
-            //------------------------------------------------------------//
             UIModule::on_window_draw_begin();
-            bool show = true;
-            UIModule::ShowExampleAppDockSpace(&show);
-            ImGui::ShowDemoWindow();
-
-            ImGui::Begin("Backgroun Color Window");
-            ImGui::ColorEdit4("Background Color", this->background_color);
-            ImGui::SliderFloat3("scale", scale, 0.f, 2.f);
-            ImGui::SliderFloat("rotate", &rotate, 0.f, 360.f);
-            ImGui::SliderFloat3("translate", translate, -1.f, 1.f);
-
-            ImGui::SliderFloat3("camera position", camera_position, -10.0f, 10.0f);
-            ImGui::SliderFloat3("camera rotation", camera_rotation, 0.0f, 360.0f);
-            ImGui::Checkbox("Perspective camera", &perspective_camera);
-            ImGui::End();
-            //------------------------------------------------------------//
             on_ui_draw();
-
             UIModule::on_window_draw_end();
 
 
@@ -157,6 +142,11 @@ namespace AiryEngine {
     {
         size_t found = executable_path.find_last_of("/\\");
         this->path_to_executable = executable_path.substr(0, found);
+    }
+
+    void Application::close()
+    {
+        this->closeWindow = true;
     }
 
 }

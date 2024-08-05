@@ -22,8 +22,18 @@ namespace AiryEngine {
         void set_rotation(const glm::vec3& rotation);
         void set_position_rotation(const glm::vec3& position, const glm::vec3& rotation);
         void set_projection_mode(const ProjectionMode projection_mode);
+
+        void set_far_clip_plane(const float far);
+        void set_near_clip_plane(const float near);
+        void set_viewport_size(const float width, const float height);
+        void set_field_of_view(const float fov);
+
         const glm::mat4 get_view_matrix();
         const glm::mat4 get_projection_matrix() const { return m_projection_matrix; }
+
+        const float get_far_clip_plane() const { return this->far_clip_plane; }
+        const float get_near_clip_plane() const { return this->near_clip_plane; }
+        const float get_field_of_view() const { return this->field_of_view; }
 
         void move_forward(const float delta);
         void move_right(const float delta);
@@ -47,6 +57,11 @@ namespace AiryEngine {
         glm::vec3 m_direction;
         glm::vec3 m_right;
         glm::vec3 m_up;
+        float far_clip_plane { 100.f };
+        float near_clip_plane { 0.1f };
+        float viewport_width { 800.f };
+        float viewport_height { 600.f };
+        float field_of_view { 60.f };
  
         static constexpr glm::vec3 s_world_up{ 0.f, 0.f, 1.f };
         static constexpr glm::vec3 s_world_right{ 0.f, -1.f, 0.f };

@@ -119,6 +119,63 @@ public:
         camera.add_movement_and_rotation(movement_delta, rotation_delta);   
     }
 
+    void setup_dockspace_menu()
+    {
+        static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+        static ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+        window_flags |= ImGuiWindowFlags_NoBackground;
+
+        const ImGuiViewport* viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->WorkPos);
+        ImGui::SetNextWindowSize(viewport->WorkSize);
+        ImGui::SetNextWindowViewport(viewport->ID);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+        ImGui::Begin("DockSpace", nullptr, window_flags);
+        ImGui::PopStyleVar(3);
+
+        ImGuiIO& io = ImGui::GetIO();
+        ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+
+        if (ImGui::BeginMenuBar())
+        {
+            if (ImGui::BeginMenu("File"))
+            {
+                // Disabling fullscreen would allow the window to be moved to the front of other windows,
+                // which we can't undo at the moment without finer window depth/z control.
+                if (ImGui::MenuItem("New Scene...", NULL))
+                {
+
+                }
+
+                if (ImGui::MenuItem("Open Scene...", NULL))
+                {
+
+                }
+
+                if (ImGui::MenuItem("Save Scene...", NULL))
+                {
+
+                }
+                ImGui::Separator();
+                if (ImGui::MenuItem("Exit", NULL))
+                {
+                    close();
+                }
+                
+                ImGui::EndMenu();
+            }
+
+            ImGui::EndMenuBar();
+        }
+
+        ImGui::End();
+    }
+
     virtual void on_mouse_button_pressed(const AiryEngine::MouseButtonCode mouse_button_code, 
                                         const double x_pos, 
                                         const double y_pos, 
@@ -132,6 +189,8 @@ public:
 
     virtual void on_ui_draw() override
     {
+        setup_dockspace_menu();
+
         camera_position[0] = camera.get_camera_position().x;
         camera_position[1] = camera.get_camera_position().y;
         camera_position[2] = camera.get_camera_position().z;
@@ -140,17 +199,37 @@ public:
         camera_rotation[1] = camera.get_camera_rotation().y;
         camera_rotation[2] = camera.get_camera_rotation().z;
 
-        // ImGui::Begin("Editor");
-        // if (ImGui::SliderFloat3("camera position", camera_position, -10.0f, 10.0f))
-        // {
-        //     camera.set_position(glm::vec3(camera_position[0], camera_position[1], camera_position[2]));
-        // }
-        // if (ImGui::SliderFloat3("camera rotation", camera_rotation, 0.0f, 360.0f))
-        // {
-        //     camera.set_rotation(glm::vec3(camera_rotation[0], camera_rotation[1], camera_rotation[2]));
-        // }
-        // ImGui::Checkbox("Perspective camera", &perspective_camera);
-        // ImGui::End();
+        camera_fov = camera.get_field_of_view();
+        camera_near_plane = camera.get_near_clip_plane();
+        camera_far_plane = camera.get_far_clip_plane();
+
+        ImGui::Begin("Editor");
+        if (ImGui::SliderFloat3("camera position", camera_position, -10.0f, 10.0f))
+        {
+            camera.set_position(glm::vec3(camera_position[0], camera_position[1], camera_position[2]));
+        }
+        if (ImGui::SliderFloat3("camera rotation", camera_rotation, 0.0f, 360.0f))
+        {
+            camera.set_rotation(glm::vec3(camera_rotation[0], camera_rotation[1], camera_rotation[2]));
+        }
+        if (ImGui::SliderFloat("camera FOV", &camera_fov, 1.0f, 120.0f))
+        {
+            camera.set_field_of_view(camera_fov);
+        }  
+        if (ImGui::SliderFloat("camera near clip plane", &camera_near_plane, 0.1f, 10.0f))
+        {
+            camera.set_near_clip_plane(camera_near_plane);
+        }  
+        if (ImGui::SliderFloat("camera far clip plane", &camera_far_plane, 1.0f, 100.0f))
+        {
+            camera.set_far_clip_plane(camera_far_plane);
+        }  
+        if (ImGui::Checkbox("Perspective camera", &perspective_camera))
+        {
+            camera.set_projection_mode(perspective_camera ? AiryEngine::Camera::ProjectionMode::Perspective : AiryEngine::Camera::ProjectionMode::Orthographic);
+        }
+
+        ImGui::End();
     }   
 };
 

@@ -1,6 +1,6 @@
 #include "AiryEngineCore/Camera.hpp"
 #include <glm/trigonometric.hpp>
-#include <glm/ext/matrix_transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace AiryEngine {
 
@@ -64,14 +64,15 @@ namespace AiryEngine {
     {
         if (m_projection_mode == ProjectionMode::Perspective)
         {
-            float r = 0.1f;
-            float t = 0.1f;
-            float f = 10;
-            float n = 0.1f;
-            m_projection_matrix = glm::mat4(n / r, 0, 0, 0,
-                                            0, n / t, 0, 0,
-                                            0, 0, (-f - n) / (f - n), -1,
-                                            0, 0, -2 * f * n / (f - n), 0);
+            // float r = 0.1f;
+            // float t = 0.1f;
+            // float f = 10;
+            // float n = 0.1f;
+            // m_projection_matrix = glm::mat4(n / r, 0, 0, 0,
+            //                                 0, n / t, 0, 0,
+            //                                 0, 0, (-f - n) / (f - n), -1,
+            //                                 0, 0, -2 * f * n / (f - n), 0);
+            m_projection_matrix = glm::perspective(glm::radians(this->field_of_view), this->viewport_width / this->viewport_height, this->near_clip_plane, this->far_clip_plane);
         }
         else
         {
@@ -108,6 +109,31 @@ namespace AiryEngine {
     void Camera::set_projection_mode(const ProjectionMode projection_mode)
     {
         m_projection_mode = projection_mode;
+        update_projection_matrix();
+    }
+
+    void Camera::set_far_clip_plane(const float far)
+    {
+        this->far_clip_plane = far;
+        update_projection_matrix();
+    }
+
+    void Camera::set_near_clip_plane(const float near)
+    {
+        this->near_clip_plane = near;
+        update_projection_matrix();
+    }
+
+    void Camera::set_viewport_size(const float width, const float height)
+    {
+        this->viewport_width = width;
+        this->viewport_height = height;
+        update_projection_matrix();
+    }
+
+    void Camera::set_field_of_view(const float fov)
+    {
+        this->field_of_view = fov;
         update_projection_matrix();
     }
 

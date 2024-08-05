@@ -236,7 +236,6 @@ namespace AiryEngine {
         glm::mat4 model_matrix = translate_matrix * rotate_matrix * scale_matrix; 
         this->shader_program->set_matrix4("model_matrix", model_matrix);
 
-        camera.set_projection_mode(perspective_camera ? Camera::ProjectionMode::Perspective : Camera::ProjectionMode::Orthographic);
         this->shader_program->set_matrix4("view_projection_matrix", camera.get_projection_matrix() * camera.get_view_matrix());
 
         draw_vertex_elements(*vao);
