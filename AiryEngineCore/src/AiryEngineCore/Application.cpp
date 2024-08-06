@@ -149,4 +149,34 @@ namespace AiryEngine {
         this->closeWindow = true;
     }
 
+    void Application::set_light_source_position(float position[3])
+    {
+        this->renderer->set_light_source_position(position);
+    }
+    
+    void Application::set_light_source_color(float color[3])
+    {
+        this->renderer->set_light_source_color(color);
+    }
+
+    void Application::set_ambiant_factor(float factor)
+    {
+        this->renderer->set_ambiant_factor(factor);
+    }
+
+    void Application::set_diffuse_factor(float factor)
+    {
+        this->renderer->set_diffuse_factor(factor);
+    }
+
+    void Application::set_specular_factor(float factor)
+    {
+        this->renderer->set_specular_factor(factor);
+    }
+
+    void Application::set_shininess(float shininess)
+    {
+        this->renderer->set_shininess(shininess);
+    }
+
 }

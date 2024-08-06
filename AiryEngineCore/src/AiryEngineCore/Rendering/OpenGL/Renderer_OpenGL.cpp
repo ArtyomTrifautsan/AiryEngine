@@ -9,105 +9,56 @@
 #include "AiryEngineCore/Camera.hpp"
 #include "AiryEngineCore/Log.hpp"
 
-// #define STB_IMAGE_IMPLEMENTATION
-// #define STBI_ONLY_PNG
-// #include "AiryEngineCore/ResourceManaging/stb_image.h"
 
 namespace AiryEngine {
 
+    GLfloat pos_norm_uv[] = {
+        //    position             normal              UV                  index
 
+        // FRONT
+        -1.0f, -1.f, -1.f,    -1.f,  0.f,  0.f,     0.f, 0.f,              // 0
+        -1.0f,  1.f, -1.f,    -1.f,  0.f,  0.f,     1.f, 0.f,              // 1
+        -1.0f,  1.f,  1.f,    -1.f,  0.f,  0.f,     1.f, 1.f,              // 2
+        -1.0f, -1.f,  1.f,    -1.f,  0.f,  0.f,     0.f, 1.f,              // 3
 
+        // BACK                                  
+         1.0f, -1.f, -1.f,     1.f,  0.f,  0.f,     1.f, 0.f,              // 4
+         1.0f,  1.f, -1.f,     1.f,  0.f,  0.f,     0.f, 0.f,              // 5
+         1.0f,  1.f,  1.f,     1.f,  0.f,  0.f,     0.f, 1.f,              // 6
+         1.0f, -1.f,  1.f,     1.f,  0.f,  0.f,     1.f, 1.f,              // 7
 
+        // RIGHT
+        -1.0f,  1.f, -1.f,     0.f,  1.f,  0.f,     0.f, 0.f,              // 8
+         1.0f,  1.f, -1.f,     0.f,  1.f,  0.f,     1.f, 0.f,              // 9
+         1.0f,  1.f,  1.f,     0.f,  1.f,  0.f,     1.f, 1.f,              // 10
+        -1.0f,  1.f,  1.f,     0.f,  1.f,  0.f,     0.f, 1.f,              // 11
 
-    //================================================================================//
-    void generate_circle(unsigned char* data,
-                         const unsigned int width,
-                         const unsigned int height,
-                         const unsigned int center_x,
-                         const unsigned int center_y,
-                         const unsigned int radius,
-                         const unsigned char color_r,
-                         const unsigned char color_g,
-                         const unsigned char color_b)
-    {
-        for (unsigned int x = 0; x < width; ++x)
-        {
-            for (unsigned int y = 0; y < height; ++y)
-            {
-                if ((x - center_x) * (x - center_x) + (y - center_y) * (y - center_y) < radius * radius)
-                {
-                    data[3 * (x + width * y) + 0] = color_r;
-                    data[3 * (x + width * y) + 1] = color_g;
-                    data[3 * (x + width * y) + 2] = color_b;
-                }
-            }
-        }
-    }
+        // LEFT
+        -1.0f, -1.f, -1.f,     0.f, -1.f,  0.f,     1.f, 0.f,              // 12
+         1.0f, -1.f, -1.f,     0.f, -1.f,  0.f,     0.f, 0.f,              // 13
+         1.0f, -1.f,  1.f,     0.f, -1.f,  0.f,     0.f, 1.f,              // 14
+        -1.0f, -1.f,  1.f,     0.f, -1.f,  0.f,     1.f, 1.f,              // 15
 
-    void generate_smile_texture(unsigned char* data,
-                                const unsigned int width,
-                                const unsigned int height)
-    {
-        // background
-        for (unsigned int x = 0; x < width; ++x)
-        {
-            for (unsigned int y = 0; y < height; ++y)
-            {
-                data[3 * (x + width * y) + 0] = 200;
-                data[3 * (x + width * y) + 1] = 191;
-                data[3 * (x + width * y) + 2] = 231;
-            }
-        }
+        // TOP
+        -1.0f, -1.f,  1.f,     0.f,  0.f,  1.f,     0.f, 0.f,              // 16
+        -1.0f,  1.f,  1.f,     0.f,  0.f,  1.f,     1.f, 0.f,              // 17
+         1.0f,  1.f,  1.f,     0.f,  0.f,  1.f,     1.f, 1.f,              // 18
+         1.0f, -1.f,  1.f,     0.f,  0.f,  1.f,     0.f, 1.f,              // 19
 
-        // face
-        generate_circle(data, width, height, width * 0.5, height * 0.5, width * 0.4, 255, 255, 0);
-
-        // smile
-        generate_circle(data, width, height, width * 0.5, height * 0.4, width * 0.2, 0, 0, 0);
-        generate_circle(data, width, height, width * 0.5, height * 0.45, width * 0.2, 255, 255, 0);
-
-        // eyes
-        generate_circle(data, width, height, width * 0.35, height * 0.6, width * 0.07, 255, 0, 255);
-        generate_circle(data, width, height, width * 0.65, height * 0.6, width * 0.07, 0, 0, 255);
-    }
-    //================================================================================//
-
-
-    GLfloat positions_colors2[] = {
-         1.0f, -0.5f, -0.5f,     1.0f, 1.0f, 0.0f,   1.0f, 0.0f,
-         1.0f,  0.5f, -0.5f,     0.0f, 1.0f, 1.0f,   0.0f, 0.0f,
-         1.0f, -0.5f,  0.5f,     1.0f, 0.0f, 1.0f,   1.0f, 1.0f,
-         1.0f,  0.5f,  0.5f,     1.0f, 0.0f, 0.0f,   0.0f, 1.0f,
-
-        -1.0f, -0.5f, -0.5f,     1.0f, 1.0f, 0.0f,   1.0f, 0.0f,
-        -1.0f,  0.5f, -0.5f,     0.0f, 1.0f, 1.0f,   0.0f, 0.0f,
-        -1.0f, -0.5f,  0.5f,     1.0f, 0.0f, 1.0f,   1.0f, 1.0f,
-        -1.0f,  0.5f,  0.5f,     1.0f, 0.0f, 0.0f,   0.0f, 1.0f
+         // BOTTOM
+         -1.0f, -1.f, -1.f,    0.f,  0.f, -1.f,     0.f, 1.f,              // 20
+         -1.0f,  1.f, -1.f,    0.f,  0.f, -1.f,     1.f, 1.f,              // 21
+          1.0f,  1.f, -1.f,    0.f,  0.f, -1.f,     1.f, 0.f,              // 22
+          1.0f, -1.f, -1.f,    0.f,  0.f, -1.f,     0.f, 0.f,              // 23
     };
 
-    // GLint indices[] = {
-    //     0, 1, 2, 3, 2, 1
-    // };
-
-    // GLfloat positions_colors2[] = {
-    //      0.0f, -0.5f, -0.5f,     1.0f, 1.0f, 0.0f,
-    //      0.0f,  0.5f, -0.5f,     0.0f, 1.0f, 1.0f,
-    //      0.0f, -0.5f,  0.5f,     1.0f, 0.0f, 1.0f,
-    //      0.0f,  0.5f,  0.5f,     1.0f, 0.0f, 0.0f,
-
-    //     -1.0f, -0.5f, -0.5f,     1.0f, 1.0f, 0.0f,
-    //     -1.0f,  0.5f, -0.5f,     0.0f, 1.0f, 1.0f,
-    //     -1.0f, -0.5f,  0.5f,     1.0f, 0.0f, 1.0f,
-    //     -1.0f,  0.5f,  0.5f,     1.0f, 0.0f, 0.0f,
-    // };
-
     GLint indices[] = {
-        0, 1, 2, 3, 2, 1,
-        4, 5, 6, 7, 6, 5,
-        4, 0, 2, 4, 6, 2,
-        5, 1, 3, 5, 7, 3,
-        7, 3, 2, 7, 6, 2,
-        4, 0, 1, 4, 5, 1
+         0,  1,  2,  2,  3,  0, // front
+         4,  5,  6,  6,  7,  4, // back
+         8,  9, 10, 10, 11,  8, // right
+        12, 13, 14, 14, 15, 12, // left
+        16, 17, 18, 18, 19, 16, // top
+        20, 21, 22, 22, 23, 20  // bottom
     };
 
     float scale[3] = { 1.0f, 1.0f, 1.0f };
@@ -115,6 +66,15 @@ namespace AiryEngine {
     float translate[3] = { 0.0f, 0.0f, 0.0f };
 
     float background_color[4] = {0.33f, 0.33f, 0.33f, 0.f};
+
+    std::array<glm::vec3, 6> cubes_positions = {
+        glm::vec3(-2.f, -2.f, -4.f),
+        glm::vec3(-5.f,  0.f,  3.f),
+        glm::vec3(-8.f,  0.f,  3.f),
+        glm::vec3( 2.f,  1.f, -2.f),
+        glm::vec3( 4.f, -3.f,  3.f),
+        glm::vec3( 1.f, -7.f, -1.f),
+    };
 
     bool Renderer_OpenGL::init(GLFWwindow* window)
     {
@@ -151,8 +111,14 @@ namespace AiryEngine {
 
         this->resource_manager = resource_manager;
 
-        this->shader_program = this->resource_manager->load_shaders("DefaultShaders", "Resources/Shaders/vertex_shader.txt", "Resources/Shaders/fragment_shader.txt");
-        if (!shader_program->is_compiled()) 
+        this->default_shader_program = this->resource_manager->load_shaders("default_shaders", "Resources/Shaders/default_vertex_shader.txt", "Resources/Shaders/default_fragment_shader.txt");
+        if (!this->default_shader_program->is_compiled()) 
+        {
+            LOG_CRITICAL("Failed to compile Shader Program");
+        }
+
+        this->light_source_shader_program = this->resource_manager->load_shaders("light_source_shaders", "Resources/Shaders/light_source_vertex_shader.txt", "Resources/Shaders/light_source_fragment_shader.txt");
+        if (!this->light_source_shader_program->is_compiled()) 
         {
             LOG_CRITICAL("Failed to compile Shader Program");
         }
@@ -163,46 +129,20 @@ namespace AiryEngine {
             ShaderDataType::Float3,
             ShaderDataType::Float2
         };
-        this->positions_colors_vbo = std::make_unique<VertexBuffer>(positions_colors2, sizeof(positions_colors2), bufferLayout_vec3_vec3_vec2);
-        this->vao = std::make_unique<VertexArray>();
-        this->index_buffer = std::make_unique<IndexBuffer>(indices, sizeof(indices) / sizeof(GLuint));
+        this->cube_positions_vbo = std::make_unique<VertexBuffer>(pos_norm_uv, sizeof(pos_norm_uv), bufferLayout_vec3_vec3_vec2);
+        this->cube_vao = std::make_unique<VertexArray>();
+        this->cube_index_buffer = std::make_unique<IndexBuffer>(indices, sizeof(indices) / sizeof(GLuint));
 
-        vao->add_vertex_buffer(*positions_colors_vbo);
-        vao->set_index_buffer(*index_buffer);
+        cube_vao->add_vertex_buffer(*this->cube_positions_vbo);
+        cube_vao->set_index_buffer(*this->cube_index_buffer);
 
         this->dog_texture = this->resource_manager->load_texture("Resources/Textures/dog.png");
-        // const unsigned int width = 1000;
-        // const unsigned int height = 1000;
-        // const unsigned int channels = 3;
-        // auto* pixels = new unsigned char[width * height * channels];  
-        // generate_smile_texture(pixels, width, height);
-        // this->dog_texture = std::make_shared<Texture2D>(pixels, width, height, channels);
         this->dog_texture->bind(0);
-
-
-
-
-
-        // this->dog_texture = this->resource_manager->load_texture("Resources/Textures/dog.png");
-        // glCreateTextures(GL_TEXTURE_2D, 1, &this->texture_handle); 
-        // glTextureStorage2D(this->texture_handle, 1, GL_RGB8, dog_texture.width, dog_texture.height);
-        // glTextureSubImage2D(this->texture_handle, 0, 0, 0, dog_texture.width, dog_texture.height, GL_RGBA, GL_UNSIGNED_BYTE, dog_texture.pixels);
-
-        // glCreateTextures(GL_TEXTURE_2D, 1, &this->texture_handle); 
-        // glTextureStorage2D(this->texture_handle, 1, GL_RGB8, width, height);
-        // glTextureSubImage2D(this->texture_handle, 0, 0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-
-        // glTextureParameteri(this->texture_handle, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        // glTextureParameteri(this->texture_handle, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        // glTextureParameteri(this->texture_handle, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        // glTextureParameteri(this->texture_handle, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        // glBindTextureUnit(0, texture_handle);
     }
 
     Renderer_OpenGL::~Renderer_OpenGL()
     {
-        // glDeleteTextures(1, &this->texture_handle);
+        
     }
 
     void Renderer_OpenGL::rendering(Camera& camera, bool perspective_camera)
@@ -215,8 +155,38 @@ namespace AiryEngine {
         );
         clear();
 
-        this->shader_program->bind();
+        this->default_shader_program->bind();
 
+        // glm::mat4 scale_matrix(scale[0], 0,        0,        0,
+        //                        0,        scale[1], 0,        0,
+        //                        0,        0,        scale[2], 0,
+        //                        0,        0,        0,        1);
+            
+        // float rotate_in_radians = glm::radians(rotate);
+        // glm::mat4 rotate_matrix( cos(rotate_in_radians), sin(rotate_in_radians), 0, 0,
+        //                         -sin(rotate_in_radians), cos(rotate_in_radians), 0, 0,
+        //                          0,                      0,                      1, 0,
+        //                          0,                      0,                      0, 1);
+        
+        // glm::mat4 translate_matrix(1,            0,            0,            0,
+        //                            0,            1,            0,            0,
+        //                            0,            0,            1,            0,  
+        //                            translate[0], translate[1], translate[2], 1);
+
+        // glm::mat4 model_matrix = translate_matrix * rotate_matrix * scale_matrix; 
+        // this->default_shader_program->set_matrix4("model_matrix", model_matrix);
+        this->default_shader_program->set_matrix4("view_projection_matrix", camera.get_projection_matrix() * camera.get_view_matrix());
+        this->default_shader_program->set_vec3("camera_position", camera.get_camera_position());
+        this->default_shader_program->set_vec3("light_position", glm::vec3(this->light_source_position[0], this->light_source_position[1], this->light_source_position[2]));
+        this->default_shader_program->set_vec3("light_color", glm::vec3(this->light_source_color[0], this->light_source_color[1], this->light_source_color[2]));
+        this->default_shader_program->set_float("ambient_factor", this->ambiant_factor);
+        this->default_shader_program->set_float("diffuse_factor", this->diffuse_factor);
+        this->default_shader_program->set_float("specular_factor", this->specular_factor);
+        this->default_shader_program->set_float("shininess", this->shininess);
+        // draw_vertex_elements(*cube_vao);
+
+        // Вообще для каждого объекта нужно делать свою матрицу поворота и матрицу скалирования,
+        // но это временное решение
         glm::mat4 scale_matrix(scale[0], 0,        0,        0,
                                0,        scale[1], 0,        0,
                                0,        0,        scale[2], 0,
@@ -227,18 +197,27 @@ namespace AiryEngine {
                                 -sin(rotate_in_radians), cos(rotate_in_radians), 0, 0,
                                  0,                      0,                      1, 0,
                                  0,                      0,                      0, 1);
-        
-        glm::mat4 translate_matrix(1,            0,            0,            0,
+        for (const glm::vec3& current_position : cubes_positions)
+        {
+            glm::mat4 translate_matrix(1,            0,            0,            0,
                                    0,            1,            0,            0,
+                                   0,            0,            1,            0,  
+                                   current_position[0], current_position[1], current_position[2], 1);
+            glm::mat4 model_matrix = translate_matrix * rotate_matrix * scale_matrix;
+            this->default_shader_program->set_matrix4("model_matrix", model_matrix);
+
+            draw_vertex_elements(*cube_vao);
+        }
+
+        this->light_source_shader_program->bind();
+        glm::mat4 light_source_model_matrix(1,            0,            0,            0,
+                                   0,            1,            0,            0, 
                                    0,            0,            1,            0, 
-                                   translate[0], translate[1], translate[2], 1);
-
-        glm::mat4 model_matrix = translate_matrix * rotate_matrix * scale_matrix; 
-        this->shader_program->set_matrix4("model_matrix", model_matrix);
-
-        this->shader_program->set_matrix4("view_projection_matrix", camera.get_projection_matrix() * camera.get_view_matrix());
-
-        draw_vertex_elements(*vao);
+                                   light_source_position[0], light_source_position[1], light_source_position[2], 1);
+        this->light_source_shader_program->set_matrix4("model_matrix", light_source_model_matrix);
+        this->light_source_shader_program->set_matrix4("view_projection_matrix", camera.get_projection_matrix() * camera.get_view_matrix());
+        this->light_source_shader_program->set_vec3("light_color", glm::vec3(this->light_source_color[0], this->light_source_color[1], this->light_source_color[2]));
+        draw_vertex_elements(*cube_vao);
     }
 
     void Renderer_OpenGL::draw_vertex_elements(const VertexArray& vertex_array)
@@ -267,5 +246,39 @@ namespace AiryEngine {
     const char* Renderer_OpenGL::get_renderer_str() { return reinterpret_cast<const char*>(glGetString(GL_RENDERER)); }
     
     const char* Renderer_OpenGL::get_version_str() { return reinterpret_cast<const char*>(glGetString(GL_VERSION)); }
+
+    void Renderer_OpenGL::set_light_source_position(float position[3])
+    {
+        this->light_source_position[0] = position[0];
+        this->light_source_position[1] = position[1];
+        this->light_source_position[2] = position[2];
+    }
+    
+    void Renderer_OpenGL::set_light_source_color(float color[3])
+    {
+        this->light_source_color[0] = color[0];
+        this->light_source_color[1] = color[1];
+        this->light_source_color[2] = color[2];
+    }
+
+    void Renderer_OpenGL::set_ambiant_factor(float factor)
+    {
+        this->ambiant_factor = factor;
+    }
+
+    void Renderer_OpenGL::set_diffuse_factor(float factor)
+    {
+        this->diffuse_factor = factor;
+    }
+
+    void Renderer_OpenGL::set_specular_factor(float factor)
+    {
+        this->specular_factor = factor;
+    }
+
+    void Renderer_OpenGL::set_shininess(float shininess)
+    {
+        this->shininess = shininess;
+    }
 
 }

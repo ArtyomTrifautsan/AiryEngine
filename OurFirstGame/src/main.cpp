@@ -13,6 +13,13 @@ class GameApplication : public AiryEngine::Application
     double m_initial_mouse_pos_x = 0.0;
     double m_initial_mouse_pos_y = 0.0;
 
+    float camera_position[3] = { 0.0f, 0.0f, 1.0f };
+    float camera_rotation[3] = { 0.0f, 0.0f, 0.0f };
+    bool perspective_camera = true;
+    float camera_fov = 60.f;
+    float camera_near_plane = 0.1f;
+    float camera_far_plane = 100.f;
+
 public:
     GameApplication(const std::string& executable_path) : AiryEngine::Application(executable_path)
     {
@@ -203,7 +210,27 @@ public:
         camera_near_plane = camera.get_near_clip_plane();
         camera_far_plane = camera.get_far_clip_plane();
 
+        // Editor GUI
         ImGui::Begin("Editor");
+
+        ImGui::SliderFloat3("light source position", light_source_position, -10.0f, 10.0f);
+        set_light_source_position(light_source_position);
+
+        ImGui::ColorEdit3("light source color", light_source_color);
+        set_light_source_color(light_source_color);
+
+        ImGui::SliderFloat("ambiant factor", &ambiant_factor, 0.0f, 1.0f);
+        set_ambiant_factor(ambiant_factor);
+
+        ImGui::SliderFloat("diffuse factor", &diffuse_factor, 0.0f, 1.0f);
+        set_diffuse_factor(diffuse_factor);
+
+        ImGui::SliderFloat("specular factor", &specular_factor, 0.0f, 1.0f);
+        set_specular_factor(specular_factor);
+
+        ImGui::SliderFloat("shininess", &shininess, 1.0f, 128.0f);
+        set_shininess(shininess);
+
         if (ImGui::SliderFloat3("camera position", camera_position, -10.0f, 10.0f))
         {
             camera.set_position(glm::vec3(camera_position[0], camera_position[1], camera_position[2]));

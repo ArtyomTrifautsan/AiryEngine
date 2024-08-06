@@ -32,6 +32,13 @@ namespace AiryEngine {
         static void enable_depth_testing();
         static void disable_depth_testing();
 
+        void set_light_source_position(float light_source_position[3]);     // Temporary solution
+        void set_light_source_color(float light_source_color[3]);       // Temporary solution
+        void set_ambiant_factor(float factor);       // Temporary solution
+        void set_diffuse_factor(float factor);       // Temporary solution
+        void set_specular_factor(float factor);       // Temporary solution
+        void set_shininess(float shininess);       // Temporary solution
+
         static const char* get_vendor_str();
         static const char* get_renderer_str();
         static const char* get_version_str();
@@ -39,10 +46,18 @@ namespace AiryEngine {
     private:
         GLFWwindow* window;
         std::shared_ptr<ResourceManager> resource_manager;
-        std::shared_ptr<ShaderProgram> shader_program;
-        std::unique_ptr<VertexArray> vao;
-        std::unique_ptr<IndexBuffer> index_buffer;
-        std::unique_ptr<VertexBuffer> positions_colors_vbo;
+        std::shared_ptr<ShaderProgram> default_shader_program;
+        std::shared_ptr<ShaderProgram> light_source_shader_program;
+        std::unique_ptr<VertexArray> cube_vao;
+        std::unique_ptr<IndexBuffer> cube_index_buffer;
+        std::unique_ptr<VertexBuffer> cube_positions_vbo;
+
+        float light_source_position[3] = { 1.f, 0.f, 0.f };     // Temporary solution
+        float light_source_color[3] = { 1.f, 1.f, 1.f };        // Temporary solution
+        float ambiant_factor = 0.1f;        // Temporary solution
+        float diffuse_factor = 1.0f;        // Temporary solution
+        float specular_factor = 0.5f;        // Temporary solution
+        float shininess = 32.0f;        // Temporary solution
 
         std::shared_ptr<Texture2D> dog_texture;
     };

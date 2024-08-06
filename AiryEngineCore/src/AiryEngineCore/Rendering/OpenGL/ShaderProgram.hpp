@@ -20,6 +20,9 @@ namespace AiryEngine {
         static void unbind();
         bool is_compiled() const { return is_shader_compiled; }
         void set_matrix4(const char* name, const glm::mat4& matrix) const;
+        void set_vec3(const char* name, const glm::vec3& vector) const;
+        void set_float(const char* name, const float value) const;
+        void set_int(const char* name, const int value) const;
 
     private:
         unsigned int id = 0;

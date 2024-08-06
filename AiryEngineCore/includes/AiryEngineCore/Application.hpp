@@ -30,16 +30,24 @@ namespace AiryEngine {
                                             const double x_pos, 
                                             const double y_pos, 
                                             const bool pressed) {}
+        
+        void set_light_source_position(float light_source_position[3]);     // Temporary solution
+        void set_light_source_color(float light_source_color[3]);       // Temporary solution
+        void set_ambiant_factor(float factor);       // Temporary solution
+        void set_diffuse_factor(float factor);       // Temporary solution
+        void set_specular_factor(float factor);       // Temporary solution
+        void set_shininess(float shininess);       // Temporary solution
 
         glm::vec2 get_current_cursor_position() const;
 
-        float camera_position[3] = { 0.0f, 0.0f, 1.0f };
-        float camera_rotation[3] = { 0.0f, 0.0f, 0.0f };
-        bool perspective_camera = true;
-        float camera_fov = 60.f;
-        float camera_near_plane = 0.1f;
-        float camera_far_plane = 100.f;
-        Camera camera{glm::vec3(-5, 0, 0)};
+        Camera camera{glm::vec3(-5.f, 0.f, 0.f)};
+
+        float light_source_position[3] = { 0.f, 3.f, 0.f };     // Temporary solution
+        float light_source_color[3] = { 1.f, 1.f, 1.f };        // Temporary solution
+        float ambiant_factor = 0.1f;        // Temporary solution
+        float diffuse_factor = 1.0f;        // Temporary solution
+        float specular_factor = 0.5f;        // Temporary solution
+        float shininess = 32.0f;        // Temporary solution
 
     private:
         std::unique_ptr<class Window> window;
