@@ -95,15 +95,6 @@ namespace AiryEngine {
     {
     }
 
-    VertexBuffer::VertexBuffer(const void* data, const size_t size, BufferLayout buffer_layout):
-        bufferLayout(std::move(buffer_layout))
-    {
-        glGenBuffers(1, &this->id);
-        glBindBuffer(GL_ARRAY_BUFFER, this->id);
-        const EUsage usage = VertexBuffer::EUsage::Static;
-        glBufferData(GL_ARRAY_BUFFER, size, data, usage_to_GLenum(usage));
-    }
-
     VertexBuffer::VertexBuffer(const void* data, const size_t size, BufferLayout buffer_layout, const EUsage usage):
         bufferLayout(std::move(buffer_layout))
     {
@@ -111,6 +102,14 @@ namespace AiryEngine {
         glBindBuffer(GL_ARRAY_BUFFER, this->id);
         glBufferData(GL_ARRAY_BUFFER, size, data, usage_to_GLenum(usage));
     }
+
+    // VertexBuffer::VertexBuffer(std::vector<float>& data, const size_t size, BufferLayout buffer_layout, const EUsage usage):
+    //     bufferLayout(std::move(buffer_layout))
+    // {
+    //     glGenBuffers(1, &this->id);
+    //     glBindBuffer(GL_ARRAY_BUFFER, this->id);
+    //     glBufferData(GL_ARRAY_BUFFER, size, &data.front(), usage_to_GLenum(usage));
+    // }
 
     VertexBuffer::~VertexBuffer() { glDeleteBuffers(1, &this->id); }
 
@@ -132,4 +131,10 @@ namespace AiryEngine {
 
     void VertexBuffer::unbind() { glBindBuffer(GL_ARRAY_BUFFER, 0); }
 
+
+    // void VertexBuffer::convert_data(int* intermediate_data_buffer, unsigned int intermediate_data_buffer_size, std::shared_ptr<std::vector<VertexData>> data)
+    // {
+    //     int size_data;
+    //     size_data = sizeof(*data);
+    // }
 }

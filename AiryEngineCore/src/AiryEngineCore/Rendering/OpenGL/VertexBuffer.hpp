@@ -2,8 +2,11 @@
 
 #include <iostream>     // is included for using size_t
 #include <vector>
+#include <memory>
 
 namespace AiryEngine {
+
+    struct VertexData;
 
     enum class ShaderDataType
     {
@@ -66,8 +69,8 @@ namespace AiryEngine {
             Stream
         };
 
-        VertexBuffer(const void* data, const size_t size, BufferLayout buffer_layout);
-        VertexBuffer(const void* data, const size_t size, BufferLayout buffer_layout, const EUsage usage);
+        VertexBuffer(const void* data, const size_t size, BufferLayout buffer_layout, const EUsage usage = VertexBuffer::EUsage::Static);
+        //VertexBuffer(std::vector<float>& data, const size_t size, BufferLayout buffer_layout, const EUsage usage = VertexBuffer::EUsage::Static);
         ~VertexBuffer();
 
         VertexBuffer& operator=(const VertexBuffer&) = delete;
@@ -83,6 +86,8 @@ namespace AiryEngine {
     private:
         unsigned int id = 0;
         BufferLayout bufferLayout;
+
+        void convert_data(int* intermediate_data_buffer, unsigned int intermediate_data_buffer_size, std::shared_ptr<std::vector<VertexData>> data);
     };
 
 }

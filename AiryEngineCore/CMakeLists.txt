@@ -22,6 +22,8 @@ set(ENGINE_PRIVATE_INCLUDES
     src/AiryEngineCore/Rendering/OpenGL/IndexBuffer.hpp
     src/AiryEngineCore/Rendering/OpenGL/VertexArray.hpp
     src/AiryEngineCore/Rendering/OpenGL/Texture2D.hpp
+    src/AiryEngineCore/Rendering/OpenGL/Model3D.hpp
+    src/AiryEngineCore/Rendering/OpenGL/Mesh.hpp
 )
 
 set(ENGINE_PRIVATE_SOURCES
@@ -37,6 +39,8 @@ set(ENGINE_PRIVATE_SOURCES
     src/AiryEngineCore/Rendering/OpenGL/IndexBuffer.cpp
     src/AiryEngineCore/Rendering/OpenGL/VertexArray.cpp
     src/AiryEngineCore/Rendering/OpenGL/Texture2D.cpp
+    src/AiryEngineCore/Rendering/OpenGL/Model3D.cpp
+    src/AiryEngineCore/Rendering/OpenGL/Mesh.cpp
 )
 
 set(ENGINE_ALL_SOURCES
@@ -68,6 +72,7 @@ target_link_libraries(${ENGINE_PROJECT_NAME} PRIVATE glad)
 
 add_subdirectory(../external/glm ${CMAKE_CURRENT_BINARY_DIR}/glm)
 target_link_libraries(${ENGINE_PROJECT_NAME} PRIVATE glm)
+
 
 
 set(IMGUI_INCLUDES

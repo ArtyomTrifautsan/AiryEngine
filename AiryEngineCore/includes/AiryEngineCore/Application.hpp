@@ -8,13 +8,14 @@
 
 namespace AiryEngine {
 
+    class Model3D;
+    class Texture2D;
+
     class Application
     {
     public:
-        //Application();
         Application(const std::string& executable_path);  
         virtual ~Application();
-        // void init(const std::string& executable_path);
         void set_executable_path(const std::string& executable_path);
 
         Application(const Application&) = delete;
@@ -38,6 +39,10 @@ namespace AiryEngine {
         void set_specular_factor(float factor);       // Temporary solution
         void set_shininess(float shininess);       // Temporary solution
 
+        std::shared_ptr<Model3D> create_model(std::shared_ptr<std::vector<float>> vertices, 
+                                    std::shared_ptr<std::vector<unsigned int>> indices, 
+                                    std::shared_ptr<Texture2D> texture);
+
         glm::vec2 get_current_cursor_position() const;
 
         Camera camera{glm::vec3(-5.f, 0.f, 0.f)};
@@ -51,12 +56,13 @@ namespace AiryEngine {
 
     private:
         std::unique_ptr<class Window> window;
-        std::unique_ptr<class Renderer_OpenGL> renderer;
         std::shared_ptr<class ResourceManager> resource_manager;
 
         EventDispatcher eventDispatcher;
         bool closeWindow = false;
         float background_color[4] = {0.33f, 0.33f, 0.33f, 0.f};
+
+        std::vector<std::shared_ptr<Model3D>> models;
 
         std::string path_to_executable;
     };

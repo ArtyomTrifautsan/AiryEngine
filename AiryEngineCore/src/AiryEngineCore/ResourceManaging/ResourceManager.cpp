@@ -12,6 +12,7 @@
 
 #include "AiryEngineCore/Log.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
+#include "AiryEngineCore/Rendering/OpenGL/Mesh.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -21,6 +22,8 @@ namespace AiryEngine {
     ResourceManager::ResourceManager(const std::string& executable_path)
     {
         this->path_to_executable = executable_path;
+
+        // Assimp::Importer importer;
     }
 
     std::string ResourceManager::get_file_string(const std::string& relative_file_path)
@@ -84,7 +87,7 @@ namespace AiryEngine {
         return nullptr;
     }
 
-    std::shared_ptr<Texture2D> ResourceManager::load_texture(const std::string& texture_path)
+    std::shared_ptr<Texture2D> ResourceManager::load_texture2D(const std::string& texture_name, const std::string& texture_path)
     {
         int width = 0;
         int height = 0;
@@ -102,8 +105,194 @@ namespace AiryEngine {
         // LOG_INFO("  width: {}", width);
         // LOG_INFO("  height: {}", height);
         // LOG_INFO("  channels: {}", channels);
-        std::shared_ptr<Texture2D> new_texture = std::make_shared<Texture2D>(pixels, width, height, channels);
+        std::shared_ptr<Texture2D>& new_texture = this->textures.emplace(texture_name, std::make_shared<Texture2D>(pixels, width, height, channels)).first->second;
+        
+        //std::shared_ptr<Texture2D> new_texture = std::make_shared<Texture2D>(pixels, width, height, channels);
 
         return new_texture;
+    }
+
+    std::shared_ptr<Texture2D> ResourceManager::get_texture2D(const std::string& texture_name)
+    {
+        Texture2DMap::const_iterator it = this->textures.find(texture_name);
+        if (it != this->textures.end())
+        {
+            return it->second;
+        }
+        LOG_CRITICAL("Can't find the texture: {}", texture_name);
+        //std::cerr << "Can't find the shader program: " << shaderName << std::endl;
+        return nullptr;
+    }
+
+    std::shared_ptr<Model3D> ResourceManager::load_model3D(const std::string& model_name, const std::string& model_path, std::shared_ptr<Texture2D> texture)
+    {
+        //LOG_INFO("load_model method was runned");
+
+        std::shared_ptr<Model3D> new_model = std::make_shared<Model3D>(); 
+
+        std::shared_ptr<std::vector<float>> vertices = std::make_shared<std::vector<float>>(); 
+        std::shared_ptr<std::vector<unsigned int>> indices = std::make_shared<std::vector<unsigned int>>();
+        std::shared_ptr<TextureData> temp_texture_data = std::make_shared<TextureData>();
+        load_OBJ(std::string(this->path_to_executable + "/" + model_path), vertices, indices);
+        std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(vertices, indices, temp_texture_data, texture);
+        //LOG_INFO("New mesh was created succeessfully");
+
+        new_model->add_mesh(mesh);
+        // LOG_INFO("New mesh was added to list succeessfully");
+
+        // LOG_INFO("load_model method completed the work succeessfully");
+
+        return new_model;
+    }
+
+    std::shared_ptr<Model3D> ResourceManager::get_model3D(const std::string& model_name)
+    {
+        
+    }
+
+    void ResourceManager::load_OBJ(const std::string& full_path_to_model, 
+                                    std::shared_ptr<std::vector<float>> vertices, 
+                                    std::shared_ptr<std::vector<unsigned int>> indices)
+    {
+        LOG_INFO("load_OBJ method was runned");
+
+        std::vector<std::vector<float>> vertex_coords;
+        std::vector<std::vector<float>> normals;
+        std::vector<std::vector<float>> texture_coords;
+
+        std::string line;
+        std::vector<std::string> line_vector;
+        std::ifstream file(full_path_to_model); // окрываем файл для чтения
+        if (file.is_open())
+        {
+            LOG_INFO("3D model loading: File opened {}", full_path_to_model);
+
+            int i = 0;
+            while (std::getline(file, line))
+            {
+                //std::cout << i++ <<": " << line << std::endl;
+                line_vector = split_string(line, " ");
+
+                if (line_vector[0] == "mtllib")
+                {
+                    LOG_INFO("Material file: {}", line_vector[1]);
+                }
+                else if (line_vector[0] == "v")
+                {
+                    LOG_INFO("Vertex: ({0}, {1}, {2})", line_vector[1], line_vector[2], line_vector[3]);
+                    vertex_coords.push_back({std::stof(line_vector[1]), std::stof(line_vector[2]), std::stof(line_vector[3])});
+                }
+                else if (line_vector[0] == "vn")
+                {
+                    LOG_INFO("Vertex normal: ({0}, {1}, {2})", line_vector[1], line_vector[2], line_vector[3]);
+                    normals.push_back({std::stof(line_vector[1]), std::stof(line_vector[2]), std::stof(line_vector[3])});
+                }
+                else if (line_vector[0] == "vt")
+                {
+                    LOG_INFO("Vertex texture: ({0}, {1})", line_vector[1], line_vector[2]);
+                    texture_coords.push_back({std::stof(line_vector[1]), std::stof(line_vector[2])});
+                }
+                else if (line_vector[0] == "f")
+                {
+                    LOG_INFO("Poligon data");
+
+                    for (int i = 1; i <= 3; i++)
+                    {
+                        std::vector<std::string> _vertex = split_string(line_vector[i], "/");
+                        LOG_INFO("  Vertex {3} data: {0}/{1}/{2}", _vertex[0], _vertex[1], _vertex[2], i);
+                        LOG_INFO("  Vertex {3} pos: {0}/{1}/{2}", 
+                                    vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[0]) - 1)][0], 
+                                    vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[0]) - 1)][1], 
+                                    vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[0]) - 1)][2], i);
+                        vertices->push_back(vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[0]) - 1)][0]);
+                        vertices->push_back(vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[0]) - 1)][1]);
+                        vertices->push_back(vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[0]) - 1)][2]);
+                        
+                        LOG_INFO("  Vertex {3} normals: {0}/{1}/{2}", 
+                                    normals[static_cast<unsigned int>(std::stoul(_vertex[2]) - 1)][0], 
+                                    normals[static_cast<unsigned int>(std::stoul(_vertex[2]) - 1)][1], 
+                                    normals[static_cast<unsigned int>(std::stoul(_vertex[2]) - 1)][2], i);
+                        vertices->push_back(vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[2]) - 1)][0]);
+                        vertices->push_back(vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[2]) - 1)][1]);
+                        vertices->push_back(vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[2]) - 1)][2]);   
+                        
+                        LOG_INFO("  Vertex {2} texture coords: {0}/{1}", 
+                                    texture_coords[static_cast<unsigned int>(std::stoul(_vertex[1]) - 1)][0], 
+                                    texture_coords[static_cast<unsigned int>(std::stoul(_vertex[1]) - 1)][1], i);
+                        vertices->push_back(vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[1]) - 1)][0]);
+                        vertices->push_back(vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[1]) - 1)][1]);
+
+                        // VertexData vertex_data = VertexData(
+                        //     vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[0]) - 1)],
+                        //     normals[static_cast<unsigned int>(std::stoul(_vertex[2]) - 1)],
+                        //     texture_coords[static_cast<unsigned int>(std::stoul(_vertex[1]) - 1)]
+                        // );
+                        //(*vertices).push_back(vertex_data); 
+                        indices->push_back(static_cast<unsigned int>(indices->size()));
+                    }
+                }
+            }
+        } 
+        else 
+        {
+            LOG_CRITICAL("Can't open the file with 3D model: {}", full_path_to_model);
+        }
+
+        LOG_INFO("load_OBJ method end");
+        file.close();     // закрываем файл
+    }
+
+    std::vector<std::string> ResourceManager::split_string(std::string& str, const std::string separator)
+    {
+        std::vector<std::string> output_vector;
+        int str_len = str.size();
+        int sep_len = separator.size();
+
+        if (str_len < sep_len)
+        {
+
+        }
+
+        std::string word = "";
+        for (int i = 0; i < str_len; i++)
+        {   
+            std::string checking_part_of_string;
+            // Если оставшаяся часть строки меньше чем сепаратор
+            if (sep_len > str_len - i + 1)
+            {
+                sep_len = str_len - i + 1;
+                for (int j = 0; j < sep_len; j++)
+                    checking_part_of_string += str[i+j];
+
+                word += checking_part_of_string;
+                output_vector.push_back(word);
+                break;
+            }
+
+            for (int j = 0; j < sep_len; j++)
+                checking_part_of_string += str[i+j];
+            
+            if (checking_part_of_string == separator)
+            {
+                if (word != "")
+                {
+                    output_vector.push_back(word);
+                    word = "";
+                }
+            }
+            else
+            {
+                word += str[i];
+            }
+        }
+
+        // Также нужно добавить последнее слово после сепаратора
+        if (word != "")
+        {
+            output_vector.push_back(word);
+            word = "";
+        }
+
+        return output_vector;
     }
 }
