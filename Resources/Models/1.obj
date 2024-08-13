@@ -1,6 +1,6 @@
 # Blender 4.1.1
 # www.blender.org
-mtllib untitled.mtl
+mtllib 1.mtl
 o Cone.003
 v -0.072483 5.909857 -1.526304
 v 0.221293 5.909857 -1.497370

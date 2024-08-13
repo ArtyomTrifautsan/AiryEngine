@@ -54,8 +54,8 @@ namespace AiryEngine {
 
         m_direction = glm::normalize(euler_rotate_matrix * s_world_forward);
         m_right = glm::normalize(euler_rotate_matrix * s_world_right);
-        //m_up = glm::normalize(euler_rotate_matrix * s_world_up);
-        m_up = glm::normalize(glm::cross(m_right, m_direction));
+        m_up = glm::normalize(euler_rotate_matrix * s_world_up);
+        //m_up = glm::normalize(glm::cross(m_right, m_direction));
         
         m_view_matrix = glm::lookAt(m_position, m_position + m_direction, m_up);
     }

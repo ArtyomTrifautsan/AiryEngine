@@ -213,7 +213,7 @@ public:
         // Editor GUI
         ImGui::Begin("Editor");
 
-        ImGui::SliderFloat3("light source position", light_source_position, -10.0f, 10.0f);
+        ImGui::SliderFloat3("light source position", light_source_position, -50.0f, 50.0f);
         set_light_source_position(light_source_position);
 
         ImGui::ColorEdit3("light source color", light_source_color);

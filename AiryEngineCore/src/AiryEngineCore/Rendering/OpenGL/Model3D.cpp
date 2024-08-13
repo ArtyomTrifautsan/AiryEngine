@@ -21,11 +21,11 @@ namespace AiryEngine {
             add_mesh(current_mesh);
     }
 
-    void Model3D::draw(std::shared_ptr<ShaderProgram> shader_program, Camera& camera, const glm::vec3& light_source_position, const glm::vec3& light_source_color)
-    {
-        for (std::shared_ptr<Mesh> current_mesh : this->meshes) 
-            current_mesh->draw(shader_program, camera, light_source_position, light_source_color);
-    }
+    // void Model3D::draw(std::shared_ptr<ShaderProgram> shader_program, Camera& camera, const glm::vec3& light_source_position, const glm::vec3& light_source_color)
+    // {
+    //     for (std::shared_ptr<Mesh> current_mesh : this->meshes) 
+    //         current_mesh->draw(shader_program, camera, light_source_position, light_source_color);
+    // }
 
     void Model3D::set_scale(float scale_x, float scale_y, float scale_z)
     {
@@ -37,11 +37,13 @@ namespace AiryEngine {
             current_mesh->set_scale(scale_x, scale_y, scale_z);
     }
 
-    void Model3D::set_rotate(float angle)
+    void Model3D::set_rotate(float angle_x, float angle_y, float angle_z)
     {
-        this->rotate = angle;
+        this->rotate[0] = angle_x;
+        this->rotate[1] = angle_y;
+        this->rotate[2] = angle_z;
         for (std::shared_ptr<Mesh> current_mesh : this->meshes) 
-            current_mesh->set_rotate(angle);
+            current_mesh->set_rotate(angle_x, angle_y, angle_z);
     }
 
     void Model3D::set_translate(float translate_x, float translate_y, float translate_z)

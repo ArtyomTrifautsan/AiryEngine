@@ -26,6 +26,11 @@ namespace AiryEngine {
                             std::shared_ptr<ShaderProgram> shader_program, 
                             const glm::vec3& light_source_position, 
                             const glm::vec3& light_source_color);
+        static void render_light_model3D(class Camera& camera, 
+                            std::shared_ptr<Model3D> model, 
+                            std::shared_ptr<ShaderProgram> shader_program, 
+                            const glm::vec3& light_source_position, 
+                            const glm::vec3& light_source_color);
 
         static bool init(GLFWwindow* window);  //  Нельзя убирать этот метод, он инициализирует glad в Window.cpp
 
@@ -42,6 +47,11 @@ namespace AiryEngine {
     
     private:
         static void render_mesh(class Camera& camera, 
+                        std::shared_ptr<Mesh> mesh,
+                        std::shared_ptr<ShaderProgram> shader_program, 
+                        const glm::vec3& light_source_position, 
+                        const glm::vec3& light_source_color);
+        static void render_light_mesh(class Camera& camera, 
                         std::shared_ptr<Mesh> mesh,
                         std::shared_ptr<ShaderProgram> shader_program, 
                         const glm::vec3& light_source_position, 

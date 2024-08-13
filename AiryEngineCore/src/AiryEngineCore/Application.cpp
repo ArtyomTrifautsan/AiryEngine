@@ -88,6 +88,9 @@ namespace AiryEngine {
         set_executable_path(executable_path);
 
         this->resource_manager = std::make_shared<ResourceManager>(this->path_to_executable);
+        this->resource_manager->set_shaders_directory("Resources/Shaders");
+        this->resource_manager->set_textures_directory("Resources/Textures");
+        this->resource_manager->set_models_directory("Resources/Models");
     }
 
     Application::~Application() 
@@ -174,28 +177,40 @@ namespace AiryEngine {
             }
         );
 
-        std::shared_ptr<ShaderProgram> default_shader_program = this->resource_manager->load_shaders("default_shaders", "Resources/Shaders/default_vertex_shader.txt", "Resources/Shaders/default_fragment_shader.txt");
+        std::shared_ptr<ShaderProgram> default_shader_program = this->resource_manager->load_shaders("default_shaders", "default_vertex_shader.txt", "default_fragment_shader.txt");
         if (!default_shader_program->is_compiled()) 
         {
             LOG_CRITICAL("Failed to compile Default Shader Program");
         }
 
-        std::shared_ptr<ShaderProgram> light_source_shader_program = this->resource_manager->load_shaders("light_source_shaders", "Resources/Shaders/light_source_vertex_shader.txt", "Resources/Shaders/light_source_fragment_shader.txt");
+        std::shared_ptr<ShaderProgram> light_source_shader_program = this->resource_manager->load_shaders("light_source_shaders", "light_source_vertex_shader.txt", "light_source_fragment_shader.txt");
         if (!light_source_shader_program->is_compiled()) 
         {
             LOG_CRITICAL("Failed to compile Light Shader Program");
         }
 
-        //create_model("Resources/Models/1.obj", "Resources/Textures/dog.png");
-        std::shared_ptr<Texture2D> model_texture = this->resource_manager->load_texture2D("model_texture", "Resources/Textures/dog.png");
-        std::shared_ptr<Model3D> Egor_model = this->resource_manager->load_model3D("first_model", "Resources/Models/1.obj", model_texture);
-        Egor_model->set_translate_x(-5);
+        std::shared_ptr<Texture2D> model_texture = this->resource_manager->load_texture2D("model_texture", "dog.png");
 
+        // Модель Егорки
+        std::shared_ptr<Model3D> Egor_model = this->resource_manager->load_model3D("first_model", "1.obj", model_texture);
+        Egor_model->set_translate_x(-5);
+        Egor_model->set_rotate(90, 0, 0);
+        Egor_model->set_translate(0, 0, -10);
+
+        // Модель фонарика
         std::shared_ptr<std::vector<float>> pnu_ptr = std::make_shared<std::vector<float>>();
         for (int i = 0; i < pos_norm_uv.size(); i++) pnu_ptr->push_back(pos_norm_uv[i]);
         std::shared_ptr<std::vector<unsigned int>> indices_ptr = std::make_shared<std::vector<unsigned int>>();
         for (int i = 0; i < indices.size(); i++) indices_ptr->push_back(indices[i]);
+
         std::shared_ptr<Model3D> cube_model = create_model(pnu_ptr, indices_ptr, model_texture);
+        // cube_model->set_scale(0.1, 0.1, 0.1);
+        
+        // std::shared_ptr<Material> light_material = std::make_shared<Material>();
+        // light_material->ambient_color = glm::vec3(0, 0, 0);
+        // light_material->diffuse_color = glm::vec3(this->light_source_color[0], this->light_source_color[1], this->light_source_color[2]);
+        // light_material->specular_color = glm::vec3(0, 0, 0);
+        // light_material->shininess = 1;
 
         float frame = 0.0;
         Renderer_OpenGL::enable_depth_testing();
@@ -206,10 +221,11 @@ namespace AiryEngine {
             glm::vec3 lsp_vec3 = glm::vec3(this->light_source_position[0], this->light_source_position[1], this->light_source_position[2]);
             glm::vec3 lsc_vec3 = glm::vec3(this->light_source_color[0], this->light_source_color[1], this->light_source_color[2]);
             Renderer_OpenGL::render_model3D(this->camera, Egor_model, default_shader_program, lsp_vec3, lsc_vec3);
-            Renderer_OpenGL::render_model3D(this->camera, cube_model, default_shader_program, lsp_vec3, lsc_vec3);
+            // Renderer_OpenGL::render_model3D(this->camera, cube_model, default_shader_program, lsp_vec3, lsc_vec3);
+            Renderer_OpenGL::render_light_model3D(this->camera, cube_model, light_source_shader_program, lsp_vec3, lsc_vec3);
 
-            //cube_model->set_translate_x(frame);
-            //Egor_model->set_translate_x(-frame);
+            cube_model->set_translate(this->light_source_position[0], this->light_source_position[1], this->light_source_position[2]);
+
             frame += 0.01;
 
             UIModule::on_window_draw_begin();
@@ -227,11 +243,11 @@ namespace AiryEngine {
                                     std::shared_ptr<std::vector<unsigned int>> indices, 
                                     std::shared_ptr<Texture2D> texture)
     {
-        std::shared_ptr<TextureData> temp_texture_data = std::make_shared<TextureData>();
+        std::shared_ptr<Material> temp_material = std::make_shared<Material>();
         
         std::shared_ptr<Model3D> model = std::make_shared<Model3D>();
 
-        std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(vertices, indices, temp_texture_data, texture);
+        std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(vertices, indices, temp_material);
         model->add_mesh(mesh);
 
         return model;
