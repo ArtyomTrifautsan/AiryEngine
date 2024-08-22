@@ -5,25 +5,21 @@
 #include <memory>
 #include <map>
 
-#include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
-#include "AiryEngineCore/Rendering/OpenGL/Texture2D.hpp"
-#include "AiryEngineCore/Rendering/OpenGL/Model3D.hpp"
 
 namespace AiryEngine {
 
-    // struct Texture2D
-    // {
-    //     int width = 0;
-    //     int height = 0;
-    //     int channels = 0;
-    //     unsigned char* pixels;
-    // };
+    class ShaderProgram;
+    class Texture2D;
+    class Model3D;
+    class Mesh;
+    struct Material;
 
     class ResourceManager
     {
     public:
         ResourceManager(const std::string& executable_path);
         //~ResourceManager();
+        void set_executable_path(const std::string& executable_path);
 
         //ResourceManager(const ResourceManager&) = delete;
         //ResourceManager& operator=(const ResourceManager&) = delete;
@@ -36,7 +32,7 @@ namespace AiryEngine {
         std::shared_ptr<Texture2D> load_texture2D(const std::string& texture_name, const std::string& texture_path);
         std::shared_ptr<Texture2D> get_texture2D(const std::string& texture_name);
 
-        std::shared_ptr<Model3D> load_model3D(const std::string& model_name, const std::string& texture_path, std::shared_ptr<Texture2D> texture);
+        std::shared_ptr<Model3D> load_model3D(const std::string& model_name, const std::string& model_path);
         std::shared_ptr<Model3D> get_model3D(const std::string& model_name);
 
         void set_shaders_directory(const std::string& path);

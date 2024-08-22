@@ -7,7 +7,6 @@
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
 
-#include "AiryEngineCore/Rendering/OpenGL/Texture2D.hpp"
 
 namespace AiryEngine {
 
@@ -17,6 +16,7 @@ namespace AiryEngine {
     class VertexArray;
     class VertexBuffer;
     class IndexBuffer;
+    class Texture2D;
 
 
     //typedef std::map<std::string, std::shared_ptr<Material>> MaterialsMap;

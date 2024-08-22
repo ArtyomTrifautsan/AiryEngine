@@ -1,9 +1,10 @@
+#include "AiryEngineCore/Window.hpp"
+
 #include <memory>
 #include <iostream>
 
 #include <GLFW/glfw3.h>
 
-#include "AiryEngineCore/Window.hpp"
 #include "AiryEngineCore/Log.hpp"
 #include "AiryEngineCore/Modules/UIModule.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.hpp"

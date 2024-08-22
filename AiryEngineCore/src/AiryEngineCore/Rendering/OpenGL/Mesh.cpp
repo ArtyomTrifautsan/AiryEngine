@@ -11,6 +11,7 @@
 #include "AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/IndexBuffer.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/VertexArray.hpp"
+#include "AiryEngineCore/Rendering/OpenGL/Texture2D.hpp"
 
 
 namespace AiryEngine {
@@ -43,54 +44,6 @@ namespace AiryEngine {
 
         this->vertex_array->unbind();
     }
-
-    // void Mesh::draw(std::shared_ptr<ShaderProgram> shader_program, Camera& camera, const glm::vec3& light_source_position, const glm::vec3& light_source_color)
-    // {
-    //     LOG_INFO("Draw mesh function");
-
-    //     // this->texture->bind(0); 
-
-    //     shader_program->bind();
-    //     this->vertex_array->bind();
-
-    //     shader_program->set_matrix4("view_projection_matrix", camera.get_projection_matrix() * camera.get_view_matrix());
-    //     shader_program->set_vec3("camera_position", camera.get_camera_position());
-    //     shader_program->set_vec3("light_position", light_source_position);
-    //     shader_program->set_vec3("light_color", light_source_color);
-    //     shader_program->set_float("ambient_factor", this->ambiant_factor);
-    //     shader_program->set_float("diffuse_factor", this->diffuse_factor);
-    //     shader_program->set_float("specular_factor", this->specular_factor);
-    //     shader_program->set_float("shininess", this->shininess);
-
-    //     glm::mat4 scale_matrix(
-    //         scale[0], 0,        0,        0,
-    //         0,        scale[1], 0,        0,
-    //         0,        0,        scale[2], 0,
-    //         0,        0,        0,        1
-    //     );
-            
-    //     float rotate_in_radians = glm::radians(rotate);
-    //     glm::mat4 rotate_matrix(
-    //          cos(rotate_in_radians), sin(rotate_in_radians), 0, 0,
-    //         -sin(rotate_in_radians), cos(rotate_in_radians), 0, 0,
-    //          0,                      0,                      1, 0,
-    //          0,                      0,                      0, 1
-    //     );
-
-    //     glm::mat4 translate_matrix(
-    //         1,            0,            0,            0,
-    //         0,            1,            0,            0,
-    //         0,            0,            1,            0,  
-    //         translate[0], translate[1], translate[2], 1
-    //     );
-
-    //     glm::mat4 model_matrix = translate_matrix * rotate_matrix * scale_matrix;
-    //     shader_program->set_matrix4("model_matrix", model_matrix);
-
-    //     Renderer_OpenGL::draw_vertex_elements(*this->vertex_array);
-        
-    //     this->vertex_array->unbind();
-    // }
 
     void Mesh::set_material(std::shared_ptr<Material> material)
     {

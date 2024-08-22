@@ -1,12 +1,18 @@
-
 #include <iostream>
 #include <memory>
 #include <imgui/imgui.h>
-using std::cout;
-using std::endl;
+// using std::cout;
+// using std::endl;
 
 #include <AiryEngineCore/Application.hpp>
+#include <AiryEngineCore/Renderer.hpp>
 #include <AiryEngineCore/Input.hpp>
+#include <AiryEngineCore/ResourceManager.hpp>
+
+#include <AiryEngineCore/Scene/Model3D.hpp>
+
+
+
 
 class GameApplication : public AiryEngine::Application
 {
@@ -20,10 +26,36 @@ class GameApplication : public AiryEngine::Application
     float camera_near_plane = 0.1f;
     float camera_far_plane = 100.f;
 
+    float light_source_position[3] = { 0, 0, 0 };
+    float light_source_color[3] = { 1, 1, 1 };
+
+    std::shared_ptr<AiryEngine::Renderer> renderer;
+    std::shared_ptr<AiryEngine::Model3D> Egorka_model;
+    std::shared_ptr<AiryEngine::Model3D> lamp_model;
+
 public:
-    GameApplication(const std::string& executable_path) : AiryEngine::Application(executable_path)
+    GameApplication(std::shared_ptr<AiryEngine::ResourceManager> _resource_manager) : AiryEngine::Application(_resource_manager)
     {
         // set_executable_path(executable_path);
+    }
+
+    virtual void on_start(std::shared_ptr<AiryEngine::ResourceManager> _resource_manager) override
+    {
+        std::cout << "On_start start" << std::endl;
+        this->renderer = std::make_shared<AiryEngine::Renderer>(_resource_manager);
+        std::cout << "Renderer was crerated" << std::endl;
+
+        // this->lamp_model = _resource_manager->load_model3D("lamp_model", "Lampa234.obj");
+        this->lamp_model = _resource_manager->load_model3D("1", "1.obj");
+
+        this->Egorka_model = _resource_manager->load_model3D("Egorka_model", "CartoonCity2.obj");
+        std::cout << "Model 1 was crerated" << std::endl;
+        Egorka_model->set_translate_x(-5);
+        this->Egorka_model->set_rotate(90, 0, 0);
+        Egorka_model->set_translate(0, 0, -10);
+
+        // this->lamp_model = _resource_manager->load_model3D("lamp_model", "Lamp.obj");
+        std::cout << "Model 2 was crerated" << std::endl;
     }
 
     virtual void on_update() override
@@ -124,6 +156,18 @@ public:
         }
 
         camera.add_movement_and_rotation(movement_delta, rotation_delta);   
+
+
+        this->lamp_model->set_scale(0.1, 0.1, 0.1);
+        this->lamp_model->set_translate(light_source_position[0], light_source_position[1], light_source_position[2]);
+    }
+
+    virtual void on_draw() override
+    {
+        // AiryEngine::Renderer::render_model3D(camera, this->Egorka_model);
+        this->renderer->render_model3D(camera, this->Egorka_model);
+        // AiryEngine::Renderer::render_model3D(camera, this->lamp_model);
+        this->renderer->render_model3D(camera, this->lamp_model);
     }
 
     void setup_dockspace_menu()
@@ -214,22 +258,24 @@ public:
         ImGui::Begin("Editor");
 
         ImGui::SliderFloat3("light source position", light_source_position, -50.0f, 50.0f);
-        set_light_source_position(light_source_position);
+        // set_light_source_position(light_source_position);
+        this->renderer->set_light_source_position(glm::vec3(light_source_position[0], light_source_position[1], light_source_position[2]));
 
         ImGui::ColorEdit3("light source color", light_source_color);
-        set_light_source_color(light_source_color);
+        // set_light_source_color(light_source_color);
+        this->renderer->set_light_source_color(glm::vec3(light_source_color[0], light_source_color[1], light_source_color[2]));
 
-        ImGui::SliderFloat("ambiant factor", &ambiant_factor, 0.0f, 1.0f);
-        set_ambiant_factor(ambiant_factor);
+        // ImGui::SliderFloat("ambiant factor", &ambiant_factor, 0.0f, 1.0f);
+        // set_ambiant_factor(ambiant_factor);
 
-        ImGui::SliderFloat("diffuse factor", &diffuse_factor, 0.0f, 1.0f);
-        set_diffuse_factor(diffuse_factor);
+        // ImGui::SliderFloat("diffuse factor", &diffuse_factor, 0.0f, 1.0f);
+        // set_diffuse_factor(diffuse_factor);
 
-        ImGui::SliderFloat("specular factor", &specular_factor, 0.0f, 1.0f);
-        set_specular_factor(specular_factor);
+        // ImGui::SliderFloat("specular factor", &specular_factor, 0.0f, 1.0f);
+        // set_specular_factor(specular_factor);
 
-        ImGui::SliderFloat("shininess", &shininess, 1.0f, 128.0f);
-        set_shininess(shininess);
+        // ImGui::SliderFloat("shininess", &shininess, 1.0f, 128.0f);
+        // set_shininess(shininess);
 
         if (ImGui::SliderFloat3("camera position", camera_position, -10.0f, 10.0f))
         {
@@ -262,8 +308,17 @@ public:
 
 int main(int argc, char const *argv[])
 {
-    auto game_application = std::make_unique<GameApplication>(argv[0]);
-    //game_application->init(argv[0]);
+    std::cout << "main start" << std::endl;
+
+    auto resource_manager = std::make_shared<AiryEngine::ResourceManager>(argv[0]);
+    resource_manager->set_shaders_directory("Resources/Shaders");
+    resource_manager->set_textures_directory("Resources/Textures");
+    resource_manager->set_models_directory("Resources/Models");
+
+    // AiryEngine::Renderer::init(resource_manager);
+    
+    auto game_application = std::make_unique<GameApplication>(resource_manager);
+    
     int returnCode = game_application->start(1024, 768, "OurFirstGame");
 
     return returnCode;

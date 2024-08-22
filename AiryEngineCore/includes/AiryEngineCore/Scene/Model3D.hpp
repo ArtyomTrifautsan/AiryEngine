@@ -4,11 +4,10 @@
 #include <vector>
 #include <memory>
 
-#include "AiryEngineCore/Rendering/OpenGL/Mesh.hpp"
-
-//#include <assimp/scene.h>
 
 namespace AiryEngine {
+
+    class Mesh;
 
     class Model3D
     {

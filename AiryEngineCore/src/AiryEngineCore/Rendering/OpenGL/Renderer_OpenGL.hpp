@@ -1,13 +1,8 @@
 #pragma once
 
-#include "AiryEngineCore/ResourceManaging/ResourceManager.hpp"
-#include "AiryEngineCore/Rendering/OpenGL/Model3D.hpp"
+// #include "AiryEngineCore/ResourceManaging/ResourceManager.hpp"
+// #include "AiryEngineCore/Rendering/OpenGL/Model3D.hpp"
 
-#include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
-#include "AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp"
-#include "AiryEngineCore/Rendering/OpenGL/IndexBuffer.hpp"
-#include "AiryEngineCore/Rendering/OpenGL/VertexArray.hpp"
-#include "AiryEngineCore/Rendering/OpenGL/Texture2D.hpp"
 
 struct GLFWwindow;
 
@@ -15,22 +10,27 @@ struct GLFWwindow;
 
 namespace AiryEngine {
 
+    class Model3D;
     class VertexArray;
+    // class VertexBuffer;
+    // class IndexBuffer;
+    // class Texture2D;
+    // class ShaderProgram;
 
     class Renderer_OpenGL
     {
     public:
         static void before_render();
-        static void render_model3D(class Camera& camera, 
-                            std::shared_ptr<Model3D> model, 
-                            std::shared_ptr<ShaderProgram> shader_program, 
-                            const glm::vec3& light_source_position, 
-                            const glm::vec3& light_source_color);
-        static void render_light_model3D(class Camera& camera, 
-                            std::shared_ptr<Model3D> model, 
-                            std::shared_ptr<ShaderProgram> shader_program, 
-                            const glm::vec3& light_source_position, 
-                            const glm::vec3& light_source_color);
+        // static void render_model3D(class Camera& camera, 
+        //                     std::shared_ptr<Model3D> model, 
+        //                     std::shared_ptr<ShaderProgram> shader_program, 
+        //                     const glm::vec3& light_source_position, 
+        //                     const glm::vec3& light_source_color);
+        // static void render_light_model3D(class Camera& camera, 
+        //                     std::shared_ptr<Model3D> model, 
+        //                     std::shared_ptr<ShaderProgram> shader_program, 
+        //                     const glm::vec3& light_source_position, 
+        //                     const glm::vec3& light_source_color);
 
         static bool init(GLFWwindow* window);  //  Нельзя убирать этот метод, он инициализирует glad в Window.cpp
 
@@ -46,16 +46,16 @@ namespace AiryEngine {
         static const char* get_version_str();
     
     private:
-        static void render_mesh(class Camera& camera, 
-                        std::shared_ptr<Mesh> mesh,
-                        std::shared_ptr<ShaderProgram> shader_program, 
-                        const glm::vec3& light_source_position, 
-                        const glm::vec3& light_source_color);
-        static void render_light_mesh(class Camera& camera, 
-                        std::shared_ptr<Mesh> mesh,
-                        std::shared_ptr<ShaderProgram> shader_program, 
-                        const glm::vec3& light_source_position, 
-                        const glm::vec3& light_source_color);
+        // static void render_mesh(class Camera& camera, 
+        //                 std::shared_ptr<Mesh> mesh,
+        //                 std::shared_ptr<ShaderProgram> shader_program, 
+        //                 const glm::vec3& light_source_position, 
+        //                 const glm::vec3& light_source_color);
+        // static void render_light_mesh(class Camera& camera, 
+        //                 std::shared_ptr<Mesh> mesh,
+        //                 std::shared_ptr<ShaderProgram> shader_program, 
+        //                 const glm::vec3& light_source_position, 
+        //                 const glm::vec3& light_source_color);
     };
 
 }

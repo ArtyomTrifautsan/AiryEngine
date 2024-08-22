@@ -1,7 +1,9 @@
+#include "AiryEngineCore/Rendering/OpenGL/IndexBuffer.hpp"
+
 #include <glad/glad.h>
 
-#include "IndexBuffer.hpp"
 #include "AiryEngineCore/Log.hpp"
+
 
 namespace AiryEngine {
 

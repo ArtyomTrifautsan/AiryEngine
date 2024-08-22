@@ -2,10 +2,11 @@
 
 #include <iostream>     // is included for using size_t
 
-#include "VertexBuffer.hpp"
-#include "IndexBuffer.hpp"
 
 namespace AiryEngine {
+
+    class VertexBuffer;
+    class IndexBuffer;
 
     class VertexArray
     {

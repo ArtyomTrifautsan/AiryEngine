@@ -3,9 +3,12 @@
 #include <iostream>     // is included for using size_t
 #include <vector>
 
-#include "VertexBuffer.hpp"
+#include "AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp"
+
 
 namespace AiryEngine {
+
+    class VertexBuffer;
 
     class IndexBuffer
     {

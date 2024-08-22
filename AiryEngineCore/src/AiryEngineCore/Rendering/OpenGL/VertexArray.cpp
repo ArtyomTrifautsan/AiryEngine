@@ -1,9 +1,11 @@
+#include "AiryEngineCore/Rendering/OpenGL/VertexArray.hpp"
+
 #include <glad/glad.h>
 
-#include "VertexArray.hpp" 
-#include "VertexBuffer.hpp" 
-#include "IndexBuffer.hpp"
 #include "AiryEngineCore/Log.hpp"
+
+#include "AiryEngineCore/Rendering/OpenGL/IndexBuffer.hpp"
+#include "AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp"
 
 namespace AiryEngine {
 

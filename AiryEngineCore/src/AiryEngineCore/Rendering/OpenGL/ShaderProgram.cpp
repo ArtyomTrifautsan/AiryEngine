@@ -1,7 +1,8 @@
+#include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
+
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "ShaderProgram.hpp"
 #include "AiryEngineCore/Log.hpp"
 
 namespace AiryEngine

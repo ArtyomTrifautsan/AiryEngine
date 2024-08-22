@@ -1,10 +1,11 @@
+#include "AiryEngineCore/Rendering/OpenGL/Texture2D.hpp"
+
+#include <glad/glad.h>
 #include <algorithm>
 #include <cmath>
-#include <glad/glad.h>
 
 #include "AiryEngineCore/Log.hpp"
 
-#include "Texture2D.hpp"
 
 namespace AiryEngine
 {

@@ -1,7 +1,9 @@
+#include "AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp"
+
 #include <glad/glad.h>
 
-#include "VertexBuffer.hpp"
 #include "AiryEngineCore/Log.hpp"
+
 
 namespace AiryEngine {
 

@@ -3,27 +3,28 @@ cmake_minimum_required(VERSION 3.12)
 set(ENGINE_PROJECT_NAME AiryEngineCore)
 
 set(ENGINE_PUBLIC_INCLUDES
-    src/AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.hpp
     includes/AiryEngineCore/Application.hpp
     includes/AiryEngineCore/Camera.hpp
     includes/AiryEngineCore/Event.hpp
     includes/AiryEngineCore/Log.hpp
     includes/AiryEngineCore/Keys.hpp
     includes/AiryEngineCore/Input.hpp
+    includes/AiryEngineCore/Renderer.hpp
+    includes/AiryEngineCore/ResourceManager.hpp
+    includes/AiryEngineCore/Scene/Model3D.hpp
 )
 
 set(ENGINE_PRIVATE_INCLUDES
     src/AiryEngineCore/Window.hpp
-    src/AiryEngineCore/ResourceManaging/ResourceManager.hpp
-    src/AiryEngineCore/ResourceManaging/stb_image.h
+    src/AiryEngineCore/stb_image.h
     src/AiryEngineCore/Modules/UIModule.hpp
+    src/AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.hpp
     src/AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp
     src/AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp
     src/AiryEngineCore/Rendering/OpenGL/IndexBuffer.hpp
     src/AiryEngineCore/Rendering/OpenGL/VertexArray.hpp
-    src/AiryEngineCore/Rendering/OpenGL/Texture2D.hpp
-    src/AiryEngineCore/Rendering/OpenGL/Model3D.hpp
     src/AiryEngineCore/Rendering/OpenGL/Mesh.hpp
+    src/AiryEngineCore/Rendering/OpenGL/Texture2D.hpp
 )
 
 set(ENGINE_PRIVATE_SOURCES
@@ -31,15 +32,16 @@ set(ENGINE_PRIVATE_SOURCES
     src/AiryEngineCore/Camera.cpp
     src/AiryEngineCore/Window.cpp
     src/AiryEngineCore/Input.cpp
-    src/AiryEngineCore/ResourceManaging/ResourceManager.cpp
+    src/AiryEngineCore/Renderer.cpp
+    src/AiryEngineCore/ResourceManager.cpp
     src/AiryEngineCore/Modules/UIModule.cpp
+    src/AiryEngineCore/Scene/Model3D.cpp
     src/AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.cpp
     src/AiryEngineCore/Rendering/OpenGL/ShaderProgram.cpp
     src/AiryEngineCore/Rendering/OpenGL/VertexBuffer.cpp
     src/AiryEngineCore/Rendering/OpenGL/IndexBuffer.cpp
     src/AiryEngineCore/Rendering/OpenGL/VertexArray.cpp
     src/AiryEngineCore/Rendering/OpenGL/Texture2D.cpp
-    src/AiryEngineCore/Rendering/OpenGL/Model3D.cpp
     src/AiryEngineCore/Rendering/OpenGL/Mesh.cpp
 )
 

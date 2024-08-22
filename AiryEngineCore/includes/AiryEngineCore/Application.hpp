@@ -10,11 +10,13 @@ namespace AiryEngine {
 
     class Model3D;
     class Texture2D;
+    class ResourceManager;
 
     class Application
     {
     public:
-        Application(const std::string& executable_path);  
+        //Application(const std::string& executable_path);
+        Application(std::shared_ptr<ResourceManager> _resource_manager);  
         virtual ~Application();
         void set_executable_path(const std::string& executable_path);
 
@@ -24,7 +26,9 @@ namespace AiryEngine {
         Application& operator=(Application&&) = delete;
 
         virtual int start(unsigned int window_width, unsigned int window_height, const char* title);
+        virtual void on_start(std::shared_ptr<ResourceManager> _resource_manager) {}
         void close();
+        virtual void on_draw() {}
         virtual void on_update() {}
         virtual void on_ui_draw() {}
         virtual void on_mouse_button_pressed(const MouseButtonCode mouse_button_code, 
@@ -32,27 +36,26 @@ namespace AiryEngine {
                                             const double y_pos, 
                                             const bool pressed) {}
         
-        void set_light_source_position(float light_source_position[3]);     // Temporary solution
-        void set_light_source_color(float light_source_color[3]);       // Temporary solution
-        void set_ambiant_factor(float factor);       // Temporary solution
-        void set_diffuse_factor(float factor);       // Temporary solution
-        void set_specular_factor(float factor);       // Temporary solution
-        void set_shininess(float shininess);       // Temporary solution
+        // void set_light_source_position(float light_source_position[3]);     // Temporary solution
+        // void set_light_source_color(float light_source_color[3]);       // Temporary solution
+        // void set_ambiant_factor(float factor);       // Temporary solution
+        // void set_diffuse_factor(float factor);       // Temporary solution
+        // void set_specular_factor(float factor);       // Temporary solution
+        // void set_shininess(float shininess);       // Temporary solution
 
-        std::shared_ptr<Model3D> create_model(std::shared_ptr<std::vector<float>> vertices, 
-                                    std::shared_ptr<std::vector<unsigned int>> indices, 
-                                    std::shared_ptr<Texture2D> texture);
+        // std::shared_ptr<Model3D> create_model(std::shared_ptr<std::vector<float>> vertices, 
+        //                             std::shared_ptr<std::vector<unsigned int>> indices);
 
         glm::vec2 get_current_cursor_position() const;
 
         Camera camera{glm::vec3(-5.f, 0.f, 0.f)};
 
-        float light_source_position[3] = { 0.f, 3.f, 0.f };     // Temporary solution
-        float light_source_color[3] = { 1.f, 1.f, 1.f };        // Temporary solution
-        float ambiant_factor = 0.1f;        // Temporary solution
-        float diffuse_factor = 1.0f;        // Temporary solution
-        float specular_factor = 0.5f;        // Temporary solution
-        float shininess = 32.0f;        // Temporary solution
+        // float light_source_position[3] = { 0.f, 3.f, 0.f };     // Temporary solution
+        // float light_source_color[3] = { 1.f, 1.f, 1.f };        // Temporary solution
+        // float ambiant_factor = 0.1f;        // Temporary solution
+        // float diffuse_factor = 1.0f;        // Temporary solution
+        // float specular_factor = 0.5f;        // Temporary solution
+        // float shininess = 32.0f;        // Temporary solution
 
     private:
         std::unique_ptr<class Window> window;

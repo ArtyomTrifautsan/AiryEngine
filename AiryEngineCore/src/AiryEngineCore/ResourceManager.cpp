@@ -1,3 +1,5 @@
+#include "AiryEngineCore/ResourceManager.hpp"
+
 #include <sstream>
 #include <fstream>
 #include <iostream>
@@ -5,15 +7,14 @@
 #include <string>
 #include <memory>
 #include <map>
-#include <iostream>
 #include <algorithm>
 //#include <glad/glad.h>
 
-#include "ResourceManager.hpp"
-
 #include "AiryEngineCore/Log.hpp"
-#include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
+#include "AiryEngineCore/Scene/Model3D.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/Mesh.hpp"
+#include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
+#include "AiryEngineCore/Rendering/OpenGL/Texture2D.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -22,9 +23,12 @@ namespace AiryEngine {
 
     ResourceManager::ResourceManager(const std::string& executable_path)
     {
-        this->path_to_executable = executable_path;
+        // this->path_to_executable = executable_path;
+        set_executable_path(executable_path);
 
-        // Assimp::Importer importer;
+        this->shaders_directory = "";
+        this->textures_directory = "";
+        this->models_directory = "";
     }
 
     std::string ResourceManager::get_file_string(const std::string& relative_file_path)
@@ -34,6 +38,7 @@ namespace AiryEngine {
         if (!f.is_open())
         {
             LOG_CRITICAL("Failed to open file: {}", relative_file_path);
+            LOG_CRITICAL("Failed to open file: {}", this->path_to_executable + "/" + relative_file_path.c_str());
             //std::cerr << "Failed to open file: " << relativeFilePath << std::endl;
             return std::string{};
         }
@@ -131,7 +136,7 @@ namespace AiryEngine {
         return nullptr;
     }
 
-    std::shared_ptr<Model3D> ResourceManager::load_model3D(const std::string& model_name, const std::string& model_path, std::shared_ptr<Texture2D> texture)
+    std::shared_ptr<Model3D> ResourceManager::load_model3D(const std::string& model_name, const std::string& model_path)
     {
         if (this->loaded_models.count(model_path))
             return this->loaded_models[model_path];
@@ -506,6 +511,12 @@ namespace AiryEngine {
         }
 
         return new_str;
+    }
+
+    void ResourceManager::set_executable_path(const std::string& executable_path)
+    {
+        size_t found = executable_path.find_last_of("/\\");
+        this->path_to_executable = executable_path.substr(0, found);
     }
 
     void ResourceManager::set_shaders_directory(const std::string& path)
