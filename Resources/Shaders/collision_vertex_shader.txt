@@ -18,4 +18,3 @@ void main() {
     frag_position = vertex_position_world.xyz;
     gl_Position = view_projection_matrix * vertex_position_world;
 };
-

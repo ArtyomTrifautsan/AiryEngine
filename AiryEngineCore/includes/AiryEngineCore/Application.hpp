@@ -43,8 +43,7 @@ namespace AiryEngine {
         // void set_specular_factor(float factor);       // Temporary solution
         // void set_shininess(float shininess);       // Temporary solution
 
-        // std::shared_ptr<Model3D> create_model(std::shared_ptr<std::vector<float>> vertices, 
-        //                             std::shared_ptr<std::vector<unsigned int>> indices);
+        std::shared_ptr<Model3D> create_collision_cube_model(const std::string& model_name, const std::string& model_path);
 
         glm::vec2 get_current_cursor_position() const;
 

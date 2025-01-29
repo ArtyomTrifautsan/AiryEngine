@@ -17,7 +17,8 @@ using std::endl;
 #include "AiryEngineCore/ResourceManager.hpp"
 #include "AiryEngineCore/Modules/UIModule.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.hpp"
-// #include "AiryEngineCore/Rendering/OpenGL/Mesh.hpp"
+#include "AiryEngineCore/Scene/Model3D.hpp"
+#include "AiryEngineCore/Rendering/OpenGL/Mesh.hpp"
 
 namespace AiryEngine {
 
@@ -105,7 +106,7 @@ namespace AiryEngine {
 
     int Application::start(unsigned int window_width, unsigned int window_height, const char* title)
     {
-        LOG_INFO("Application::start");
+        // LOG_INFO("Application::start");
 
         this->window = std::make_unique<Window>(title, window_width, window_height);
         this->camera.set_viewport_size(static_cast<float>(window_width), static_cast<float>(window_height));
@@ -184,50 +185,18 @@ namespace AiryEngine {
             }
         );
 
-        LOG_INFO("Before on_start");
+        // LOG_INFO("Before on_start");
         on_start(this->resource_manager);
-        LOG_INFO("After on_start");
-
-        // std::shared_ptr<ShaderProgram> default_shader_program = this->resource_manager->load_shaders("default_shaders", "default_vertex_shader.txt", "default_fragment_shader.txt");
-        // if (!default_shader_program->is_compiled()) 
-        // {
-        //     LOG_CRITICAL("Failed to compile Default Shader Program");
-        // }
-
-        // std::shared_ptr<ShaderProgram> light_source_shader_program = this->resource_manager->load_shaders("light_source_shaders", "light_source_vertex_shader.txt", "light_source_fragment_shader.txt");
-        // if (!light_source_shader_program->is_compiled()) 
-        // {
-        //     LOG_CRITICAL("Failed to compile Light Shader Program");
-        // }
+        // LOG_INFO("After on_start");
 
         std::shared_ptr<Texture2D> model_texture = this->resource_manager->load_texture2D("model_texture", "dog.png");
 
-        // // Модель Егорки
-        // std::shared_ptr<Model3D> Egor_model = this->resource_manager->load_model3D("first_model", "CartoonCity2.obj");
-        // Egor_model->set_translate_x(-5);
-        // Egor_model->set_rotate(90, 0, 0);
-        // Egor_model->set_translate(0, 0, -10);
-
-        // // Модель фонарика
-        // std::shared_ptr<std::vector<float>> pnu_ptr = std::make_shared<std::vector<float>>();
-        // for (int i = 0; i < pos_norm_uv.size(); i++) pnu_ptr->push_back(pos_norm_uv[i]);
-        // std::shared_ptr<std::vector<unsigned int>> indices_ptr = std::make_shared<std::vector<unsigned int>>();
-        // for (int i = 0; i < indices.size(); i++) indices_ptr->push_back(indices[i]);
-
-        // std::shared_ptr<Model3D> cube_model = create_model(pnu_ptr, indices_ptr);
-
         float frame = 0.0;
         Renderer_OpenGL::enable_depth_testing();
+        // Renderer_OpenGL::enable_alpha_channel();
         while (!this->closeWindow)
         {
             Renderer_OpenGL::before_render();
-
-            // glm::vec3 lsp_vec3 = glm::vec3(this->light_source_position[0], this->light_source_position[1], this->light_source_position[2]);
-            // glm::vec3 lsc_vec3 = glm::vec3(this->light_source_color[0], this->light_source_color[1], this->light_source_color[2]);
-            // Renderer_OpenGL::render_model3D(this->camera, Egor_model, default_shader_program, lsp_vec3, lsc_vec3);
-            // Renderer_OpenGL::render_light_model3D(this->camera, cube_model, light_source_shader_program, lsp_vec3, lsc_vec3);
-
-            // cube_model->set_translate(this->light_source_position[0], this->light_source_position[1], this->light_source_position[2]);
 
             frame += 0.01;
 
@@ -257,18 +226,32 @@ namespace AiryEngine {
     //     Renderer_OpenGL::render_model3D(this->camera, Egor_model, default_shader_program, lsp_vec3, lsc_vec3);
     // }
 
-    // std::shared_ptr<Model3D> Application::create_model(std::shared_ptr<std::vector<float>> vertices, 
-    //                                 std::shared_ptr<std::vector<unsigned int>> indices)
-    // {
-    //     std::shared_ptr<Material> temp_material = std::make_shared<Material>();
-        
-    //     std::shared_ptr<Model3D> model = std::make_shared<Model3D>();
+    std::shared_ptr<Model3D> Application::create_collision_cube_model(const std::string& model_name, const std::string& model_path)
+    {
+        std::shared_ptr<Model3D> model = this->resource_manager->load_model3D(model_name, model_path);
 
-    //     std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(vertices, indices, temp_material);
-    //     model->add_mesh(mesh);
+        std::shared_ptr<Material> temp_material = std::make_shared<Material>();
+        temp_material->ambient_color = glm::vec3(1, 1, 1);
+        temp_material->diffuse_color = glm::vec3(1, 0, 0);
+        temp_material->specular_color = glm::vec3(0.5, 0.5, 0.5);
+        temp_material->shininess = 32;
+        temp_material->alpha_channel = 0.2f;
 
-    //     return model;
-    // }
+        model->set_material(temp_material);
+
+        // std::shared_ptr<Model3D> model = std::make_shared<Model3D>();
+
+        // Создаем указатели на массив вершин и массив индексов
+        // std::shared_ptr<std::vector<float>> pnu_ptr = std::make_shared<std::vector<float>>();
+        // for (int i = 0; i < pos_norm_uv.size(); i++) pnu_ptr->push_back(pos_norm_uv[i]);
+        // std::shared_ptr<std::vector<unsigned int>> indices_ptr = std::make_shared<std::vector<unsigned int>>();
+        // for (int i = 0; i < indices.size(); i++) indices_ptr->push_back(indices[i]);
+
+        // std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(pnu_ptr, indices_ptr, temp_material);
+        // model->add_mesh(mesh);
+
+        return model;
+    }
 
     glm::vec2 Application::get_current_cursor_position() const
     {

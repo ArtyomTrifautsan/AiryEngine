@@ -40,6 +40,8 @@ namespace AiryEngine {
         static void set_viewport(const unsigned int width, const unsigned int height, const unsigned int left_offset = 0, const unsigned bottom_offset = 0);
         static void enable_depth_testing();
         static void disable_depth_testing();
+        static void enable_alpha_channel();
+        static void disable_alpha_channel();
 
         static const char* get_vendor_str();
         static const char* get_renderer_str();

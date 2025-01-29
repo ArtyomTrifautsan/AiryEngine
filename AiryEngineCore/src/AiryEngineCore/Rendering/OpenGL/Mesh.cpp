@@ -50,6 +50,11 @@ namespace AiryEngine {
         this->material = material;
     }
 
+    void Mesh::set_diffuse_color(float r, float g, float b)
+    {
+        this->material->diffuse_color = glm::vec3(r, g, b);
+    }
+
     void Mesh::set_scale(float scale_x, float scale_y, float scale_z)
     {
         if (scale_x > 0) this->scale[0] = scale_x;

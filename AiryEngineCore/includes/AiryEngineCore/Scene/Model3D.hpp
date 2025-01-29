@@ -7,6 +7,7 @@
 
 namespace AiryEngine {
 
+    struct Material;
     class Mesh;
 
     class Model3D
@@ -21,6 +22,8 @@ namespace AiryEngine {
 
             std::vector<std::shared_ptr<Mesh>> get_meshes() const {return this->meshes; }
 
+            void set_material(std::shared_ptr<Material> material);
+            void set_diffuse_color(float r, float g, float b);
             void set_scale(float scale_x, float scale_y, float scale_z);
             void set_rotate(float angle_x, float angle_y, float angle_z);
             void set_translate(float translate_x, float translate_y, float translate_z);

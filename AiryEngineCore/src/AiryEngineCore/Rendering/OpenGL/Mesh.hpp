@@ -29,6 +29,7 @@ namespace AiryEngine {
         glm::vec3 specular_color;
         int shininess;
         std::string diffuse_map;
+        float alpha_channel = 1.0;
     };
 
 
@@ -59,6 +60,7 @@ namespace AiryEngine {
         float get_shininess() const { return this->shininess; }     // Temporary solution
 
         void set_material(std::shared_ptr<Material> material);
+        void set_diffuse_color(float r, float g, float b);
         void set_scale(float scale_x, float scale_y, float scale_z);
         void set_rotate(float angle_x, float angle_y, float angle_z);
         void set_translate(float translate_x, float translate_y, float translate_z);

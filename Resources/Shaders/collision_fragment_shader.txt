@@ -1,0 +1,34 @@
+#version 460
+
+in vec2 texture_pos;
+in vec3 frag_normal;
+in vec3 frag_position;
+
+//layout(binding = 0) uniform sampler2D InTexture;
+
+uniform vec3 camera_position;
+
+uniform vec3 ambient_color;
+uniform float ambient_factor;
+uniform vec3 diffuse_color;
+uniform float diffuse_factor;
+uniform vec3 specular_color;
+uniform float specular_factor;
+uniform float shininess;
+
+uniform float alpha_channel;
+
+out vec4 fragment_color;
+
+void main() {
+    // Ambient
+    vec3 ambient = ambient_color * ambient_factor;
+
+    // Diffuse
+    vec3 diffuse = diffuse_color * diffuse_factor;
+
+    // Specular
+    vec3 specular = specular_color * specular_factor;
+
+    fragment_color = vec4(ambient + diffuse + specular, alpha_channel);
+};

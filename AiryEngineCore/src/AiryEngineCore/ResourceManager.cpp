@@ -139,7 +139,9 @@ namespace AiryEngine {
     std::shared_ptr<Model3D> ResourceManager::load_model3D(const std::string& model_name, const std::string& model_path)
     {
         if (this->loaded_models.count(model_path))
-            return this->loaded_models[model_path];
+        {
+            // return this->loaded_models[model_path];
+        }
 
         std::shared_ptr<Model3D> new_model = std::make_shared<Model3D>(); 
         std::vector<std::shared_ptr<Mesh>> meshes;
@@ -250,6 +252,7 @@ namespace AiryEngine {
                 else if (line_vector[0] == "f")
                 {
                     // LOG_INFO("Poligon data");
+                    // LOG_INFO("  Vertex {3} data: {0}/{1}/{2}", _vertex[0], _vertex[1], _vertex[2], i);
 
                     for (int i = 1; i <= 3; i++)
                     {
@@ -267,15 +270,15 @@ namespace AiryEngine {
                         //             normals[static_cast<unsigned int>(std::stoul(_vertex[2]) - 1)][0], 
                         //             normals[static_cast<unsigned int>(std::stoul(_vertex[2]) - 1)][1], 
                         //             normals[static_cast<unsigned int>(std::stoul(_vertex[2]) - 1)][2], i);
-                        vertices->push_back(vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[2]) - 1)][0]);
-                        vertices->push_back(vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[2]) - 1)][1]);
-                        vertices->push_back(vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[2]) - 1)][2]);   
+                        vertices->push_back(normals[static_cast<unsigned int>(std::stoul(_vertex[2]) - 1)][0]);
+                        vertices->push_back(normals[static_cast<unsigned int>(std::stoul(_vertex[2]) - 1)][1]);
+                        vertices->push_back(normals[static_cast<unsigned int>(std::stoul(_vertex[2]) - 1)][2]);   
                         
                         // LOG_INFO("  Vertex {2} texture coords: {0}/{1}", 
                         //             texture_coords[static_cast<unsigned int>(std::stoul(_vertex[1]) - 1)][0], 
                         //             texture_coords[static_cast<unsigned int>(std::stoul(_vertex[1]) - 1)][1], i);
-                        vertices->push_back(vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[1]) - 1)][0]);
-                        vertices->push_back(vertex_coords[static_cast<unsigned int>(std::stoul(_vertex[1]) - 1)][1]);
+                        vertices->push_back(texture_coords[static_cast<unsigned int>(std::stoul(_vertex[1]) - 1)][0]);
+                        vertices->push_back(texture_coords[static_cast<unsigned int>(std::stoul(_vertex[1]) - 1)][1]);
 
                         indices->push_back(static_cast<unsigned int>(indices->size()));
                     }

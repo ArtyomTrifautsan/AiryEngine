@@ -11,13 +11,20 @@ set(ENGINE_PUBLIC_INCLUDES
     includes/AiryEngineCore/Input.hpp
     includes/AiryEngineCore/Renderer.hpp
     includes/AiryEngineCore/ResourceManager.hpp
+
     includes/AiryEngineCore/Scene/Model3D.hpp
+
+    includes/AiryEngineCore/Physics/CollidingObjects/CubeCollidingObject.hpp
+    includes/AiryEngineCore/Physics/CollidingObjects/SphereCollidingObject.hpp
+    includes/AiryEngineCore/Physics/CollisionDetector.hpp
 )
 
 set(ENGINE_PRIVATE_INCLUDES
     src/AiryEngineCore/Window.hpp
     src/AiryEngineCore/stb_image.h
+
     src/AiryEngineCore/Modules/UIModule.hpp
+
     src/AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.hpp
     src/AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp
     src/AiryEngineCore/Rendering/OpenGL/VertexBuffer.hpp
@@ -34,8 +41,10 @@ set(ENGINE_PRIVATE_SOURCES
     src/AiryEngineCore/Input.cpp
     src/AiryEngineCore/Renderer.cpp
     src/AiryEngineCore/ResourceManager.cpp
+
     src/AiryEngineCore/Modules/UIModule.cpp
     src/AiryEngineCore/Scene/Model3D.cpp
+
     src/AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.cpp
     src/AiryEngineCore/Rendering/OpenGL/ShaderProgram.cpp
     src/AiryEngineCore/Rendering/OpenGL/VertexBuffer.cpp
@@ -43,6 +52,10 @@ set(ENGINE_PRIVATE_SOURCES
     src/AiryEngineCore/Rendering/OpenGL/VertexArray.cpp
     src/AiryEngineCore/Rendering/OpenGL/Texture2D.cpp
     src/AiryEngineCore/Rendering/OpenGL/Mesh.cpp
+
+    src/AiryEngineCore/Physics/CollisionDetector.cpp
+    src/AiryEngineCore/Physics/CollidingObjects/CubeCollidingObject.cpp
+    src/AiryEngineCore/Physics/CollidingObjects/SphereCollidingObject.cpp
 )
 
 set(ENGINE_ALL_SOURCES

@@ -28,6 +28,18 @@ namespace AiryEngine {
     //         current_mesh->draw(shader_program, camera, light_source_position, light_source_color);
     // }
 
+    void Model3D::set_material(std::shared_ptr<Material> material)
+    {
+        for (std::shared_ptr<Mesh> current_mesh : this->meshes)
+            current_mesh->set_material(material);
+    }
+
+    void Model3D::set_diffuse_color(float r, float g, float b)
+    {
+        for (std::shared_ptr<Mesh> current_mesh : this->meshes)
+            current_mesh->set_diffuse_color(r, g, b);
+    }
+
     void Model3D::set_scale(float scale_x, float scale_y, float scale_z)
     {
         if (scale_x > 0) this->scale[0] = scale_x;

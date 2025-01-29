@@ -11,7 +11,7 @@
 
 #include <AiryEngineCore/Scene/Model3D.hpp>
 
-
+#include <AiryEngineCore/Physics/CollisionDetector.hpp>
 
 
 class GameApplication : public AiryEngine::Application
@@ -29,9 +29,29 @@ class GameApplication : public AiryEngine::Application
     float light_source_position[3] = { 0, 0, 0 };
     float light_source_color[3] = { 1, 1, 1 };
 
+    float collision_cube_1_position[3] = { 0, 0, 0 };
+    float collision_cube_2_position[3] = { 0, 0, 0 };
+    float collision_sphere_1_position[3] = { -3, -3, 0 };
+    float collision_sphere_2_position[3] = { -3, -3, 0 };
+
+    float ambient_factor = 0.1f;
+    float diffuse_factor = 1.0f;
+    float specular_factor = 0.5f;
+
     std::shared_ptr<AiryEngine::Renderer> renderer;
-    std::shared_ptr<AiryEngine::Model3D> Egorka_model;
+
+    std::shared_ptr<AiryEngine::Model3D> house_model;
     std::shared_ptr<AiryEngine::Model3D> lamp_model;
+    std::shared_ptr<AiryEngine::Model3D> tree_model;
+
+    std::shared_ptr<AiryEngine::Model3D> collision_cube_model_1;
+    std::shared_ptr<AiryEngine::CubeCollidingObject> cube_1;
+    std::shared_ptr<AiryEngine::Model3D> collision_cube_model_2;
+    std::shared_ptr<AiryEngine::CubeCollidingObject> cube_2;
+    std::shared_ptr<AiryEngine::Model3D> collision_sphere_model_1;
+    std::shared_ptr<AiryEngine::SphereCollidingObject> sphere_1;
+    std::shared_ptr<AiryEngine::Model3D> collision_sphere_model_2;
+    std::shared_ptr<AiryEngine::SphereCollidingObject> sphere_2;
 
 public:
     GameApplication(std::shared_ptr<AiryEngine::ResourceManager> _resource_manager) : AiryEngine::Application(_resource_manager)
@@ -45,17 +65,43 @@ public:
         this->renderer = std::make_shared<AiryEngine::Renderer>(_resource_manager);
         std::cout << "Renderer was crerated" << std::endl;
 
-        // this->lamp_model = _resource_manager->load_model3D("lamp_model", "Lampa234.obj");
-        this->lamp_model = _resource_manager->load_model3D("1", "1.obj");
+        // this->tree_model = _resource_manager->load_model3D("lamp_model", "ifghh.obj");
+        // std::cout << "Lamp model was loaded" << std::endl;
 
-        this->Egorka_model = _resource_manager->load_model3D("Egorka_model", "CartoonCity2.obj");
-        std::cout << "Model 1 was crerated" << std::endl;
-        Egorka_model->set_translate_x(-5);
-        this->Egorka_model->set_rotate(90, 0, 0);
-        Egorka_model->set_translate(0, 0, -10);
+        this->lamp_model = _resource_manager->load_model3D("Lamp", "Lampa234.obj");
+        this->lamp_model->set_rotate(90, 0, 0);
+        std::cout << "Lamp model was loaded" << std::endl;
+        // std::cout << "Meshes: " << this->lamp_model->get_meshes().size() << std::endl;
 
-        // this->lamp_model = _resource_manager->load_model3D("lamp_model", "Lamp.obj");
-        std::cout << "Model 2 was crerated" << std::endl;
+        this->house_model = _resource_manager->load_model3D("House", "CartoonCity2.obj");
+        std::cout << "House model was loaded" << std::endl;
+        // std::cout << "Meshes: " << this->house_model->get_meshes().size() << std::endl;
+        this->house_model->set_translate_x(-5);
+        this->house_model->set_rotate(90, 0, 0);
+        this->house_model->set_translate(0, 0, -10);
+
+        this->collision_cube_model_1 = create_collision_cube_model("Cube1", "Cube.obj");
+        this->cube_1 = std::make_shared<AiryEngine::CubeCollidingObject>();
+        this->collision_cube_model_1->set_translate(3, -3, 0);
+        this->cube_1->set_translate(3, -3, 0);
+        std::cout << "Collide cube 1 model was loaded" << std::endl;
+        // std::cout << "Meshes: " << this->collision_cube_model_1->get_meshes().size() << std::endl;
+
+        this->collision_cube_model_2 = create_collision_cube_model("Cube2", "Cube.obj");
+        this->cube_2 = std::make_shared<AiryEngine::CubeCollidingObject>();
+        // this->collision_cube_model_2->set_scale(0.1, 0.1, 0.1);
+        std::cout << "Collide cube 2 model was loaded" << std::endl;
+        // std::cout << "Meshes: " << this->collision_cube_model_2->get_meshes().size() << std::endl;
+
+        this->collision_sphere_model_1 = create_collision_cube_model("Sphere1", "Sphere.obj");
+        this->sphere_1 = std::make_shared<AiryEngine::SphereCollidingObject>();
+        std::cout << "Collide sphere 1 model was loaded" << std::endl;
+
+        this->collision_sphere_model_2 = create_collision_cube_model("Sphere2", "Sphere.obj");
+        this->sphere_2 = std::make_shared<AiryEngine::SphereCollidingObject>();
+        // this->collision_sphere_model_2->set_scale(0.1, 0.1, 0.1);
+        std::cout << "Collide sphere 2 model was loaded" << std::endl;
+        // std::cout << "Meshes: " << this->collision_sphere_model_1->get_meshes().size() << std::endl;
     }
 
     virtual void on_update() override
@@ -160,14 +206,67 @@ public:
 
         this->lamp_model->set_scale(0.1, 0.1, 0.1);
         this->lamp_model->set_translate(light_source_position[0], light_source_position[1], light_source_position[2]);
+
+        
+        // ============================COLISION DETECTION=============================
+        this->cube_1->set_is_collided(false);
+        this->cube_2->set_is_collided(false);
+        this->sphere_1->set_is_collided(false);
+        this->sphere_2->set_is_collided(false);
+        
+        // if (AiryEngine::CollisionDetector::cube_cube_collision(*this->cube_1, *this->cube_2))
+        // {
+        //     this->cube_1->set_is_collided(true);
+        //     this->cube_2->set_is_collided(true);
+        // }
+
+        // if (AiryEngine::CollisionDetector::sphere_sphere_collision(*this->sphere_1, *this->sphere_2))
+        // {
+        //     this->sphere_1->set_is_collided(true);
+        //     this->sphere_2->set_is_collided(true);
+        // }
+
+        if (AiryEngine::CollisionDetector::cube_sphere_collision(*this->cube_1, *this->sphere_1))
+        {
+            this->cube_1->set_is_collided(true);
+            this->sphere_1->set_is_collided(true);
+        }
+
+        // if (AiryEngine::CollisionDetector::cube_sphere_collision(*this->cube_1, *this->sphere_2))
+        // {
+        //     this->cube_1->set_is_collided(true);
+        //     this->sphere_2->set_is_collided(true);
+        // }
+
+        // if (AiryEngine::CollisionDetector::cube_sphere_collision(*this->cube_2, *this->sphere_1))
+        // {
+        //     this->cube_2->set_is_collided(true);
+        //     this->sphere_1->set_is_collided(true);
+        // }
+
+        if (this->cube_1->get_is_collided()) collision_cube_model_1->set_diffuse_color(1, 0, 0);
+        else collision_cube_model_1->set_diffuse_color(0, 1, 0);
+
+        if (this->cube_2->get_is_collided()) collision_cube_model_2->set_diffuse_color(1, 0, 0);
+        else collision_cube_model_2->set_diffuse_color(0, 1, 0);
+
+        if (this->sphere_1->get_is_collided()) collision_sphere_model_1->set_diffuse_color(1, 0, 0);
+        else collision_sphere_model_1->set_diffuse_color(0, 1, 0);
+
+        if (this->sphere_2->get_is_collided()) collision_sphere_model_2->set_diffuse_color(1, 0, 0);
+        else collision_sphere_model_2->set_diffuse_color(0, 1, 0);
+        // ===========================================================================
     }
 
     virtual void on_draw() override
     {
-        // AiryEngine::Renderer::render_model3D(camera, this->Egorka_model);
-        this->renderer->render_model3D(camera, this->Egorka_model);
-        // AiryEngine::Renderer::render_model3D(camera, this->lamp_model);
         this->renderer->render_model3D(camera, this->lamp_model);
+        this->renderer->render_model3D(camera, this->house_model);
+        // this->renderer->render_model3D(camera, this->tree_model);
+        this->renderer->render_collision_model(camera, this->collision_cube_model_1);
+        // this->renderer->render_collision_model(camera, this->collision_cube_model_2);
+        this->renderer->render_collision_model(camera, this->collision_sphere_model_1);
+        // this->renderer->render_collision_model(camera, this->collision_sphere_model_2);
     }
 
     void setup_dockspace_menu()
@@ -257,6 +356,22 @@ public:
         // Editor GUI
         ImGui::Begin("Editor");
 
+        ImGui::SliderFloat3("collision cube_1 pos", collision_cube_1_position, -10.0f, 10.0f);
+        this->cube_1->set_translate(glm::vec3(collision_cube_1_position[0], collision_cube_1_position[1], collision_cube_1_position[2]));
+        this->collision_cube_model_1->set_translate(collision_cube_1_position[0], collision_cube_1_position[1], collision_cube_1_position[2]);
+
+        ImGui::SliderFloat3("collision cube_2 pos", collision_cube_2_position, -10.0f, 10.0f);
+        this->cube_2->set_translate(glm::vec3(collision_cube_2_position[0], collision_cube_2_position[1], collision_cube_2_position[2]));
+        this->collision_cube_model_2->set_translate(collision_cube_2_position[0], collision_cube_2_position[1], collision_cube_2_position[2]);
+
+        ImGui::SliderFloat3("collision sphere_1 pos", collision_sphere_1_position, -10.0f, 10.0f);
+        this->sphere_1->set_translate(glm::vec3(collision_sphere_1_position[0], collision_sphere_1_position[1], collision_sphere_1_position[2]));
+        this->collision_sphere_model_1->set_translate(collision_sphere_1_position[0], collision_sphere_1_position[1], collision_sphere_1_position[2]);
+
+        ImGui::SliderFloat3("collision sphere_2 pos", collision_sphere_2_position, -10.0f, 10.0f);
+        this->sphere_2->set_translate(glm::vec3(collision_sphere_2_position[0], collision_sphere_2_position[1], collision_sphere_2_position[2]));
+        this->collision_sphere_model_2->set_translate(collision_sphere_2_position[0], collision_sphere_2_position[1], collision_sphere_2_position[2]);
+
         ImGui::SliderFloat3("light source position", light_source_position, -50.0f, 50.0f);
         // set_light_source_position(light_source_position);
         this->renderer->set_light_source_position(glm::vec3(light_source_position[0], light_source_position[1], light_source_position[2]));
@@ -265,14 +380,14 @@ public:
         // set_light_source_color(light_source_color);
         this->renderer->set_light_source_color(glm::vec3(light_source_color[0], light_source_color[1], light_source_color[2]));
 
-        // ImGui::SliderFloat("ambiant factor", &ambiant_factor, 0.0f, 1.0f);
-        // set_ambiant_factor(ambiant_factor);
+        ImGui::SliderFloat("ambient factor", &ambient_factor, 0.0f, 1.0f);
+        this->renderer->set_ambient_factor(ambient_factor);
 
-        // ImGui::SliderFloat("diffuse factor", &diffuse_factor, 0.0f, 1.0f);
-        // set_diffuse_factor(diffuse_factor);
+        ImGui::SliderFloat("diffuse factor", &diffuse_factor, 0.0f, 1.0f);
+        this->renderer->set_diffuse_factor(diffuse_factor);
 
-        // ImGui::SliderFloat("specular factor", &specular_factor, 0.0f, 1.0f);
-        // set_specular_factor(specular_factor);
+        ImGui::SliderFloat("specular factor", &specular_factor, 0.0f, 1.0f);
+        this->renderer->set_specular_factor(specular_factor);
 
         // ImGui::SliderFloat("shininess", &shininess, 1.0f, 128.0f);
         // set_shininess(shininess);
