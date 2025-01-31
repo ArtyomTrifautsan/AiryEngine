@@ -26,8 +26,9 @@ namespace AiryEngine {
         Application& operator=(Application&&) = delete;
 
         virtual int start(unsigned int window_width, unsigned int window_height, const char* title);
-        virtual void on_start(std::shared_ptr<ResourceManager> _resource_manager) {}
         void close();
+
+        virtual void on_start(std::shared_ptr<ResourceManager> _resource_manager) {}
         virtual void on_draw() {}
         virtual void on_update() {}
         virtual void on_ui_draw() {}

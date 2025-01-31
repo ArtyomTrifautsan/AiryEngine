@@ -4,42 +4,52 @@
 #include <glm/ext/matrix_float3x3.hpp>
 #include <glm/ext/matrix_float4x4.hpp>
 
+#include <iostream>
+
 
 namespace AiryEngine {
 
     CubeCollidingObject::CubeCollidingObject()
     {
+        this->is_collided = false;
 
+        this->anchor_point = glm::vec3(-1, -1, -1); 
+
+        this->x_vector = glm::vec3(2, 0, 0);
+        this->y_vector = glm::vec3(0, 2, 0);
+        this->z_vector = glm::vec3(0, 0, 2);
+
+        this->translate = glm::vec3(0, 0, 0);
+        this->scale = glm::vec3(1, 1, 1);
+
+        update_coords();
     }
 
-    CubeCollidingObject::~CubeCollidingObject()
-    {
+    // CubeCollidingObject::~CubeCollidingObject()
+    // {
 
-    }
+    // }
 
     void CubeCollidingObject::update_coords()
     {
-        this->anchor_point = glm::vec3(-1, -1, 1);
-        this->x_point = glm::vec3(1, -1, 1);
-        this->y_point = glm::vec3(-1, 1, 1);
-        this->z_point = glm::vec3(-1, -1, -1);
+        this->start_point = this->anchor_point + this->translate;
 
         glm::mat3 scale_matrix(
-            this->scale[0], 0,        0,
-            0,        this->scale[1], 0,
-            0,        0,        this->scale[2]
+            this->scale[0], 0,              0,
+            0,              this->scale[1], 0,
+            0,              0,              this->scale[2]
         );
 
-        this->anchor_point = scale_matrix * this->anchor_point;
-        this->x_point = scale_matrix * this->x_point;
-        this->y_point = scale_matrix * this->y_point;
-        this->z_point = scale_matrix * this->z_point;
+        this->x_shifted_point = this->start_point + scale_matrix * this->x_vector;
+        this->y_shifted_point = this->start_point + scale_matrix * this->y_vector;
+        this->z_shifted_point = this->start_point + scale_matrix * this->z_vector;
 
-        this->anchor_point = this->anchor_point + this->translate;
-        this->x_point = this->x_point + this->translate;
-        this->y_point = this->y_point + this->translate;
-        this->z_point = this->z_point + this->translate;
+        this->end_point = this->start_point + scale_matrix * (this->x_vector + this->y_vector + this->z_vector);
+
+        // std::cout << "start_point = " << "(" << this->start_point.x << ", " << this->start_point.y << ", " << this->start_point.z << ")" << std::endl;
+        // std::cout << "end_point = " << "(" << this->end_point.x << ", " << this->end_point.y << ", " << this->end_point.z << ")" << std::endl;
     }
+
 
     void CubeCollidingObject::set_scale(const glm::vec3& _scale)
     {
@@ -47,6 +57,7 @@ namespace AiryEngine {
 
         update_coords();
     }
+
 
     void CubeCollidingObject::set_scale(float scale_x, float scale_y, float scale_z)
     {
@@ -57,12 +68,14 @@ namespace AiryEngine {
         update_coords();
     }
 
+
     void CubeCollidingObject::set_translate(const glm::vec3& _translate)
     {
         this->translate = _translate;
 
         update_coords();
     }
+
 
     void CubeCollidingObject::set_translate(float translate_x, float translate_y, float translate_z)
     {
@@ -72,6 +85,7 @@ namespace AiryEngine {
 
         update_coords();
     }
+
 
     void CubeCollidingObject::set_is_collided(bool _is_collided)
     {
