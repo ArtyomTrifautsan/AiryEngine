@@ -44,11 +44,11 @@ namespace AiryEngine {
         // void set_specular_factor(float factor);       // Temporary solution
         // void set_shininess(float shininess);       // Temporary solution
 
-        std::shared_ptr<Model3D> create_collision_cube_model(const std::string& model_name, const std::string& model_path);
+        std::shared_ptr<Model3D> create_collision_cube_model(const std::string& model_name, const std::string& model_path, const std::string& model_dir_path);
 
         glm::vec2 get_current_cursor_position() const;
 
-        Camera camera{glm::vec3(-5.f, 0.f, 0.f)};
+        Camera camera{glm::vec3(0.f, 0.f, -5.f)};
 
         // float light_source_position[3] = { 0.f, 3.f, 0.f };     // Temporary solution
         // float light_source_color[3] = { 1.f, 1.f, 1.f };        // Temporary solution

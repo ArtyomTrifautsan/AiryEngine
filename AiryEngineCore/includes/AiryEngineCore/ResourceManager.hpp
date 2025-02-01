@@ -33,7 +33,7 @@ namespace AiryEngine {
         std::shared_ptr<Texture2D> load_texture2D_by_full_path(const std::string& texture_name, const std::string& texture_full_path);
         std::shared_ptr<Texture2D> get_texture2D(const std::string& texture_name);
 
-        std::shared_ptr<Model3D> load_model3D(const std::string& model_name, const std::string& model_path);
+        std::shared_ptr<Model3D> load_model3D(const std::string& model_name, const std::string& model_path, const std::string& model_dir_path);
         std::shared_ptr<Model3D> get_model3D(const std::string& model_name);
 
         void set_shaders_directory(const std::string& path);

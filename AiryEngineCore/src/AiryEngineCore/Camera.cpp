@@ -32,7 +32,7 @@ namespace AiryEngine {
         const float pitch_in_radians = glm::radians(m_rotation.y);      
         const float yaw_in_radians = glm::radians(m_rotation.z);
 
-        const glm::mat3 rotate_matrix_x(
+        const glm::mat3 rotate_matrix_x( 
             1,  0,                    0,
             0,  cos(roll_in_radians), sin(roll_in_radians),
             0, -sin(roll_in_radians), cos(roll_in_radians)

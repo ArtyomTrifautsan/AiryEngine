@@ -6,7 +6,7 @@
 #include "AiryEngineCore/Camera.hpp"
 
 #include "AiryEngineCore/ResourceManager.hpp"
-#include "AiryEngineCore/Scene/Model3D.hpp"
+#include "AiryEngineCore/Rendering/OpenGL/Model3D.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/Mesh.hpp"

@@ -11,7 +11,7 @@
 //#include <glad/glad.h>
 
 #include "AiryEngineCore/Log.hpp"
-#include "AiryEngineCore/Scene/Model3D.hpp"
+#include "AiryEngineCore/Rendering/OpenGL/Model3D.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/Mesh.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/Texture2D.hpp"
@@ -158,7 +158,7 @@ namespace AiryEngine {
         this->loaded_textures[texture_full_path] = new_texture;
         this->textures[texture_name] = new_texture;
 
-        LOG_INFO("[load_texture2D_by_full_path] Load texture with texture name: {}", texture_name);
+        // LOG_INFO("[load_texture2D_by_full_path] Load texture with texture name: {}", texture_name);
 
         //std::shared_ptr<Texture2D>& new_texture = this->textures.emplace(texture_name, std::make_shared<Texture2D>(pixels, width, height, channels)).first->second;
 
@@ -180,11 +180,12 @@ namespace AiryEngine {
         return nullptr;
     }
 
-    std::shared_ptr<Model3D> ResourceManager::load_model3D(const std::string& model_name, const std::string& model_path)
+    std::shared_ptr<Model3D> ResourceManager::load_model3D(const std::string& model_name, const std::string& model_path, const std::string& model_dir_path)
     {
-        if (this->loaded_models.count(model_path))
+        std::string path_to_model = model_dir_path + "/" + model_path;
+        if (this->loaded_models.count(path_to_model))
         {
-            // return this->loaded_models[model_path];
+            return this->loaded_models[path_to_model];
         }
 
         std::shared_ptr<Model3D> new_model = std::make_shared<Model3D>(); 
@@ -193,12 +194,12 @@ namespace AiryEngine {
         // std::shared_ptr<std::vector<float>> vertices = std::make_shared<std::vector<float>>(); 
         // std::shared_ptr<std::vector<unsigned int>> indices = std::make_shared<std::vector<unsigned int>>();
         std::shared_ptr<Material> temp_material = std::make_shared<Material>();
-        load_OBJ(std::string(this->path_to_executable + "/" + this->models_directory + "/" + model_path), meshes, model_name);
+        load_OBJ(std::string(this->path_to_executable + "/" + this->models_directory + "/" + path_to_model), meshes, model_name);
         //std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(vertices, indices, temp_material, texture);
 
         new_model->add_meshes(meshes);
         this->models[model_name] = new_model;
-        this->loaded_models[model_path] = new_model;
+        this->loaded_models[path_to_model] = new_model;
 
         //=============================PRINT HAVING MAP_KD=============================
         // std::vector<std::shared_ptr<Mesh>> model_meshes = new_model->get_meshes();
@@ -502,7 +503,7 @@ namespace AiryEngine {
                     // materials = load_MTL(std::string(path_to_directory + "/" + line_vector[1]), model_name);
 
                     new_material->diffuse_map = map_Kd_name;
-                    LOG_INFO("Ready to load texture with texture name: {}", new_material->diffuse_map);
+                    // LOG_INFO("Ready to load texture with texture name: {}", new_material->diffuse_map);
                     load_texture2D_by_full_path(new_material->diffuse_map, map_Kd_filename);
                 }
             }

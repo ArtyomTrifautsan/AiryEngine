@@ -8,7 +8,7 @@
 
 #include "AiryEngineCore/Camera.hpp"
 #include "AiryEngineCore/Log.hpp"
-#include "AiryEngineCore/Scene/Model3D.hpp"
+#include "AiryEngineCore/Rendering/OpenGL/Model3D.hpp"
 
 #include "AiryEngineCore/Rendering/OpenGL/Mesh.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/ShaderProgram.hpp"

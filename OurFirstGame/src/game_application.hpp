@@ -36,7 +36,7 @@ private:
     double initial_mouse_pos_x = 0.0;
     double initial_mouse_pos_y = 0.0;
 
-    float light_source_position[3] = { 0, -50, 1.5 };
+    float light_source_position[3] = { 0, 1, -50.0f };
     float light_source_color[3] = { 1, 1, 1 };
     float ambient_factor = 0.1f;
     float diffuse_factor = 1.0f;

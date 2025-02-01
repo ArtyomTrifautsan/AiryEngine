@@ -17,7 +17,7 @@ using std::endl;
 #include "AiryEngineCore/ResourceManager.hpp"
 #include "AiryEngineCore/Modules/UIModule.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.hpp"
-#include "AiryEngineCore/Scene/Model3D.hpp"
+#include "AiryEngineCore/Rendering/OpenGL/Model3D.hpp"
 #include "AiryEngineCore/Rendering/OpenGL/Mesh.hpp"
 
 namespace AiryEngine {
@@ -226,9 +226,9 @@ namespace AiryEngine {
     //     Renderer_OpenGL::render_model3D(this->camera, Egor_model, default_shader_program, lsp_vec3, lsc_vec3);
     // }
 
-    std::shared_ptr<Model3D> Application::create_collision_cube_model(const std::string& model_name, const std::string& model_path)
+    std::shared_ptr<Model3D> Application::create_collision_cube_model(const std::string& model_name, const std::string& model_path, const std::string& model_dir_path)
     {
-        std::shared_ptr<Model3D> model = this->resource_manager->load_model3D(model_name, model_path);
+        std::shared_ptr<Model3D> model = this->resource_manager->load_model3D(model_name, model_path, model_dir_path);
 
         std::shared_ptr<Material> temp_material = std::make_shared<Material>();
         temp_material->ambient_color = glm::vec3(1, 1, 1);

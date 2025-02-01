@@ -63,9 +63,12 @@ namespace AiryEngine {
         float viewport_height { 600.f };
         float field_of_view { 60.f };
  
-        static constexpr glm::vec3 s_world_up{ 0.f, 0.f, 1.f };
-        static constexpr glm::vec3 s_world_right{ 0.f, -1.f, 0.f };
-        static constexpr glm::vec3 s_world_forward{ 1.f, 0.f, 0.f };
+        // static constexpr glm::vec3 s_world_up{ 0.f, 0.f, 1.f };
+        // static constexpr glm::vec3 s_world_right{ 0.f, -1.f, 0.f };
+        // static constexpr glm::vec3 s_world_forward{ 1.f, 0.f, 0.f };
+        static constexpr glm::vec3 s_world_up{ 0.f, 1.f, 0.f };
+        static constexpr glm::vec3 s_world_right{ 1.f, 0.f, 0.f };
+        static constexpr glm::vec3 s_world_forward{ 0.f, 0.f, 1.f };
 
         glm::mat4 m_view_matrix;
         glm::mat4 m_projection_matrix;

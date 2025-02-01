@@ -4,10 +4,12 @@ set(GAME_PROJECT_NAME OurFirstGame)
 
 set(GAME_INCLUDES
     src/game_application.hpp
+    src/game_round.hpp
 )
 
 set(GAME_SOURCES
     src/game_application.cpp
+    src/game_round.hpp
 )
 
 add_executable(${GAME_PROJECT_NAME}

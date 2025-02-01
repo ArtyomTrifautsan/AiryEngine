@@ -10,7 +10,7 @@
 #include <AiryEngineCore/Input.hpp>
 #include <AiryEngineCore/ResourceManager.hpp>
 
-#include <AiryEngineCore/Scene/Model3D.hpp>
+#include <AiryEngineCore/Rendering/OpenGL/Model3D.hpp>
 
 
 // #include <AiryEngineCore/Physics/CollisionDetector.hpp>
@@ -28,16 +28,17 @@ void GameApplication::on_start(std::shared_ptr<AiryEngine::ResourceManager> _res
     this->renderer = std::make_shared<AiryEngine::Renderer>(_resource_manager);
 
 
-    this->lamp_model = _resource_manager->load_model3D("Lamp", "Lampa234.obj");
-    this->lamp_model->set_rotate(90, 0, 0);
+    this->lamp_model = _resource_manager->load_model3D("Lamp", "Lampa234.obj", "");
+    // this->lamp_model->set_rotate(90, 0, 0);
     this->lamp_model->set_translate_y(-1);
 
-    this->canister_model = _resource_manager->load_model3D("Canister", "Kanistra.obj");
+    // this->canister_model = _resource_manager->load_model3D("Canister", "Kanistra.obj", "Kanister");
+    this->canister_model = _resource_manager->load_model3D("Canister", "WayOne.obj", "FunnyRider/Road");
     // this->canister_model = _resource_manager->load_model3D("Canister", "Cube.obj");
-    this->canister_model->set_rotate(90, 0, 0);
+    // this->canister_model->set_rotate(90, 0, 0);
 
-    this->cube_model3D = create_collision_cube_model("Cube1", "Cube.obj");
-    this->sphere_model3D = create_collision_cube_model("sphere", "sphere.obj");
+    this->cube_model3D = create_collision_cube_model("Cube1", "Cube.obj", "CubeCollideModel");
+    this->sphere_model3D = create_collision_cube_model("sphere", "sphere.obj", "SphereCollideModel");
     // this->cube_model3D->set_translate(3, -3, 0);
 
     this->cube_1_colliding_object = std::make_shared<AiryEngine::CubeCollidingObject>();
@@ -82,13 +83,13 @@ void GameApplication::_handle_events()
     // Go Left
     if (AiryEngine::Input::IsKeyPressed(AiryEngine::KeyCode::KEY_A))
     {
-        movement_delta.y -= 0.05f;
+        movement_delta.y += 0.05f;
     }
 
     // Go Right
     if (AiryEngine::Input::IsKeyPressed(AiryEngine::KeyCode::KEY_D))
     {
-        movement_delta.y += 0.05f;
+        movement_delta.y -= 0.05f;
     }
 
     // Go Up
@@ -147,12 +148,15 @@ void GameApplication::_handle_events()
         if (AiryEngine::Input::IsMouseButtonPressed(AiryEngine::MouseButtonCode::MOUSE_BUTTON_LEFT))
         {
             camera.move_right(static_cast<float>(current_cursor_position.x - this->initial_mouse_pos_x) / 100.f );
-            camera.move_up(static_cast<float>(this->initial_mouse_pos_y - current_cursor_position.y) / 100.f );
+            // camera.move_up(static_cast<float>(this->initial_mouse_pos_y - current_cursor_position.y) / 100.f );
+            camera.move_up(static_cast<float>(current_cursor_position.y - this->initial_mouse_pos_y) / 100.f );
         }
         else
         {
-            rotation_delta.z += static_cast<float>(this->initial_mouse_pos_x - current_cursor_position.x) / 5.f;
-            rotation_delta.y -= static_cast<float>(this->initial_mouse_pos_y - current_cursor_position.y) / 5.f;
+            // rotation_delta.z += static_cast<float>(this->initial_mouse_pos_x - current_cursor_position.x) / 5.f;
+            // rotation_delta.y -= static_cast<float>(this->initial_mouse_pos_y - current_cursor_position.y) / 5.f;
+            rotation_delta.y += static_cast<float>(this->initial_mouse_pos_x - current_cursor_position.x) / 5.f;
+            rotation_delta.x -= static_cast<float>(this->initial_mouse_pos_y - current_cursor_position.y) / 5.f;
         }
 
         this->initial_mouse_pos_x = current_cursor_position.x;

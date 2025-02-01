@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.12)
 set(ENGINE_PROJECT_NAME AiryEngineCore)
 
 set(ENGINE_PUBLIC_INCLUDES
+includes/AiryEngineCore/Rendering/OpenGL/Model3D.hpp
     includes/AiryEngineCore/Application.hpp
     includes/AiryEngineCore/Camera.hpp
     includes/AiryEngineCore/Event.hpp
@@ -11,8 +12,6 @@ set(ENGINE_PUBLIC_INCLUDES
     includes/AiryEngineCore/Input.hpp
     includes/AiryEngineCore/Renderer.hpp
     includes/AiryEngineCore/ResourceManager.hpp
-
-    includes/AiryEngineCore/Scene/Model3D.hpp
 
     includes/AiryEngineCore/Physics/CollidingObjects/CubeCollidingObject.hpp
     includes/AiryEngineCore/Physics/CollidingObjects/SphereCollidingObject.hpp
@@ -43,8 +42,8 @@ set(ENGINE_PRIVATE_SOURCES
     src/AiryEngineCore/ResourceManager.cpp
 
     src/AiryEngineCore/Modules/UIModule.cpp
-    src/AiryEngineCore/Scene/Model3D.cpp
 
+    src/AiryEngineCore/Rendering/OpenGL/Model3D.cpp
     src/AiryEngineCore/Rendering/OpenGL/Renderer_OpenGL.cpp
     src/AiryEngineCore/Rendering/OpenGL/ShaderProgram.cpp
     src/AiryEngineCore/Rendering/OpenGL/VertexBuffer.cpp
