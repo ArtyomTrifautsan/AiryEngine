@@ -36,6 +36,8 @@ namespace AiryEngine
         std::shared_ptr<ShaderProgram> default_shader_program;
         std::shared_ptr<ShaderProgram> light_source_shader_program;
         std::shared_ptr<ShaderProgram> collision_shader_program;
+        std::shared_ptr<ShaderProgram> model3D_material_shader_program;
+        std::shared_ptr<ShaderProgram> model3D_texture_shader_program;
 
         glm::vec3 light_source_position = { 0.f, 3.f, 0.f };
         glm::vec3 light_source_color = { 1.f, 1.f, 1.f };

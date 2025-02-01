@@ -29,6 +29,7 @@ namespace AiryEngine {
         glm::vec3 specular_color;
         int shininess;
         std::string diffuse_map;
+        bool has_duffuse_map = false;
         float alpha_channel = 1.0;
     };
 
@@ -47,6 +48,9 @@ namespace AiryEngine {
         std::shared_ptr<Material> get_material() const { return this->material; }
         std::shared_ptr<Texture2D> get_texture() const { return this->texture; }
         std::shared_ptr<VertexArray> get_vertex_array() const { return this->vertex_array; }
+
+        bool get_has_texture() const { return this->has_texture; };
+
         void get_scale(float (&_scale)[3]) const;
         void get_rotate(float (&_rotate)[3]) const;
         void get_translate(float (&_translate)[3]) const;
@@ -59,6 +63,8 @@ namespace AiryEngine {
         float get_specular_factor() const { return this->specular_factor; }     //Temporary solution
         float get_shininess() const { return this->shininess; }     // Temporary solution
 
+        void set_texture(std::shared_ptr<Texture2D> texture);
+        void set_has_texture(bool has_texture);
         void set_material(std::shared_ptr<Material> material);
         void set_diffuse_color(float r, float g, float b);
         void set_scale(float scale_x, float scale_y, float scale_z);
@@ -73,6 +79,8 @@ namespace AiryEngine {
         std::shared_ptr<std::vector<unsigned int>> indices;
         std::shared_ptr<Material> material;
         std::shared_ptr<Texture2D> texture;
+
+        bool has_texture = false;
 
         std::shared_ptr<VertexArray> vertex_array;
         std::shared_ptr<VertexBuffer> vertex_buffer;

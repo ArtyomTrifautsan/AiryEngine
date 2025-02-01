@@ -30,6 +30,7 @@ namespace AiryEngine {
         std::shared_ptr<ShaderProgram> get_shader_program(const std::string& shader_name);
 
         std::shared_ptr<Texture2D> load_texture2D(const std::string& texture_name, const std::string& texture_path);
+        std::shared_ptr<Texture2D> load_texture2D_by_full_path(const std::string& texture_name, const std::string& texture_full_path);
         std::shared_ptr<Texture2D> get_texture2D(const std::string& texture_name);
 
         std::shared_ptr<Model3D> load_model3D(const std::string& model_name, const std::string& model_path);
@@ -53,9 +54,9 @@ namespace AiryEngine {
         std::string get_file_string(const std::string& relative_file_path);
         std::string get_directory_path(const std::string& path_to_file);
         std::string change_symbol(std::string& str, const char& src_symbol, const std::string& new_symbol);
-        void load_OBJ(const std::string& full_path_to_model, std::vector<std::shared_ptr<Mesh>>& meshes);
+        void load_OBJ(const std::string& full_path_to_model, std::vector<std::shared_ptr<Mesh>>& meshes, const std::string& model_name);
 
-        std::shared_ptr<std::map<std::string, std::shared_ptr<Material>>> load_MTL(const std::string& full_path_to_model);
+        std::shared_ptr<std::map<std::string, std::shared_ptr<Material>>> load_MTL(const std::string& full_path_to_model, const std::string& model_name);
         std::vector<std::string> split_string(std::string& str, const std::string separator);
 
         std::string path_to_executable;

@@ -12,24 +12,29 @@
 
 #include <AiryEngineCore/Scene/Model3D.hpp>
 
-// #include <AiryEngineCore/Physics/CollisionDetector.hpp>
 
+// #include <AiryEngineCore/Physics/CollisionDetector.hpp>
 
 GameApplication::GameApplication(std::shared_ptr<AiryEngine::ResourceManager> _resource_manager) : AiryEngine::Application(_resource_manager)
 {
     // set_executable_path(executable_path);
     // std::cout << "GameApplication constructor started" << std::endl;
 }
-
+// adar
 
 void GameApplication::on_start(std::shared_ptr<AiryEngine::ResourceManager> _resource_manager)
 {
     // std::cout << "on_start started" << std::endl;
     this->renderer = std::make_shared<AiryEngine::Renderer>(_resource_manager);
 
+
     this->lamp_model = _resource_manager->load_model3D("Lamp", "Lampa234.obj");
     this->lamp_model->set_rotate(90, 0, 0);
     this->lamp_model->set_translate_y(-1);
+
+    this->canister_model = _resource_manager->load_model3D("Canister", "Kanistra.obj");
+    // this->canister_model = _resource_manager->load_model3D("Canister", "Cube.obj");
+    this->canister_model->set_rotate(90, 0, 0);
 
     this->cube_model3D = create_collision_cube_model("Cube1", "Cube.obj");
     this->sphere_model3D = create_collision_cube_model("sphere", "sphere.obj");
@@ -218,7 +223,7 @@ void GameApplication::_detect_collisions()
 
 void GameApplication::on_draw()
 {
-    this->renderer->render_model3D(camera, this->lamp_model);
+    // this->renderer->render_model3D(camera, this->lamp_model);
 
     // Рендерим куб нужного цвета и в нужном месте
     // Я использую одну модель для отрисовки двух кубов. Просто перед каждым рендерингом 
@@ -247,6 +252,9 @@ void GameApplication::on_draw()
     glm::vec3 sphere_2_pos = this->sphere_2_colliding_object->get_translate();
     this->sphere_model3D->set_translate(sphere_2_pos.x, sphere_2_pos.y + 3, sphere_2_pos.z);
     this->renderer->render_collision_model(camera, this->sphere_model3D);
+
+    // this->canister_model->set_translate(canister_model_position[0], canister_model_position[0], canister_model_position[0]);
+    this->renderer->render_model3D(camera, this->canister_model);
 
     // this->renderer->render_collision_model(camera, this->collision_cube_model_2);
     // this->renderer->render_collision_model(camera, this->collision_sphere_model_1);
@@ -348,6 +356,11 @@ void GameApplication::on_ui_draw()
     ImGui::SliderFloat3("collision sphere_2 pos", collision_sphere_2_position, -10.0f, 10.0f);
     this->sphere_2_colliding_object->set_translate(glm::vec3(collision_sphere_2_position[0], collision_sphere_2_position[1], collision_sphere_2_position[2]));
     // this->collision_sphere_model_2->set_translate(collision_sphere_2_position[0], collision_sphere_2_position[1], collision_sphere_2_position[2]);
+
+    ImGui::SliderFloat3("canister model position", canister_model_position, -50.0f, 50.0f);
+    // set_light_source_position(light_source_position);
+    // this->renderer->set_light_source_position(glm::vec3(light_source_position[0], light_source_position[1], light_source_position[2]));
+    this->canister_model->set_translate(canister_model_position[0], canister_model_position[1], canister_model_position[2]);
 
     ImGui::SliderFloat3("light source position", light_source_position, -50.0f, 50.0f);
     // set_light_source_position(light_source_position);

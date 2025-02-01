@@ -109,6 +109,7 @@ namespace AiryEngine {
         if (nullptr == pixels)
         {
             LOG_CRITICAL("Can't load texture: {}", texture_path);
+            // std::cout << "Can't load texture " << std::string(this->path_to_executable + "/" + this->textures_directory + "/" + texture_path) << std::endl;
         }
         // LOG_INFO("Created image: {}", texture_path);
         // LOG_INFO("  width: {}", width);
@@ -119,19 +120,62 @@ namespace AiryEngine {
         this->loaded_textures[texture_path] = new_texture;
         this->textures[texture_name] = new_texture;
 
+        // LOG_INFO("[load_texture2D] Load texture with texture name: {}", texture_name);
+
         //std::shared_ptr<Texture2D>& new_texture = this->textures.emplace(texture_name, std::make_shared<Texture2D>(pixels, width, height, channels)).first->second;
 
         return new_texture;
     }
+
+
+    std::shared_ptr<Texture2D> ResourceManager::load_texture2D_by_full_path(const std::string& texture_name, const std::string& texture_full_path)
+    {
+        if (this->loaded_textures.count(texture_full_path))
+        {
+            LOG_INFO("Texture {} already loaded", texture_full_path);
+            return this->loaded_textures[texture_full_path];
+        }
+
+        int width = 0;
+        int height = 0;
+        int channels = 0;
+        unsigned char* pixels = nullptr;
+
+        stbi_set_flip_vertically_on_load(true);
+        pixels = stbi_load(texture_full_path.c_str(), &width, &height, &channels, 0);
+
+        if (nullptr == pixels)
+        {
+            LOG_CRITICAL("Can't load texture by full_path: {}", texture_full_path);
+            // std::cout << "Can't load texture " << std::string(this->path_to_executable + "/" + this->textures_directory + "/" + texture_path) << std::endl;
+        }
+        // LOG_INFO("Created image: {}", texture_path);
+        // LOG_INFO("  width: {}", width);
+        // LOG_INFO("  height: {}", height);
+        // LOG_INFO("  channels: {}", channels);
+        
+        std::shared_ptr<Texture2D> new_texture = std::make_shared<Texture2D>(pixels, width, height, channels);
+        this->loaded_textures[texture_full_path] = new_texture;
+        this->textures[texture_name] = new_texture;
+
+        LOG_INFO("[load_texture2D_by_full_path] Load texture with texture name: {}", texture_name);
+
+        //std::shared_ptr<Texture2D>& new_texture = this->textures.emplace(texture_name, std::make_shared<Texture2D>(pixels, width, height, channels)).first->second;
+
+        return new_texture;
+    }
+
 
     std::shared_ptr<Texture2D> ResourceManager::get_texture2D(const std::string& texture_name)
     {
         Texture2DMap::const_iterator it = this->textures.find(texture_name);
         if (it != this->textures.end())
         {
+            // std::cout << "Find texture: " << texture_name << std::endl;
             return it->second;
         }
         LOG_CRITICAL("Can't find the texture: {}", texture_name);
+        std::cerr << "Can't find the texture: " << texture_name << std::endl;
         //std::cerr << "Can't find the shader program: " << shaderName << std::endl;
         return nullptr;
     }
@@ -149,12 +193,22 @@ namespace AiryEngine {
         // std::shared_ptr<std::vector<float>> vertices = std::make_shared<std::vector<float>>(); 
         // std::shared_ptr<std::vector<unsigned int>> indices = std::make_shared<std::vector<unsigned int>>();
         std::shared_ptr<Material> temp_material = std::make_shared<Material>();
-        load_OBJ(std::string(this->path_to_executable + "/" + this->models_directory + "/" + model_path), meshes);
+        load_OBJ(std::string(this->path_to_executable + "/" + this->models_directory + "/" + model_path), meshes, model_name);
         //std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(vertices, indices, temp_material, texture);
 
         new_model->add_meshes(meshes);
         this->models[model_name] = new_model;
         this->loaded_models[model_path] = new_model;
+
+        //=============================PRINT HAVING MAP_KD=============================
+        // std::vector<std::shared_ptr<Mesh>> model_meshes = new_model->get_meshes();
+        // std::cout << "Mehses from load_model(): " << model_meshes.size() << std::endl;
+        // for (std::shared_ptr<Mesh> current_mesh : model_meshes) 
+        // {
+        //     // if (current_mesh->get_has_texture())
+        //         std::cout << "map_Kd from load_model(): " << current_mesh->get_material()->diffuse_map << std::endl;
+
+        // }
         return new_model;
     }
 
@@ -170,7 +224,7 @@ namespace AiryEngine {
         return nullptr;
     }
 
-    void ResourceManager::load_OBJ(const std::string& full_path_to_model, std::vector<std::shared_ptr<Mesh>>& meshes)
+    void ResourceManager::load_OBJ(const std::string& full_path_to_model, std::vector<std::shared_ptr<Mesh>>& meshes, const std::string& model_name)
     {
         // LOG_INFO("load_OBJ method was runned");
 
@@ -205,7 +259,7 @@ namespace AiryEngine {
                     // LOG_INFO("Loading material file: {}", line_vector[1]);
 
                     std::string path_to_directory = get_directory_path(full_path_to_model);
-                    materials = load_MTL(std::string(path_to_directory + "/" + line_vector[1]));
+                    materials = load_MTL(std::string(path_to_directory + "/" + line_vector[1]), model_name);
                 }
 
                 else if (line_vector[0] == "usemtl")
@@ -219,6 +273,13 @@ namespace AiryEngine {
                             indices,
                             mesh_material
                         );
+                        if (mesh_material->has_duffuse_map)
+                        {
+                            // std::cout << "This mesh has texture" << std::endl;
+                            new_mesh->set_has_texture(true);
+                            new_mesh->set_texture(get_texture2D(mesh_material->diffuse_map));
+                            // std::cout << "This mesh has texture: " << new_mesh->get_texture() << std::endl;
+                        }
                         meshes.push_back(new_mesh);
 
                         // Нужно обяхательно обнулить все вершины и индексы
@@ -292,6 +353,12 @@ namespace AiryEngine {
                     indices,
                     mesh_material
                 );
+                if (mesh_material->has_duffuse_map)
+                {
+                    // std::cout << "This mesh has texture" << std::endl;
+                    new_mesh->set_has_texture(true);
+                    new_mesh->set_texture(get_texture2D(mesh_material->diffuse_map));
+                }
                 meshes.push_back(new_mesh);
 
                 // Нужно обяхательно обнулить все вершины и индексы
@@ -310,7 +377,7 @@ namespace AiryEngine {
         file.close();     // закрываем файл
     }
 
-    std::shared_ptr<std::map<std::string, std::shared_ptr<Material>>> ResourceManager::load_MTL(const std::string& full_path_to_model)
+    std::shared_ptr<std::map<std::string, std::shared_ptr<Material>>> ResourceManager::load_MTL(const std::string& full_path_to_model, const std::string& model_name)
     {
         // LOG_INFO("load_MTL method start");
 
@@ -340,7 +407,13 @@ namespace AiryEngine {
                     // LOG_INFO("Create material: {}", line_vector[1]);
 
                     if (material_count)
-                        materials->emplace(new_material->name, new_material);
+                        {
+                            materials->emplace(new_material->name, new_material);
+                            // std::cout << "Create material with map_Kd: " << new_material->has_duffuse_map << std::endl;
+
+                            // new_material->diffuse_map = "";
+                            // new_material->has_duffuse_map = false;
+                        }
                         //materials[new_material->name] = new_material;
                         //materials->push_back(new_material);
                     
@@ -417,6 +490,20 @@ namespace AiryEngine {
                 else if (line_vector[0] == "map_Kd")
                 {
                     // LOG_INFO("Map kd file: {}", line_vector[1]);
+                    // std::cout << "Map kd file: " << line_vector[1] << std::endl;
+                    // new_material->diffuse_map = line_vector[1];
+                    new_material->diffuse_color = glm::vec3(0, 0, 0);
+
+                    new_material->has_duffuse_map = true;
+
+                    std::string path_to_directory = get_directory_path(full_path_to_model);
+                    std::string map_Kd_filename = std::string(path_to_directory + "/" + line_vector[1]);
+                    std::string map_Kd_name = std::string(model_name + "/" + line_vector[1]);
+                    // materials = load_MTL(std::string(path_to_directory + "/" + line_vector[1]), model_name);
+
+                    new_material->diffuse_map = map_Kd_name;
+                    LOG_INFO("Ready to load texture with texture name: {}", new_material->diffuse_map);
+                    load_texture2D_by_full_path(new_material->diffuse_map, map_Kd_filename);
                 }
             }
 
@@ -424,6 +511,9 @@ namespace AiryEngine {
             {
                 materials->emplace(new_material->name, new_material);
                 material_count++;
+
+                // new_material->diffuse_map = "";
+                // new_material->has_duffuse_map = false;
             }
         }
 

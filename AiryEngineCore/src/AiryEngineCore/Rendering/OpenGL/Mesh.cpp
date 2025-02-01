@@ -45,6 +45,16 @@ namespace AiryEngine {
         this->vertex_array->unbind();
     }
 
+    void Mesh::set_texture(std::shared_ptr<Texture2D> texture)
+    {
+        this->texture = texture;
+    }
+
+    void Mesh::set_has_texture(bool has_texture)
+    {
+        this->has_texture = has_texture;
+    }
+
     void Mesh::set_material(std::shared_ptr<Material> material)
     {
         this->material = material;

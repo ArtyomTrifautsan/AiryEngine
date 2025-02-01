@@ -27,6 +27,7 @@ private:
     std::shared_ptr<AiryEngine::Model3D> lamp_model;
     std::shared_ptr<AiryEngine::Model3D> cube_model3D;
     std::shared_ptr<AiryEngine::Model3D> sphere_model3D;
+    std::shared_ptr<AiryEngine::Model3D> canister_model;
     std::shared_ptr<AiryEngine::CubeCollidingObject> cube_1_colliding_object;
     std::shared_ptr<AiryEngine::CubeCollidingObject> cube_2_colliding_object;
     std::shared_ptr<AiryEngine::SphereCollidingObject> sphere_1_colliding_object;
@@ -35,7 +36,7 @@ private:
     double initial_mouse_pos_x = 0.0;
     double initial_mouse_pos_y = 0.0;
 
-    float light_source_position[3] = { 0, 0, 0 };
+    float light_source_position[3] = { 0, -50, 1.5 };
     float light_source_color[3] = { 1, 1, 1 };
     float ambient_factor = 0.1f;
     float diffuse_factor = 1.0f;
@@ -49,6 +50,8 @@ private:
     float collision_cube_2_position[3] = { 0, 0, 0 };
     float collision_sphere_1_position[3] = { -3, -3, 0 };
     float collision_sphere_2_position[3] = { -3, -3, 0 };
+
+    float canister_model_position[3] = { 0, 0, 0 };
 
     void _handle_events();
     void _update_light_source_state();
