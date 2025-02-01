@@ -225,6 +225,35 @@ namespace AiryEngine {
         return nullptr;
     }
 
+
+    std::shared_ptr<Model3D> ResourceManager::create_collision_cube_model(const std::string& model_name, const std::string& model_path, const std::string& model_dir_path)
+    {
+        std::shared_ptr<Model3D> model = load_model3D(model_name, model_path, model_dir_path);
+
+        std::shared_ptr<Material> temp_material = std::make_shared<Material>();
+        temp_material->ambient_color = glm::vec3(1, 1, 1);
+        temp_material->diffuse_color = glm::vec3(1, 0, 0);
+        temp_material->specular_color = glm::vec3(0.5, 0.5, 0.5);
+        temp_material->shininess = 32;
+        temp_material->alpha_channel = 0.2f;
+
+        model->set_material(temp_material);
+
+        // std::shared_ptr<Model3D> model = std::make_shared<Model3D>();
+
+        // Создаем указатели на массив вершин и массив индексов
+        // std::shared_ptr<std::vector<float>> pnu_ptr = std::make_shared<std::vector<float>>();
+        // for (int i = 0; i < pos_norm_uv.size(); i++) pnu_ptr->push_back(pos_norm_uv[i]);
+        // std::shared_ptr<std::vector<unsigned int>> indices_ptr = std::make_shared<std::vector<unsigned int>>();
+        // for (int i = 0; i < indices.size(); i++) indices_ptr->push_back(indices[i]);
+
+        // std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(pnu_ptr, indices_ptr, temp_material);
+        // model->add_mesh(mesh);
+
+        return model;
+    }
+
+
     void ResourceManager::load_OBJ(const std::string& full_path_to_model, std::vector<std::shared_ptr<Mesh>>& meshes, const std::string& model_name)
     {
         // LOG_INFO("load_OBJ method was runned");

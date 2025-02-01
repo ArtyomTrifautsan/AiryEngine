@@ -9,7 +9,7 @@ set(GAME_INCLUDES
 
 set(GAME_SOURCES
     src/game_application.cpp
-    src/game_round.hpp
+    src/game_round.cpp
 )
 
 add_executable(${GAME_PROJECT_NAME}

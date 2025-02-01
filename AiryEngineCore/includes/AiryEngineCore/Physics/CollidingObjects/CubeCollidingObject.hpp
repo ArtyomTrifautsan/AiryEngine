@@ -18,6 +18,16 @@ namespace AiryEngine {
         void set_translate(const glm::vec3& _translate);
         void set_translate(float translate_x, float translate_y, float translate_z);
 
+        void move_colliding_object(float delta_move_x, float delta_move_y, float delta_move_z);
+        void move_colliding_object_x(float delta_move_x);
+        void move_colliding_object_y(float delta_move_y);
+        void move_colliding_object_z(float delta_move_z);
+
+        void rotate_colliding_object(float delta_angle_x, float delta_angle_y, float delta_angle_z);
+        void rotate_colliding_object_x(float delta_angle_x);
+        void rotate_colliding_object_y(float delta_angle_y);
+        void rotate_colliding_object_z(float delta_angle_z);
+
         glm::vec3 get_anchor_point() const { return this->anchor_point; }
 
         glm::vec3 get_start_point() const { return this->start_point; }
@@ -51,6 +61,7 @@ namespace AiryEngine {
 
         glm::vec3 translate;
         glm::vec3 scale;
+        glm::vec3 rotate;
 
         void update_coords();
     };
