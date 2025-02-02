@@ -5,11 +5,25 @@ set(GAME_PROJECT_NAME OurFirstGame)
 set(GAME_INCLUDES
     src/game_application.hpp
     src/game_round.hpp
+    src/game_object_renderer.hpp
+
+    src/game_objects/car.hpp
+    src/game_objects/road.hpp
+    src/game_objects/barrier.hpp
+    src/game_objects/coin.hpp
+    src/game_objects/fuel_canister.hpp
 )
 
 set(GAME_SOURCES
     src/game_application.cpp
     src/game_round.cpp
+    src/game_object_renderer.cpp
+
+    src/game_objects/car.cpp
+    src/game_objects/road.cpp
+    src/game_objects/barrier.cpp
+    src/game_objects/coin.cpp
+    src/game_objects/fuel_canister.cpp
 )
 
 add_executable(${GAME_PROJECT_NAME}

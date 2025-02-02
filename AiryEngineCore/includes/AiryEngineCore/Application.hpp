@@ -48,7 +48,8 @@ namespace AiryEngine {
 
         glm::vec2 get_current_cursor_position() const;
 
-        Camera camera{glm::vec3(0.f, 0.f, -5.f)};
+        // Camera camera{glm::vec3(0.f, 0.f, -5.f)};
+        std::shared_ptr<Camera> camera;
 
         // float light_source_position[3] = { 0.f, 3.f, 0.f };     // Temporary solution
         // float light_source_color[3] = { 1.f, 1.f, 1.f };        // Temporary solution

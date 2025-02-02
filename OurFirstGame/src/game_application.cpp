@@ -18,38 +18,10 @@ GameApplication::GameApplication(std::shared_ptr<AiryEngine::ResourceManager> _r
 
 void GameApplication::on_start(std::shared_ptr<AiryEngine::ResourceManager> _resource_manager)
 {
-    // std::cout << "on_start started" << std::endl;
     this->renderer = std::make_shared<AiryEngine::Renderer>(_resource_manager);
 
-    this->game_round = std::make_shared<GameRound>();
-    this->game_round->start(_resource_manager);
-
-    // this->game_round->set_visible_car(false);
-
-    // this->lamp_model = _resource_manager->load_model3D("Lamp", "Lampa234.obj", "");
-    // this->lamp_model->set_rotate(90, 0, 0);
-    // this->lamp_model->set_translate_y(-1);
-
-    // this->canister_model = _resource_manager->load_model3D("Canister", "Kanistra.obj", "Kanister");
-    // this->canister_model = _resource_manager->load_model3D("Canister", "WayOne.obj", "FunnyRider/Road");
-    // this->canister_model = _resource_manager->load_model3D("Canister", "Cube.obj");
-    // this->canister_model->set_rotate(90, 0, 0);
-
-    // this->cube_model3D = create_collision_cube_model("Cube1", "Cube.obj", "CubeCollideModel");
-    // this->sphere_model3D = create_collision_cube_model("sphere", "sphere.obj", "SphereCollideModel");
-    // this->cube_model3D->set_translate(3, -3, 0);
-
-    // this->cube_1_colliding_object = std::make_shared<AiryEngine::CubeCollidingObject>();
-    // this->collision_cube_1_position[0] = -3;
-
-    // this->cube_2_colliding_object = std::make_shared<AiryEngine::CubeCollidingObject>();
-
-    // this->sphere_1_colliding_object = std::make_shared<AiryEngine::SphereCollidingObject>();
-    // this->collision_sphere_1_position[0] = 3;
-
-    // this->sphere_2_colliding_object = std::make_shared<AiryEngine::SphereCollidingObject>();
-    // this->collision_sphere_2_position[0] = 6;
-    // std::cout << "on_start finished" << std::endl;
+    this->game_round = std::make_shared<GameRound>(_resource_manager);
+    this->game_object_renderer = std::make_shared<GameObjectRenderer>(this->renderer, this->camera, _resource_manager);
 }
 
 void GameApplication::on_update()
@@ -145,9 +117,9 @@ void GameApplication::_handle_events()
 
         if (AiryEngine::Input::IsMouseButtonPressed(AiryEngine::MouseButtonCode::MOUSE_BUTTON_LEFT))
         {
-            camera.move_right(static_cast<float>(current_cursor_position.x - this->initial_mouse_pos_x) / 100.f );
+            camera->move_right(static_cast<float>(current_cursor_position.x - this->initial_mouse_pos_x) / 100.f );
             // camera.move_up(static_cast<float>(this->initial_mouse_pos_y - current_cursor_position.y) / 100.f );
-            camera.move_up(static_cast<float>(current_cursor_position.y - this->initial_mouse_pos_y) / 100.f );
+            camera->move_up(static_cast<float>(current_cursor_position.y - this->initial_mouse_pos_y) / 100.f );
         }
         else
         {
@@ -161,7 +133,7 @@ void GameApplication::_handle_events()
         this->initial_mouse_pos_y = current_cursor_position.y;
     }
 
-    camera.add_movement_and_rotation(movement_delta, rotation_delta);  
+    camera->add_movement_and_rotation(movement_delta, rotation_delta);  
 }
 
 
@@ -227,44 +199,13 @@ void GameApplication::on_draw()
 {
     // this->renderer->render_model3D(camera, this->lamp_model);
 
-    this->game_round->render_game_objects(this->renderer, this->camera);
+    // this->game_round->render_game_objects(this->renderer, this->camera);
 
-    // Рендерим куб нужного цвета и в нужном месте
-    // Я использую одну модель для отрисовки двух кубов. Просто перед каждым рендерингом 
-    // я перекрашиваю ее в красный или зеленый цвет и перемещаю в место физической модели
-    //куба
-    // if (this->cube_1_colliding_object->get_is_collided()) this->cube_model3D->set_diffuse_color(1.0f, 0.0f, 0.0f);
-    // else this->cube_model3D->set_diffuse_color(0.0f, 1.0f, 0.0f);
-    // glm::vec3 cube_1_pos = this->cube_1_colliding_object->get_translate();
-    // this->cube_model3D->set_translate(cube_1_pos.x, cube_1_pos.y, cube_1_pos.z);
-    // this->renderer->render_collision_model(camera, this->cube_model3D);
-
-    // if (this->cube_2_colliding_object->get_is_collided()) this->cube_model3D->set_diffuse_color(1.0f, 0.0f, 0.0f);
-    // else this->cube_model3D->set_diffuse_color(0.0f, 1.0f, 0.0f);
-    // glm::vec3 cube_2_pos = this->cube_2_colliding_object->get_translate();
-    // this->cube_model3D->set_translate(cube_2_pos.x, cube_2_pos.y, cube_2_pos.z);
-    // this->renderer->render_collision_model(camera, this->cube_model3D);
-
-    // if (this->sphere_1_colliding_object->get_is_collided()) this->sphere_model3D->set_diffuse_color(1.0f, 0.0f, 0.0f);
-    // else this->sphere_model3D->set_diffuse_color(0.0f, 1.0f, 0.0f);
-    // glm::vec3 sphere_1_pos = this->sphere_1_colliding_object->get_translate();
-    // this->sphere_model3D->set_translate(sphere_1_pos.x, sphere_1_pos.y + 3, sphere_1_pos.z);
-    // this->renderer->render_collision_model(camera, this->sphere_model3D);
-
-    // if (this->sphere_2_colliding_object->get_is_collided()) this->sphere_model3D->set_diffuse_color(1.0f, 0.0f, 0.0f);
-    // else this->sphere_model3D->set_diffuse_color(0.0f, 1.0f, 0.0f);
-    // glm::vec3 sphere_2_pos = this->sphere_2_colliding_object->get_translate();
-    // this->sphere_model3D->set_translate(sphere_2_pos.x, sphere_2_pos.y + 3, sphere_2_pos.z);
-    // this->renderer->render_collision_model(camera, this->sphere_model3D);
-
-    // this->canister_model->set_translate(canister_model_position[0], canister_model_position[0], canister_model_position[0]);
-    // this->renderer->render_model3D(camera, this->canister_model);
-
-    // this->renderer->render_collision_model(camera, this->collision_cube_model_2);
-    // this->renderer->render_collision_model(camera, this->collision_sphere_model_1);
-    // this->renderer->render_collision_model(camera, this->collision_sphere_model_2);
-
-
+    this->game_object_renderer->render_car(this->game_round->get_car());
+    this->game_object_renderer->render_road(this->game_round->get_road());
+    this->game_object_renderer->render_barrier(this->game_round->get_barrier());
+    this->game_object_renderer->render_coin(this->game_round->get_coin());
+    this->game_object_renderer->render_fuel_canister(this->game_round->get_fuel_canister());
 }
 
 
@@ -340,43 +281,21 @@ void GameApplication::on_ui_draw()
 {
     setup_dockspace_menu();
 
-    camera_fov = camera.get_field_of_view();
-    camera_near_plane = camera.get_near_clip_plane();
-    camera_far_plane = camera.get_far_clip_plane();
+    camera_fov = camera->get_field_of_view();
+    camera_near_plane = camera->get_near_clip_plane();
+    camera_far_plane = camera->get_far_clip_plane();
 
     // Editor GUI
     ImGui::Begin("Editor");
-
-    /*
-    ImGui::SliderFloat3("cube_1 pos", collision_cube_1_position, -10.0f, 10.0f);
-    this->cube_1_colliding_object->set_translate(glm::vec3(collision_cube_1_position[0], collision_cube_1_position[1], collision_cube_1_position[2]));
-    // this->collision_cube_model_1->set_translate(collision_cube_1_position[0], collision_cube_1_position[1], collision_cube_1_position[2]);
-
-    ImGui::SliderFloat3("cube_2 pos", collision_cube_2_position, -10.0f, 10.0f);
-    this->cube_2_colliding_object->set_translate(glm::vec3(collision_cube_2_position[0], collision_cube_2_position[1], collision_cube_2_position[2]));
-    // this->collision_cube_model_2->set_translate(collision_cube_2_position[0], collision_cube_2_position[1], collision_cube_2_position[2]);
-
-    ImGui::SliderFloat3("collision sphere_1 pos", collision_sphere_1_position, -10.0f, 10.0f);
-    this->sphere_1_colliding_object->set_translate(glm::vec3(collision_sphere_1_position[0], collision_sphere_1_position[1], collision_sphere_1_position[2]));
-    // this->collision_sphere_model_1->set_translate(collision_sphere_1_position[0], collision_sphere_1_position[1], collision_sphere_1_position[2]);
-
-    ImGui::SliderFloat3("collision sphere_2 pos", collision_sphere_2_position, -10.0f, 10.0f);
-    this->sphere_2_colliding_object->set_translate(glm::vec3(collision_sphere_2_position[0], collision_sphere_2_position[1], collision_sphere_2_position[2]));
-    // this->collision_sphere_model_2->set_translate(collision_sphere_2_position[0], collision_sphere_2_position[1], collision_sphere_2_position[2]);
-
-    ImGui::SliderFloat3("canister model position", canister_model_position, -50.0f, 50.0f);
-    // set_light_source_position(light_source_position);
-    // this->renderer->set_light_source_position(glm::vec3(light_source_position[0], light_source_position[1], light_source_position[2]));
-    this->canister_model->set_translate(canister_model_position[0], canister_model_position[1], canister_model_position[2]);
-    */
-
-    ImGui::Checkbox("visible colliding objects", &visible_colliding_objects);
-    this->game_round->set_visible_colliding_objects(visible_colliding_objects);
 
     setup_game_objects_dockspace();
     ImGui::Checkbox("light source visible", &light_source_visible);
     if (light_source_visible)
         setup_light_dockspace();
+    
+    ImGui::Checkbox("camera dockspace visible", &camera_dockspace_visible);
+    if (camera_dockspace_visible)
+        setup_camera_dockspace();
 
     ImGui::End();
 }
@@ -385,11 +304,9 @@ void GameApplication::on_ui_draw()
 void GameApplication::setup_light_dockspace()
 {
     ImGui::SliderFloat3("light source position", light_source_position, -50.0f, 50.0f);
-    // set_light_source_position(light_source_position);
     this->renderer->set_light_source_position(glm::vec3(light_source_position[0], light_source_position[1], light_source_position[2]));
 
     ImGui::ColorEdit3("light source color", light_source_color);
-    // set_light_source_color(light_source_color);
     this->renderer->set_light_source_color(glm::vec3(light_source_color[0], light_source_color[1], light_source_color[2]));
 
     ImGui::SliderFloat("ambient factor", &ambient_factor, 0.0f, 1.0f);
@@ -406,124 +323,160 @@ void GameApplication::setup_light_dockspace()
 
     if (ImGui::SliderFloat("camera FOV", &camera_fov, 1.0f, 120.0f))
     {
-        camera.set_field_of_view(camera_fov);
+        camera->set_field_of_view(camera_fov);
     }
     if (ImGui::SliderFloat("camera near clip plane", &camera_near_plane, 0.1f, 10.0f))
     {
-        camera.set_near_clip_plane(camera_near_plane);
+        camera->set_near_clip_plane(camera_near_plane);
     }  
     if (ImGui::SliderFloat("camera far clip plane", &camera_far_plane, 1.0f, 100.0f))
     {
-        camera.set_far_clip_plane(camera_far_plane);
+        camera->set_far_clip_plane(camera_far_plane);
+    }
+}
+
+
+void GameApplication::setup_camera_dockspace()
+{
+    glm::vec3 cam_pos = this->camera->get_camera_position();
+    camera_position[0] = cam_pos.x;
+    camera_position[1] = cam_pos.y;
+    camera_position[2] = cam_pos.z;
+    if (ImGui::SliderFloat3("camera position", camera_position, -10.0f, 10.0f))
+    {
+        this->camera->set_position(glm::vec3(camera_position[0], camera_position[1], camera_position[2]));
+    }
+
+    glm::vec3 cam_rot = this->camera->get_camera_rotation();
+    camera_rotation[0] = cam_rot.x;
+    camera_rotation[1] = cam_rot.y;
+    camera_rotation[2] = cam_rot.z;
+    if (ImGui::SliderFloat3("camera rotation", camera_rotation, 0.0f, 360.0f))
+    {
+        this->camera->set_rotation(glm::vec3(camera_rotation[0], camera_rotation[1], camera_rotation[2]));
     }
 }
 
 
 void GameApplication::setup_game_objects_dockspace()
 {
-    // bool car_visible = this->game_round->get_visible_car();
+    ImGui::Checkbox("visible colliding objects", &visible_colliding_objects);
+    this->game_object_renderer->set_visible_colliding_objects(visible_colliding_objects);
+
     ImGui::Checkbox("car visible", &car_visible);
-    this->game_round->set_visible_car(car_visible);
+    this->game_round->get_car()->set_visible(car_visible);
 
     if (car_visible)
     {
-        ImGui::SliderFloat3("car model pos", car_model_position, -15.0f, 15.0f);
-        ImGui::SliderFloat3("car colliding cube pos", car_colliding_cube_position, -7.0f, 7.0f);
-        this->game_round->set_translate_car(
-            glm::vec3(car_model_position[0], car_model_position[1], car_model_position[2]),
-            glm::vec3(car_colliding_cube_position[0], car_colliding_cube_position[1], car_colliding_cube_position[2])
+        ImGui::SliderFloat3("car pos", car_model_position, -20.0f, 20.0f);
+        this->game_round->get_car()->set_position(
+            car_model_position[0], 
+            car_model_position[1], 
+            car_model_position[2]
         );
 
-        ImGui::SliderFloat3("car model scale", car_model_scale, 0.0f, 10.0f);
-        ImGui::SliderFloat3("car colliding cube scale", car_colliding_cube_scale, 0.0f, 10.0f);
-        this->game_round->set_scale_car(
-            glm::vec3(car_model_scale[0], car_model_scale[1], car_model_scale[2]),
-            glm::vec3(car_colliding_cube_scale[0], car_colliding_cube_scale[1], car_colliding_cube_scale[2])
+        ImGui::SliderFloat3("car scale", car_model_scale, 0.0f, 10.0f);
+        this->game_round->get_car()->set_scale(
+            car_model_scale[0], 
+            car_model_scale[1], 
+            car_model_scale[2]
         );
     }
 
-
-    // bool road_visible = this->game_round->get_visible_road();
     ImGui::Checkbox("Road visible", &road_visible);
-    this->game_round->set_visible_road(road_visible);
+    this->game_round->get_road()->set_visible(road_visible);
 
     if (road_visible)
     {
-        ImGui::SliderFloat3("road model pos", road_model_position, -5.0f, 5.0f);
-        ImGui::SliderFloat3("road colliding cube pos", road_colliding_cube_position, -5.0f, 5.0f);
-        // this->game_round->set_translate_road(
-        //     glm::vec3(road_model_position[0], road_model_position[1], road_model_position[2]),
-        //     glm::vec3(road_colliding_cube_position[0], road_colliding_cube_position[1], road_colliding_cube_position[2])
-        // );
+        ImGui::SliderFloat3("road pos", road_model_position, -20.0f, 20.0f);
+        this->game_round->get_road()->set_position(
+            road_model_position[0], 
+            road_model_position[1], 
+            road_model_position[2]
+        );
 
-        ImGui::SliderFloat3("road model scale", road_model_scale, -2.0f, 2.0f);
-        ImGui::SliderFloat3("road colliding cube scale", road_colliding_cube_scale, -5.0f, 5.0f);
-        // this->game_round->set_scale_road(
-        //     glm::vec3(road_model_scale[0], road_model_scale[1], road_model_scale[2]),
-        //     glm::vec3(road_colliding_cube_scale[0], road_colliding_cube_scale[1], road_colliding_cube_scale[2])
-        // );   
+        ImGui::SliderFloat3("road scale", road_model_scale, -2.0f, 2.0f);
+        this->game_round->get_road()->set_scale(
+            road_model_scale[0], 
+            road_model_scale[1], 
+            road_model_scale[2]
+        );
     }
 
 
     ImGui::Checkbox("barrier visible", &barrier_visible);
-    this->game_round->set_visible_barrier(barrier_visible);
+    this->game_round->get_barrier()->set_visible(barrier_visible);
+
     if (barrier_visible)
     {
-        ImGui::SliderFloat3("barrier model pos", barrier_model_position, -10.0f, 10.0f);
-        ImGui::SliderFloat3("barrier colliding cube pos", barrier_colliding_cube_position, -10.0f, 10.0f);
-        // this->game_round->set_translate_barrier(
-        //     glm::vec3(barrier_model_position[0], barrier_model_position[1], barrier_model_position[2]),
-        //     glm::vec3(barrier_colliding_cube_position[0], barrier_colliding_cube_position[1], barrier_colliding_cube_position[2])
-        // );
+        ImGui::SliderFloat3("barrier pos", barrier_model_position, -20.0f, 20.0f);
+        this->game_round->get_barrier()->set_position(
+            barrier_model_position[0], 
+            barrier_model_position[1], 
+            barrier_model_position[2]
+        );
 
-        ImGui::SliderFloat3("barrier model scale", barrier_model_scale, -5.0f, 5.0f);
-        ImGui::SliderFloat3("barrier colliding cube scale", barrier_colliding_cube_scale, -5.0f, 5.0f);
-        // this->game_round->set_scale_barrier(
-        //     glm::vec3(barrier_model_scale[0], barrier_model_scale[1], barrier_model_scale[2]),
-        //     glm::vec3(barrier_colliding_cube_scale[0], barrier_colliding_cube_scale[1], barrier_colliding_cube_scale[2])
-        // );
+        ImGui::SliderFloat3("barrier scale", barrier_model_scale, -20.0f, 20.0f);
+        this->game_round->get_barrier()->set_scale(
+            barrier_model_scale[0], 
+            barrier_model_scale[1], 
+            barrier_model_scale[2]
+        );
     }
 
 
     ImGui::Checkbox("coin visible", &coin_visible);
-    this->game_round->set_visible_coin(coin_visible);
+    this->game_round->get_coin()->set_visible(coin_visible);
+
     if (coin_visible)
     {
-        ImGui::SliderFloat3("coin model pos", coin_model_position, -10.0f, 10.0f);
-        ImGui::SliderFloat3("coin colliding cube pos", coin_colliding_cube_position, -10.0f, 10.0f);
-        // this->game_round->set_translate_coin(
-        //     glm::vec3(coin_model_position[0], coin_model_position[1], coin_model_position[2]),
-        //     glm::vec3(coin_colliding_cube_position[0], coin_colliding_cube_position[1], coin_colliding_cube_position[2])
-        // );
+        ImGui::SliderFloat3("coin pos", coin_model_position, -20.0f, 20.0f);
+        this->game_round->get_coin()->set_position(
+            coin_model_position[0], 
+            coin_model_position[1], 
+            coin_model_position[2]
+        );
 
-        ImGui::SliderFloat3("coin model scale", coin_model_scale, -1.0f, 1.0f);
-        ImGui::SliderFloat3("coin colliding cube scale", coin_colliding_cube_scale, -1.0f, 1.0f);
-        // this->game_round->set_scale_coin(
-        //     glm::vec3(coin_model_scale[0], coin_model_scale[1], coin_model_scale[2]),
-        //     glm::vec3(coin_colliding_cube_scale[0], coin_colliding_cube_scale[1], coin_colliding_cube_scale[2])
-        // );
+        ImGui::SliderFloat3("coin scale", coin_model_scale, -20.0f, 20.0f);
+        this->game_round->get_coin()->set_scale(
+            coin_model_scale[0], 
+            coin_model_scale[1], 
+            coin_model_scale[2]
+        );
+
+        ImGui::SliderFloat3("coin rotate", coin_model_rotate, -180.0f, 180.0f);
+        this->game_round->get_coin()->set_rotate(
+            coin_model_rotate[0], 
+            coin_model_rotate[1], 
+            coin_model_rotate[2]
+        );
     }
 
 
     ImGui::Checkbox("fuel_canister visible", &fuel_canister_visible);
-    this->game_round->set_visible_fuel_canister(fuel_canister_visible);
+    this->game_round->get_fuel_canister()->set_visible(fuel_canister_visible);
+
     if (fuel_canister_visible)
     {
-        ImGui::SliderFloat3("fuel_canister model pos", fuel_canister_model_position, -10.0f, 10.0f);
-        ImGui::SliderFloat3("fuel_canister colliding cube pos", fuel_canister_colliding_cube_position, -10.0f, 10.0f);
-        // this->game_round->set_translate_fuel_canister(
-        //     glm::vec3(fuel_canister_model_position[0], fuel_canister_model_position[1], fuel_canister_model_position[2]),
-        //     glm::vec3(fuel_canister_colliding_cube_position[0], fuel_canister_colliding_cube_position[1], fuel_canister_colliding_cube_position[2])
-        // );
+        ImGui::SliderFloat3("fuel_canister pos", fuel_canister_model_position, -20.0f, 20.0f);
+        this->game_round->get_fuel_canister()->set_position(
+            fuel_canister_model_position[0], 
+            fuel_canister_model_position[1], 
+            fuel_canister_model_position[2]
+        );
 
-        ImGui::SliderFloat3("fuel_canister model scale", fuel_canister_model_scale, -1.0f, 1.0f);
-        ImGui::SliderFloat3("fuel_canister colliding cube scale", fuel_canister_colliding_cube_scale, -1.0f, 1.0f);
-        // this->game_round->set_scale_fuel_canister(
-        //     glm::vec3(fuel_canister_model_scale[0], fuel_canister_model_scale[1], fuel_canister_model_scale[2]),
-        //     glm::vec3(fuel_canister_colliding_cube_scale[0], fuel_canister_colliding_cube_scale[1], fuel_canister_colliding_cube_scale[2])
-        // );
+        ImGui::SliderFloat3("fuel_canister scale", fuel_canister_model_scale, -20.0f, 20.0f);
+        this->game_round->get_fuel_canister()->set_scale(
+            fuel_canister_model_scale[0],
+            fuel_canister_model_scale[1],
+            fuel_canister_model_scale[2]
+        );
+
+        ImGui::SliderFloat3("fuel_canister_model_rotate rotate", fuel_canister_model_rotate, -180.0f, 180.0f);
+        this->game_round->get_fuel_canister()->set_rotate(
+            fuel_canister_model_rotate[0], 
+            fuel_canister_model_rotate[1], 
+            fuel_canister_model_rotate[2]
+        );
     }
-    
-    // this->cube_1_colliding_object->set_translate(glm::vec3(collision_cube_1_position[0], collision_cube_1_position[1], collision_cube_1_position[2]));
-    // this->collision_cube_model_1->set_translate(collision_cube_1_position[0], collision_cube_1_position[1], collision_cube_1_position[2]);
 }

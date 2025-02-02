@@ -95,6 +95,7 @@ namespace AiryEngine {
 
         //this->resource_manager = std::make_shared<ResourceManager>(this->path_to_executable);
         this->resource_manager = _resource_manager;
+        this->camera = std::make_shared<Camera>(glm::vec3(0.0f, 2.0f, -5.0f), glm::vec3(25.0f, 0.0f, 0.0f));
 
         // Renderer::init(this->resource_manager);
     }
@@ -109,7 +110,7 @@ namespace AiryEngine {
         // LOG_INFO("Application::start");
 
         this->window = std::make_unique<Window>(title, window_width, window_height);
-        this->camera.set_viewport_size(static_cast<float>(window_width), static_cast<float>(window_height));
+        this->camera->set_viewport_size(static_cast<float>(window_width), static_cast<float>(window_height));
 
         // this->renderer = std::make_unique<Renderer_OpenGL>(this->resource_manager);
 
@@ -124,7 +125,7 @@ namespace AiryEngine {
             [&](EventWindowResize& event)
             {
                 //LOG_INFO("[WindowResize] Changed window size to {0}x{1}", event.width, event.height);
-                this->camera.set_viewport_size(event.width, event.height);
+                this->camera->set_viewport_size(event.width, event.height);
             }
         );
 

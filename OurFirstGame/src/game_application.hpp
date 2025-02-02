@@ -8,6 +8,7 @@
 
 // Файлы игры
 #include "game_round.hpp"
+#include "game_object_renderer.hpp"
 
 // Системные библиотеки
 #include <memory>
@@ -30,23 +31,20 @@ public:
 private:
     void setup_dockspace_menu();
     void setup_light_dockspace();
+    void setup_camera_dockspace();
     void setup_game_objects_dockspace();
 
     std::shared_ptr<GameRound> game_round;
+    std::shared_ptr<GameObjectRenderer> game_object_renderer;
 
     std::shared_ptr<AiryEngine::Renderer> renderer;
 
-    std::shared_ptr<AiryEngine::Model3D> lamp_model;
-    std::shared_ptr<AiryEngine::Model3D> cube_model3D;
-    std::shared_ptr<AiryEngine::Model3D> sphere_model3D;
-    std::shared_ptr<AiryEngine::Model3D> canister_model;
-    std::shared_ptr<AiryEngine::CubeCollidingObject> cube_1_colliding_object;
-    std::shared_ptr<AiryEngine::CubeCollidingObject> cube_2_colliding_object;
-    std::shared_ptr<AiryEngine::SphereCollidingObject> sphere_1_colliding_object;
-    std::shared_ptr<AiryEngine::SphereCollidingObject> sphere_2_colliding_object;
-
     double initial_mouse_pos_x = 0.0;
     double initial_mouse_pos_y = 0.0;
+
+    bool camera_dockspace_visible = true;
+    float camera_position[3] = { 0, 2, 0 };
+    float camera_rotation[3] = { 25, 0, 0 };
 
     bool light_source_visible = true;
     float light_source_position[3] = { 0, 17.0f, -11.0f };
@@ -61,38 +59,36 @@ private:
 
     bool visible_colliding_objects = true;
 
-    // float car_model_position[3] = { 0, 0, -10.025f };
-    // float car_model_scale[3] = { 1, 1, 1 };
-    // float car_colliding_cube_position[3] = { 0.529f, 0.282f, 0.070f };
-    // float car_colliding_cube_scale[3] = { 1.781f, 0.497f, 0.873f };
-    float car_model_position[3] = { 10.101f, 0, 0 };
+    float car_model_position[3] = { 0, 0, 0 };
     float car_model_scale[3] = { 1, 1, 1 };
-    float car_colliding_cube_position[3] = { 0.006f, 0.282f, 0.529f };
-    float car_colliding_cube_scale[3] = { 0.873f, 0.497f, 1.781f };
+    float car_colliding_cube_position[3] = { 0, 0, 0 };
+    float car_colliding_cube_scale[3] = { 1, 1, 1 };
     bool car_visible = true;
 
-    float road_model_position[3] = { 0, -0.302f, 0 };
-    float road_model_scale[3] = { 0.708f, 0.708f, 0.708f };
-    float road_colliding_cube_position[3] = { 0, -0.620f, -0.753f };
-    float road_colliding_cube_scale[3] = { 3.569f, 0.395f, 4.317f };
+    float road_model_position[3] = { 0, 0, 0 };
+    float road_model_scale[3] = { 1, 1, 1 };
+    float road_colliding_cube_position[3] = { 0, 0, 0 };
+    float road_colliding_cube_scale[3] = { 1, 1, 1 };
     bool road_visible = true;
 
-    float barrier_model_position[3] = { 0, -0.503f, 0 };
-    float barrier_model_scale[3] = { 0.270f, 0.270f, 0.270f };
-    float barrier_colliding_cube_position[3] = { 0, 0.202f, 0 };
-    float barrier_colliding_cube_scale[3] = { 0.849f, 0.446f, 0.246f };
+    float barrier_model_position[3] = { 0, 0, 0 };
+    float barrier_model_scale[3] = { 1, 1, 1 };
+    float barrier_colliding_cube_position[3] = { 0, 0, 0 };
+    float barrier_colliding_cube_scale[3] = { 1, 1, 1 };
     bool barrier_visible = true;
 
-    float coin_model_position[3] = { -2.821f, 0.302f, 0 };
-    float coin_model_scale[3] = { 0.300f, 0.300f, 0.300f };
-    float coin_colliding_cube_position[3] = { -0.025f, 0.400f, 0 };
-    float coin_colliding_cube_scale[3] = { 0.360f, 0.360f, 0.360f };
+    float coin_model_position[3] = { 0, 0, 0 };
+    float coin_model_scale[3] = { 1, 1, 1 };
+    float coin_colliding_cube_position[3] = { 0, 0, 0 };
+    float coin_colliding_cube_scale[3] = { 1, 1, 1 };
+    float coin_model_rotate[3] = { 0, 0, 0 };
     bool coin_visible = true;
 
-    float fuel_canister_model_position[3] = { 0, 0.202, 0 };
-    float fuel_canister_model_scale[3] = { 0.120f, 0.120f, 0.120f };
-    float fuel_canister_colliding_cube_position[3] = { 0, 0.404, 0 };
-    float fuel_canister_colliding_cube_scale[3] = { 0.320f, 0.537f, 0.321f };
+    float fuel_canister_model_position[3] = { 0, 0, 0 };
+    float fuel_canister_model_scale[3] = { 1, 1, 1 };
+    float fuel_canister_colliding_cube_position[3] = { 0, 0, 0 };
+    float fuel_canister_colliding_cube_scale[3] = { 1, 1, 1 };
+    float fuel_canister_model_rotate[3] = { 0, 0, 0 };
     bool fuel_canister_visible = true;
 
     void _handle_events();
