@@ -9,6 +9,7 @@
 #include <iostream>
 
 
+
 GameApplication::GameApplication(std::shared_ptr<AiryEngine::ResourceManager> _resource_manager) : AiryEngine::Application(_resource_manager)
 {
     // set_executable_path(executable_path);
@@ -293,9 +294,9 @@ void GameApplication::on_ui_draw()
     if (light_source_visible)
         setup_light_dockspace();
     
-    ImGui::Checkbox("camera dockspace visible", &camera_dockspace_visible);
-    if (camera_dockspace_visible)
-        setup_camera_dockspace();
+    // ImGui::Checkbox("camera dockspace visible", &camera_dockspace_visible);
+    // if (camera_dockspace_visible)
+    //     setup_camera_dockspace();
 
     ImGui::End();
 }
@@ -381,6 +382,15 @@ void GameApplication::setup_game_objects_dockspace()
             car_model_scale[1], 
             car_model_scale[2]
         );
+
+        // ImGui::SliderFloat3("car model pos", car_model_position, -5.0f, 5.0f);
+        // this->game_round->get_car()->get_model()->set_translate(car_model_position[0], car_model_position[1], car_model_position[2]);
+        // ImGui::SliderFloat3("car model scale", car_model_scale, 0.0f, 5.0f);
+        // this->game_round->get_car()->get_model()->set_scale(car_model_scale[0], car_model_scale[1], car_model_scale[2]);
+        // ImGui::SliderFloat3("car cube pos", car_colliding_cube_position, -5.0f, 5.0f);
+        // this->game_round->get_car()->get_colliding_cube()->set_translate(car_colliding_cube_position[0], car_colliding_cube_position[1], car_colliding_cube_position[2]);
+        // ImGui::SliderFloat3("car cube scale", car_colliding_cube_scale, 0.0f, 5.0f);
+        // this->game_round->get_car()->get_colliding_cube()->set_scale(car_colliding_cube_scale[0], car_colliding_cube_scale[1], car_colliding_cube_scale[2]);
     }
 
     ImGui::Checkbox("Road visible", &road_visible);
@@ -401,8 +411,16 @@ void GameApplication::setup_game_objects_dockspace()
             road_model_scale[1], 
             road_model_scale[2]
         );
-    }
 
+        // ImGui::SliderFloat3("road model pos", road_model_position, -5.0f, 5.0f);
+        // this->game_round->get_road()->get_model()->set_translate(road_model_position[0], road_model_position[1], road_model_position[2]);
+        // ImGui::SliderFloat3("road model scale", road_model_scale, 0.0f, 5.0f);
+        // this->game_round->get_road()->get_model()->set_scale(road_model_scale[0], road_model_scale[1], road_model_scale[2]);
+        // ImGui::SliderFloat3("road cube pos", road_colliding_cube_position, -5.0f, 5.0f);
+        // this->game_round->get_road()->get_colliding_cube()->set_translate(road_colliding_cube_position[0], road_colliding_cube_position[1], road_colliding_cube_position[2]);
+        // ImGui::SliderFloat3("road cube scale", road_colliding_cube_scale, 0.0f, 5.0f);
+        // this->game_round->get_road()->get_colliding_cube()->set_scale(road_colliding_cube_scale[0], road_colliding_cube_scale[1], road_colliding_cube_scale[2]);
+    }
 
     ImGui::Checkbox("barrier visible", &barrier_visible);
     this->game_round->get_barrier()->set_visible(barrier_visible);
@@ -422,6 +440,15 @@ void GameApplication::setup_game_objects_dockspace()
             barrier_model_scale[1], 
             barrier_model_scale[2]
         );
+
+        // ImGui::SliderFloat3("barrier model pos", barrier_model_position, -5.0f, 5.0f);
+        // this->game_round->get_barrier()->get_model()->set_translate(barrier_model_position[0], barrier_model_position[1], barrier_model_position[2]);
+        // ImGui::SliderFloat3("barrier model scale", barrier_model_scale, 0.0f, 5.0f);
+        // this->game_round->get_barrier()->get_model()->set_scale(barrier_model_scale[0], barrier_model_scale[1], barrier_model_scale[2]);
+        // ImGui::SliderFloat3("barrier cube pos", barrier_colliding_cube_position, -5.0f, 5.0f);
+        // this->game_round->get_barrier()->get_colliding_cube()->set_translate(barrier_colliding_cube_position[0], barrier_colliding_cube_position[1], barrier_colliding_cube_position[2]);
+        // ImGui::SliderFloat3("barrier cube scale", barrier_colliding_cube_scale, 0.0f, 5.0f);
+        // this->game_round->get_barrier()->get_colliding_cube()->set_scale(barrier_colliding_cube_scale[0], barrier_colliding_cube_scale[1], barrier_colliding_cube_scale[2]);
     }
 
 
@@ -450,6 +477,15 @@ void GameApplication::setup_game_objects_dockspace()
             coin_model_rotate[1], 
             coin_model_rotate[2]
         );
+
+        // ImGui::SliderFloat3("coin model pos", coin_model_position, -5.0f, 5.0f);
+        // this->game_round->get_coin()->get_model()->set_translate(coin_model_position[0], coin_model_position[1], coin_model_position[2]);
+        // ImGui::SliderFloat3("coin model scale", coin_model_scale, 0.0f, 5.0f);
+        // this->game_round->get_coin()->get_model()->set_scale(coin_model_scale[0], coin_model_scale[1], coin_model_scale[2]);
+        // ImGui::SliderFloat3("coin cube pos", coin_colliding_cube_position, -5.0f, 5.0f);
+        // this->game_round->get_coin()->get_colliding_cube()->set_translate(coin_colliding_cube_position[0], coin_colliding_cube_position[1], coin_colliding_cube_position[2]);
+        // ImGui::SliderFloat3("coin cube scale", coin_colliding_cube_scale, 0.0f, 5.0f);
+        // this->game_round->get_coin()->get_colliding_cube()->set_scale(coin_colliding_cube_scale[0], coin_colliding_cube_scale[1], coin_colliding_cube_scale[2]);
     }
 
 

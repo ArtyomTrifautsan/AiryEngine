@@ -10,7 +10,7 @@ Car::Car(const std::string& model_name,
 
     this->colliding_cube = std::make_shared<AiryEngine::CubeCollidingObject>();
 
-    this->model_start_offset = glm::vec3(10.101f, 0, 0 );
+    this->model_start_offset = glm::vec3(0, 0, 0 );
     this->model->set_translate(
         this->model_start_offset.x, 
         this->model_start_offset.y, 
@@ -31,7 +31,8 @@ Car::Car(const std::string& model_name,
         this->model_start_rotate.z
     );
 
-    this->colliding_cube_start_offset = glm::vec3( 0.006f, 0.282f, 0.529f );
+    // this->colliding_cube_start_offset = glm::vec3( 0.006f, 0.282f, 0.529f );
+    this->colliding_cube_start_offset = glm::vec3( -0.277f, 0.277f, 0.528f );
     this->colliding_cube->set_translate(
         this->colliding_cube_start_offset.x,
         this->colliding_cube_start_offset.y,

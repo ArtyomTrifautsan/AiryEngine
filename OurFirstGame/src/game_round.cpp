@@ -10,7 +10,7 @@ GameRound::GameRound(std::shared_ptr<AiryEngine::ResourceManager> resource_manag
 
     this->car = std::make_shared<Car>(
         "CarModel",
-        "SportCar.obj",
+        "Mashina12.obj",
         "FunnyRider/SportCar",
         resource_manager
     );
@@ -31,7 +31,7 @@ GameRound::GameRound(std::shared_ptr<AiryEngine::ResourceManager> resource_manag
 
     this->coin = std::make_shared<Coin>(
         "CoinModel",
-        "Monetka.obj",
+        "Monetka12.obj",
         "FunnyRider/Coin",
         resource_manager
     );

@@ -9,7 +9,8 @@ Coin::Coin(const std::string& model_name,
     this->model = resource_manager->load_model3D(model_name, model_filename, model_path_to_file);;
     this->colliding_cube = std::make_shared<AiryEngine::CubeCollidingObject>();
 
-    this->model_start_offset = glm::vec3(-2.821f, 0.302f, 0);
+    // this->model_start_offset = glm::vec3(-2.821f, 0.302f, 0);
+    this->model_start_offset = glm::vec3(0, 0.305f, 0);
     this->model->set_translate(
         this->model_start_offset.x, 
         this->model_start_offset.y, 
@@ -30,7 +31,8 @@ Coin::Coin(const std::string& model_name,
         this->model_start_rotate.z
     );
 
-    this->colliding_cube_start_offset = glm::vec3(-0.025f, 0.400f, 0);
+    // this->colliding_cube_start_offset = glm::vec3(-0.025f, 0.400f, 0);
+    this->colliding_cube_start_offset = glm::vec3(0, 0.410f, 0);
     this->colliding_cube->set_translate(
         this->colliding_cube_start_offset.x,
         this->colliding_cube_start_offset.y,
