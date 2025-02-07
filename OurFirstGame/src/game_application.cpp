@@ -34,6 +34,9 @@ void GameApplication::on_update()
     _update_light_source_state();
 
     _detect_collisions();
+
+    this->game_round->move_back_game_objects();
+    this->game_round->rotate_coins_and_fuel_canister();
 }
 
 void GameApplication::_handle_events()
@@ -42,39 +45,43 @@ void GameApplication::_handle_events()
     glm::vec3 rotation_delta{ 0, 0, 0 };
 
     // Go Forward
+    float camera_step = 0.05f;
+    if (AiryEngine::Input::IsKeyPressed(AiryEngine::KeyCode::KEY_LEFT_CONTROL))
+        camera_step *= 3;
+
     if (AiryEngine::Input::IsKeyPressed(AiryEngine::KeyCode::KEY_W))
     {
-        movement_delta.x += 0.05f;
+        movement_delta.x += camera_step;
     }
 
     // Go Back
     if (AiryEngine::Input::IsKeyPressed(AiryEngine::KeyCode::KEY_S))
     {
-        movement_delta.x -= 0.05f;
+        movement_delta.x -= camera_step;
     }
 
     // Go Left
     if (AiryEngine::Input::IsKeyPressed(AiryEngine::KeyCode::KEY_A))
     {
-        movement_delta.y += 0.05f;
+        movement_delta.y += camera_step;
     }
 
     // Go Right
     if (AiryEngine::Input::IsKeyPressed(AiryEngine::KeyCode::KEY_D))
     {
-        movement_delta.y -= 0.05f;
+        movement_delta.y -= camera_step;
     }
 
     // Go Up
     if (AiryEngine::Input::IsKeyPressed(AiryEngine::KeyCode::KEY_SPACE))
     {
-        movement_delta.z += 0.05f;
+        movement_delta.z += camera_step;
     }
 
     // Go Down
     if (AiryEngine::Input::IsKeyPressed(AiryEngine::KeyCode::KEY_LEFT_SHIFT))
     {
-        movement_delta.z -= 0.05f;
+        movement_delta.z -= camera_step;
     }
 
     // Rotation Up
