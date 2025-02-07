@@ -44,7 +44,7 @@ class GameRound {
 public:
     GameRound(std::shared_ptr<AiryEngine::ResourceManager> resource_manager);
 
-    void generate_start_pos();
+    void set_start_pos();
 
     void move_back_game_objects();
 
@@ -54,6 +54,8 @@ public:
 
     std::shared_ptr<Car> get_car() const { return this->car; }
     std::shared_ptr<Road> get_road() const { return this->road; }
+    std::shared_ptr<std::vector<std::shared_ptr<Road>>> get_roads() const { return this->roads; }
+
     std::shared_ptr<Barrier> get_barrier() const { return this->barrier; }
     std::shared_ptr<Coin> get_coin() const { return this->coin; }
     std::shared_ptr<FuelCanister> get_fuel_canister() const { return this->fuel_canister; }
@@ -61,7 +63,8 @@ public:
 private:
     std::shared_ptr<Car> car;
     std::shared_ptr<Road> road;
-    std::vector<std::shared_ptr<Road>> roads;
+    std::shared_ptr<std::vector<std::shared_ptr<Road>>> roads;
+
     std::shared_ptr<Barrier> barrier;
     std::shared_ptr<Coin> coin;
     std::shared_ptr<FuelCanister> fuel_canister;

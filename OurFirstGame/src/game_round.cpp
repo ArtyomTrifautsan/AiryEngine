@@ -22,6 +22,22 @@ GameRound::GameRound(std::shared_ptr<AiryEngine::ResourceManager> resource_manag
         resource_manager
     );
 
+    this->roads = std::make_shared<std::vector<std::shared_ptr<Road>>>();
+    std::string model_name = "RoadModel";
+    for (int i = 0; i < 5; i++)
+    {
+        // std::cout << "create road " << i << std::endl;
+        model_name += "1";
+        std::shared_ptr<Road> curr_road = std::make_shared<Road>(
+            model_name,
+            "WayOne.obj",
+            "FunnyRider/Road",
+            resource_manager
+        );
+        // std::cout << "created road " << i << std::endl;
+        this->roads->push_back(curr_road);
+    }
+
     this->barrier = std::make_shared<Barrier>(
         "BarrierModel",
         "Pregrados.obj",
@@ -47,9 +63,15 @@ GameRound::GameRound(std::shared_ptr<AiryEngine::ResourceManager> resource_manag
 }
 
 
-void GameRound::generate_start_pos()
+void GameRound::set_start_pos()
 {
-    
+    this->car->set_position(0.277f, 0, 0);
+
+    float road_offset = 4.317f * 2 - 0.1f;
+    for (int i = 0; i < this->roads->size(); i++)
+    {
+        (*this->roads)[i]->set_position(0, 0, road_offset * i);
+    }
 }
 
 

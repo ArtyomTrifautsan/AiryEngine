@@ -7,6 +7,7 @@ set(GAME_INCLUDES
     src/game_round.hpp
     src/game_object_renderer.hpp
 
+    src/game_objects/game_object.hpp
     src/game_objects/car.hpp
     src/game_objects/road.hpp
     src/game_objects/barrier.hpp
@@ -19,6 +20,7 @@ set(GAME_SOURCES
     src/game_round.cpp
     src/game_object_renderer.cpp
 
+    src/game_objects/game_object.cpp
     src/game_objects/car.cpp
     src/game_objects/road.cpp
     src/game_objects/barrier.cpp

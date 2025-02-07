@@ -20,6 +20,8 @@ void GameObjectRenderer::render_car(std::shared_ptr<Car> car)
     if (!car->get_visible())
         return;
 
+    car->update_pos_and_scale();
+
     renderer->render_model3D(*camera, car->get_model());
 
     if (!this->visible_colliding_objects)
@@ -40,6 +42,8 @@ void GameObjectRenderer::render_road(std::shared_ptr<Road> road)
     if (!road->get_visible())
         return;
 
+    road->update_pos_and_scale();
+
     renderer->render_model3D(*camera, road->get_model());
 
     if (!this->visible_colliding_objects)
@@ -55,10 +59,21 @@ void GameObjectRenderer::render_road(std::shared_ptr<Road> road)
 }
 
 
+void GameObjectRenderer::render_roads(std::shared_ptr<std::vector<std::shared_ptr<Road>>> roads)
+{
+    for (std::shared_ptr<Road> curr_road : *roads)
+    {
+        render_road(curr_road);
+    }
+}
+
+
 void GameObjectRenderer::render_barrier(std::shared_ptr<Barrier> barrier)
 {
     if (!barrier->get_visible())
         return;
+
+    barrier->update_pos_and_scale();
 
     renderer->render_model3D(*camera, barrier->get_model());
 
@@ -80,6 +95,8 @@ void GameObjectRenderer::render_coin(std::shared_ptr<Coin> coin)
     if (!coin->get_visible())
         return;
 
+    coin->update_pos_and_scale();
+
     renderer->render_model3D(*camera, coin->get_model());
 
     if (!this->visible_colliding_objects)
@@ -99,6 +116,8 @@ void GameObjectRenderer::render_fuel_canister(std::shared_ptr<FuelCanister> fuel
 {
     if (!fuel_canister->get_visible())
         return;
+
+    fuel_canister->update_pos_and_scale();
 
     renderer->render_model3D(*camera, fuel_canister->get_model());
 

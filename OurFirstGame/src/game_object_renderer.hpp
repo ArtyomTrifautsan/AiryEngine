@@ -11,6 +11,7 @@
 
 
 // Файлы игры
+// #include "game_round.hpp"
 #include "game_objects/car.hpp"
 #include "game_objects/road.hpp"
 #include "game_objects/barrier.hpp"
@@ -33,6 +34,8 @@ public:
     bool get_visible_colliding_objects() const { return this->visible_colliding_objects; }
 
     void render_car(std::shared_ptr<Car> car);
+    void render_roads(std::shared_ptr<std::vector<std::shared_ptr<Road>>> roads);
+
     void render_road(std::shared_ptr<Road> road);
     void render_barrier(std::shared_ptr<Barrier> barrier);
     void render_coin(std::shared_ptr<Coin> coin);

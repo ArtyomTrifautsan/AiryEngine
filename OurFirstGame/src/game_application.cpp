@@ -23,6 +23,8 @@ void GameApplication::on_start(std::shared_ptr<AiryEngine::ResourceManager> _res
 
     this->game_round = std::make_shared<GameRound>(_resource_manager);
     this->game_object_renderer = std::make_shared<GameObjectRenderer>(this->renderer, this->camera, _resource_manager);
+
+    this->game_round->set_start_pos();
 }
 
 void GameApplication::on_update()
@@ -203,7 +205,9 @@ void GameApplication::on_draw()
     // this->game_round->render_game_objects(this->renderer, this->camera);
 
     this->game_object_renderer->render_car(this->game_round->get_car());
-    this->game_object_renderer->render_road(this->game_round->get_road());
+    // this->game_object_renderer->render_road(this->game_round->get_road());
+    this->game_object_renderer->render_roads(this->game_round->get_roads());
+
     this->game_object_renderer->render_barrier(this->game_round->get_barrier());
     this->game_object_renderer->render_coin(this->game_round->get_coin());
     this->game_object_renderer->render_fuel_canister(this->game_round->get_fuel_canister());
@@ -369,19 +373,19 @@ void GameApplication::setup_game_objects_dockspace()
 
     if (car_visible)
     {
-        ImGui::SliderFloat3("car pos", car_model_position, -20.0f, 20.0f);
-        this->game_round->get_car()->set_position(
-            car_model_position[0], 
-            car_model_position[1], 
-            car_model_position[2]
-        );
+        // ImGui::SliderFloat3("car pos", car_model_position, -20.0f, 20.0f);
+        // this->game_round->get_car()->set_position(
+        //     car_model_position[0], 
+        //     car_model_position[1], 
+        //     car_model_position[2]
+        // );
 
-        ImGui::SliderFloat3("car scale", car_model_scale, 0.0f, 10.0f);
-        this->game_round->get_car()->set_scale(
-            car_model_scale[0], 
-            car_model_scale[1], 
-            car_model_scale[2]
-        );
+        // ImGui::SliderFloat3("car scale", car_model_scale, 0.0f, 10.0f);
+        // this->game_round->get_car()->set_scale(
+        //     car_model_scale[0], 
+        //     car_model_scale[1], 
+        //     car_model_scale[2]
+        // );
 
         // ImGui::SliderFloat3("car model pos", car_model_position, -5.0f, 5.0f);
         // this->game_round->get_car()->get_model()->set_translate(car_model_position[0], car_model_position[1], car_model_position[2]);
@@ -398,19 +402,19 @@ void GameApplication::setup_game_objects_dockspace()
 
     if (road_visible)
     {
-        ImGui::SliderFloat3("road pos", road_model_position, -20.0f, 20.0f);
-        this->game_round->get_road()->set_position(
-            road_model_position[0], 
-            road_model_position[1], 
-            road_model_position[2]
-        );
+        // ImGui::SliderFloat3("road pos", road_model_position, -20.0f, 20.0f);
+        // this->game_round->get_road()->set_position(
+        //     road_model_position[0], 
+        //     road_model_position[1], 
+        //     road_model_position[2]
+        // );
 
-        ImGui::SliderFloat3("road scale", road_model_scale, -2.0f, 2.0f);
-        this->game_round->get_road()->set_scale(
-            road_model_scale[0], 
-            road_model_scale[1], 
-            road_model_scale[2]
-        );
+        // ImGui::SliderFloat3("road scale", road_model_scale, -2.0f, 2.0f);
+        // this->game_round->get_road()->set_scale(
+        //     road_model_scale[0], 
+        //     road_model_scale[1], 
+        //     road_model_scale[2]
+        // );
 
         // ImGui::SliderFloat3("road model pos", road_model_position, -5.0f, 5.0f);
         // this->game_round->get_road()->get_model()->set_translate(road_model_position[0], road_model_position[1], road_model_position[2]);
@@ -427,19 +431,19 @@ void GameApplication::setup_game_objects_dockspace()
 
     if (barrier_visible)
     {
-        ImGui::SliderFloat3("barrier pos", barrier_model_position, -20.0f, 20.0f);
-        this->game_round->get_barrier()->set_position(
-            barrier_model_position[0], 
-            barrier_model_position[1], 
-            barrier_model_position[2]
-        );
+        // ImGui::SliderFloat3("barrier pos", barrier_model_position, -20.0f, 20.0f);
+        // this->game_round->get_barrier()->set_position(
+        //     barrier_model_position[0], 
+        //     barrier_model_position[1], 
+        //     barrier_model_position[2]
+        // );
 
-        ImGui::SliderFloat3("barrier scale", barrier_model_scale, -20.0f, 20.0f);
-        this->game_round->get_barrier()->set_scale(
-            barrier_model_scale[0], 
-            barrier_model_scale[1], 
-            barrier_model_scale[2]
-        );
+        // ImGui::SliderFloat3("barrier scale", barrier_model_scale, -20.0f, 20.0f);
+        // this->game_round->get_barrier()->set_scale(
+        //     barrier_model_scale[0], 
+        //     barrier_model_scale[1], 
+        //     barrier_model_scale[2]
+        // );
 
         // ImGui::SliderFloat3("barrier model pos", barrier_model_position, -5.0f, 5.0f);
         // this->game_round->get_barrier()->get_model()->set_translate(barrier_model_position[0], barrier_model_position[1], barrier_model_position[2]);
@@ -457,26 +461,26 @@ void GameApplication::setup_game_objects_dockspace()
 
     if (coin_visible)
     {
-        ImGui::SliderFloat3("coin pos", coin_model_position, -20.0f, 20.0f);
-        this->game_round->get_coin()->set_position(
-            coin_model_position[0], 
-            coin_model_position[1], 
-            coin_model_position[2]
-        );
+        // ImGui::SliderFloat3("coin pos", coin_model_position, -20.0f, 20.0f);
+        // this->game_round->get_coin()->set_position(
+        //     coin_model_position[0], 
+        //     coin_model_position[1], 
+        //     coin_model_position[2]
+        // );
 
-        ImGui::SliderFloat3("coin scale", coin_model_scale, -20.0f, 20.0f);
-        this->game_round->get_coin()->set_scale(
-            coin_model_scale[0], 
-            coin_model_scale[1], 
-            coin_model_scale[2]
-        );
+        // ImGui::SliderFloat3("coin scale", coin_model_scale, -20.0f, 20.0f);
+        // this->game_round->get_coin()->set_scale(
+        //     coin_model_scale[0], 
+        //     coin_model_scale[1], 
+        //     coin_model_scale[2]
+        // );
 
-        ImGui::SliderFloat3("coin rotate", coin_model_rotate, -180.0f, 180.0f);
-        this->game_round->get_coin()->set_rotate(
-            coin_model_rotate[0], 
-            coin_model_rotate[1], 
-            coin_model_rotate[2]
-        );
+        // ImGui::SliderFloat3("coin rotate", coin_model_rotate, -180.0f, 180.0f);
+        // this->game_round->get_coin()->set_rotate(
+        //     coin_model_rotate[0], 
+        //     coin_model_rotate[1], 
+        //     coin_model_rotate[2]
+        // );
 
         // ImGui::SliderFloat3("coin model pos", coin_model_position, -5.0f, 5.0f);
         // this->game_round->get_coin()->get_model()->set_translate(coin_model_position[0], coin_model_position[1], coin_model_position[2]);
@@ -494,25 +498,25 @@ void GameApplication::setup_game_objects_dockspace()
 
     if (fuel_canister_visible)
     {
-        ImGui::SliderFloat3("fuel_canister pos", fuel_canister_model_position, -20.0f, 20.0f);
-        this->game_round->get_fuel_canister()->set_position(
-            fuel_canister_model_position[0], 
-            fuel_canister_model_position[1], 
-            fuel_canister_model_position[2]
-        );
+        // ImGui::SliderFloat3("fuel_canister pos", fuel_canister_model_position, -20.0f, 20.0f);
+        // this->game_round->get_fuel_canister()->set_position(
+        //     fuel_canister_model_position[0], 
+        //     fuel_canister_model_position[1], 
+        //     fuel_canister_model_position[2]
+        // );
 
-        ImGui::SliderFloat3("fuel_canister scale", fuel_canister_model_scale, -20.0f, 20.0f);
-        this->game_round->get_fuel_canister()->set_scale(
-            fuel_canister_model_scale[0],
-            fuel_canister_model_scale[1],
-            fuel_canister_model_scale[2]
-        );
+        // ImGui::SliderFloat3("fuel_canister scale", fuel_canister_model_scale, -20.0f, 20.0f);
+        // this->game_round->get_fuel_canister()->set_scale(
+        //     fuel_canister_model_scale[0],
+        //     fuel_canister_model_scale[1],
+        //     fuel_canister_model_scale[2]
+        // );
 
-        ImGui::SliderFloat3("fuel_canister_model_rotate rotate", fuel_canister_model_rotate, -180.0f, 180.0f);
-        this->game_round->get_fuel_canister()->set_rotate(
-            fuel_canister_model_rotate[0], 
-            fuel_canister_model_rotate[1], 
-            fuel_canister_model_rotate[2]
-        );
+        // ImGui::SliderFloat3("fuel_canister_model_rotate rotate", fuel_canister_model_rotate, -180.0f, 180.0f);
+        // this->game_round->get_fuel_canister()->set_rotate(
+        //     fuel_canister_model_rotate[0], 
+        //     fuel_canister_model_rotate[1], 
+        //     fuel_canister_model_rotate[2]
+        // );
     }
 }

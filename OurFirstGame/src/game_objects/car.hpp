@@ -9,47 +9,20 @@
 #include <AiryEngineCore/ResourceManager.hpp>
 
 
+// Файлы игры
+#include "game_object.hpp"
+
+
 // Системные библиотеки
 #include <memory>
 
 
-class Car {
+class Car : public GameObject {
 public:
     Car(const std::string& model_name,
         const std::string& model_path,
         const std::string& model_dir_path,
         std::shared_ptr<AiryEngine::ResourceManager> resource_manager);
 
-    std::shared_ptr<AiryEngine::Model3D> get_model() const { return this->model; }
-    std::shared_ptr<AiryEngine::CubeCollidingObject> get_colliding_cube() const { return this->colliding_cube; }
-    
-    void set_visible(bool visible);
-    bool get_visible() const { return this->visible; }
-
-    void set_position(glm::vec3 position);      // Позиции выставляются относительно start_offset
-    void set_position(float position_x, float position_y, float position_z);
-    glm::vec3 get_position() const { return this->position; }
-
-    void set_scale(glm::vec3 scale);      // Масштабирование выставляется относительно start_scale
-    void set_scale(float scale_x, float scale_y, float scale_z);
-    glm::vec3 get_scale() const { return this->scale; }
-
-    void set_rotate(glm::vec3 rotate);
-    void set_rotate(float rotate_x, float rotate_y, float rotate_z);
-    glm::vec3 get_rotate() const { return this->rotate; }
-
 private:
-    std::shared_ptr<AiryEngine::Model3D> model;
-    std::shared_ptr<AiryEngine::CubeCollidingObject> colliding_cube;
-
-    glm::vec3 position;
-    glm::vec3 scale;
-    glm::vec3 rotate;
-
-    glm::vec3 model_start_offset;
-    glm::vec3 model_start_scale;
-    glm::vec3 model_start_rotate;
-    glm::vec3 colliding_cube_start_offset;
-    glm::vec3 colliding_cube_start_scale;
-    bool visible;
 };
