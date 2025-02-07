@@ -53,19 +53,43 @@ public:
     void check_fuel_canister_collision();
 
     std::shared_ptr<Car> get_car() const { return this->car; }
-    std::shared_ptr<Road> get_road() const { return this->road; }
+    // std::shared_ptr<Road> get_road() const { return this->road; }
     std::shared_ptr<std::vector<std::shared_ptr<Road>>> get_roads() const { return this->roads; }
 
-    std::shared_ptr<Barrier> get_barrier() const { return this->barrier; }
-    std::shared_ptr<Coin> get_coin() const { return this->coin; }
+    // std::shared_ptr<Barrier> get_barrier() const { return this->barrier; }
+    std::shared_ptr<std::vector<std::shared_ptr<Barrier>>> get_barriers() const { return this->barriers; }
+
+    // std::shared_ptr<Coin> get_coin() const { return this->coin; }
+    std::shared_ptr<std::vector<std::shared_ptr<Coin>>> get_coins() const { return this->coins; }
     std::shared_ptr<FuelCanister> get_fuel_canister() const { return this->fuel_canister; }
 
 private:
+    void create_car(std::shared_ptr<AiryEngine::ResourceManager> resource_manager);
+    void create_roads(std::shared_ptr<AiryEngine::ResourceManager> resource_manager);
+    void create_barriers(std::shared_ptr<AiryEngine::ResourceManager> resource_manager);
+    void create_coins(std::shared_ptr<AiryEngine::ResourceManager> resource_manager);
+
+    void set_car_start_pos();
+    void set_roads_start_pos();
+    void set_barriers_start_pos();
+    void set_coins_start_pos();
+
+    void move_back_roads();
+    void move_back_barriers();
+    void move_back_coins();
+    void move_back_fuel_canister();
+
     std::shared_ptr<Car> car;
-    std::shared_ptr<Road> road;
+    // std::shared_ptr<Road> road;
     std::shared_ptr<std::vector<std::shared_ptr<Road>>> roads;
 
-    std::shared_ptr<Barrier> barrier;
-    std::shared_ptr<Coin> coin;
+    // std::shared_ptr<Barrier> barrier;
+    std::shared_ptr<std::vector<std::shared_ptr<Barrier>>> barriers;
+
+    // std::shared_ptr<Coin> coin;
+    std::shared_ptr<std::vector<std::shared_ptr<Coin>>> coins;
     std::shared_ptr<FuelCanister> fuel_canister;
+
+    float road_offset = 4.317f * 2 - 0.1f;
+    float game_objects_steps = 0.1f;
 };

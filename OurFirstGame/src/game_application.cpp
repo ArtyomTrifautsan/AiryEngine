@@ -208,8 +208,12 @@ void GameApplication::on_draw()
     // this->game_object_renderer->render_road(this->game_round->get_road());
     this->game_object_renderer->render_roads(this->game_round->get_roads());
 
-    this->game_object_renderer->render_barrier(this->game_round->get_barrier());
-    this->game_object_renderer->render_coin(this->game_round->get_coin());
+    // this->game_object_renderer->render_barrier(this->game_round->get_barrier());
+    this->game_object_renderer->render_barriers(this->game_round->get_barriers());
+
+    // this->game_object_renderer->render_coin(this->game_round->get_coin());
+    this->game_object_renderer->render_coins(this->game_round->get_coins());
+
     this->game_object_renderer->render_fuel_canister(this->game_round->get_fuel_canister());
 }
 
@@ -368,6 +372,7 @@ void GameApplication::setup_game_objects_dockspace()
     ImGui::Checkbox("visible colliding objects", &visible_colliding_objects);
     this->game_object_renderer->set_visible_colliding_objects(visible_colliding_objects);
 
+    /*
     ImGui::Checkbox("car visible", &car_visible);
     this->game_round->get_car()->set_visible(car_visible);
 
@@ -519,4 +524,5 @@ void GameApplication::setup_game_objects_dockspace()
         //     fuel_canister_model_rotate[2]
         // );
     }
+    */
 }

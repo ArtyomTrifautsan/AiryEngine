@@ -90,6 +90,15 @@ void GameObjectRenderer::render_barrier(std::shared_ptr<Barrier> barrier)
 }
 
 
+void GameObjectRenderer::render_barriers(std::shared_ptr<std::vector<std::shared_ptr<Barrier>>> barriers)
+{
+    for (std::shared_ptr<Barrier> curr_barrier : *barriers)
+    {
+        render_barrier(curr_barrier);
+    }
+}
+
+
 void GameObjectRenderer::render_coin(std::shared_ptr<Coin> coin)
 {
     if (!coin->get_visible())
@@ -109,6 +118,15 @@ void GameObjectRenderer::render_coin(std::shared_ptr<Coin> coin)
     glm::vec3 cube_scale = coin->get_colliding_cube()->get_scale();
     this->colliding_cube_model3D->set_scale(cube_scale.x, cube_scale.y, cube_scale.z);
     renderer->render_collision_model(*camera, this->colliding_cube_model3D);
+}
+
+
+void GameObjectRenderer::render_coins(std::shared_ptr<std::vector<std::shared_ptr<Coin>>> coins)
+{
+    for (std::shared_ptr<Coin> curr_coin : *coins)
+    {
+        render_coin(curr_coin);
+    }
 }
 
 

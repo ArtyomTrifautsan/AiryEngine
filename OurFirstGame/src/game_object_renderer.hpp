@@ -34,11 +34,16 @@ public:
     bool get_visible_colliding_objects() const { return this->visible_colliding_objects; }
 
     void render_car(std::shared_ptr<Car> car);
-    void render_roads(std::shared_ptr<std::vector<std::shared_ptr<Road>>> roads);
 
     void render_road(std::shared_ptr<Road> road);
+    void render_roads(std::shared_ptr<std::vector<std::shared_ptr<Road>>> roads);
+
     void render_barrier(std::shared_ptr<Barrier> barrier);
+    void render_barriers(std::shared_ptr<std::vector<std::shared_ptr<Barrier>>> barriers);
+
     void render_coin(std::shared_ptr<Coin> coin);
+    void render_coins(std::shared_ptr<std::vector<std::shared_ptr<Coin>>> coins);
+
     void render_fuel_canister(std::shared_ptr<FuelCanister> fuel_canister);
 
 private:
