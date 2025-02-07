@@ -5,6 +5,8 @@
 
 #include "AiryEngineCore/Camera.hpp"
 #include "AiryEngineCore/Event.hpp"
+#include "AiryEngineCore/fps_keeper.hpp"
+
 
 namespace AiryEngine {
 
@@ -65,6 +67,8 @@ namespace AiryEngine {
         EventDispatcher eventDispatcher;
         bool closeWindow = false;
         float background_color[4] = {0.33f, 0.33f, 0.33f, 0.f};
+
+        std::unique_ptr<FpsKeeper> fps_keeper;
 
         std::vector<std::shared_ptr<Model3D>> models;
 

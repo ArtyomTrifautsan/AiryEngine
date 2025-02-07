@@ -294,9 +294,9 @@ void GameApplication::on_ui_draw()
     if (light_source_visible)
         setup_light_dockspace();
     
-    // ImGui::Checkbox("camera dockspace visible", &camera_dockspace_visible);
-    // if (camera_dockspace_visible)
-    //     setup_camera_dockspace();
+    ImGui::Checkbox("camera dockspace visible", &camera_dockspace_visible);
+    if (camera_dockspace_visible)
+        setup_camera_dockspace();
 
     ImGui::End();
 }

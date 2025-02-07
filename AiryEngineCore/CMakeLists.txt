@@ -12,6 +12,7 @@ includes/AiryEngineCore/Rendering/OpenGL/Model3D.hpp
     includes/AiryEngineCore/Input.hpp
     includes/AiryEngineCore/Renderer.hpp
     includes/AiryEngineCore/ResourceManager.hpp
+    includes/AiryEngineCore/timer.hpp
 
     includes/AiryEngineCore/Physics/CollidingObjects/CubeCollidingObject.hpp
     includes/AiryEngineCore/Physics/CollidingObjects/SphereCollidingObject.hpp
@@ -31,6 +32,8 @@ set(ENGINE_PRIVATE_INCLUDES
     src/AiryEngineCore/Rendering/OpenGL/VertexArray.hpp
     src/AiryEngineCore/Rendering/OpenGL/Mesh.hpp
     src/AiryEngineCore/Rendering/OpenGL/Texture2D.hpp
+
+    includes/AiryEngineCore/fps_keeper.hpp
 )
 
 set(ENGINE_PRIVATE_SOURCES
@@ -40,6 +43,7 @@ set(ENGINE_PRIVATE_SOURCES
     src/AiryEngineCore/Input.cpp
     src/AiryEngineCore/Renderer.cpp
     src/AiryEngineCore/ResourceManager.cpp
+    src/AiryEngineCore/timer.cpp
 
     src/AiryEngineCore/Modules/UIModule.cpp
 
@@ -51,6 +55,8 @@ set(ENGINE_PRIVATE_SOURCES
     src/AiryEngineCore/Rendering/OpenGL/VertexArray.cpp
     src/AiryEngineCore/Rendering/OpenGL/Texture2D.cpp
     src/AiryEngineCore/Rendering/OpenGL/Mesh.cpp
+
+    src/AiryEngineCore/fps_keeper.cpp
 
     src/AiryEngineCore/Physics/CollisionDetector.cpp
     src/AiryEngineCore/Physics/CollidingObjects/CubeCollidingObject.cpp

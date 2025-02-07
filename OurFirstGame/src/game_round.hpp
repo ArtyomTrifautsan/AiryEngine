@@ -35,10 +35,22 @@
 #include <string>
 #include <vector>
 
+// Нужны для таймера
+#include <chrono>
+#include <thread>
+
 
 class GameRound {
 public:
     GameRound(std::shared_ptr<AiryEngine::ResourceManager> resource_manager);
+
+    void generate_start_pos();
+
+    void move_back_game_objects();
+
+    void check_barrier_collision();
+    void check_coins_collision();
+    void check_fuel_canister_collision();
 
     std::shared_ptr<Car> get_car() const { return this->car; }
     std::shared_ptr<Road> get_road() const { return this->road; }
@@ -49,6 +61,7 @@ public:
 private:
     std::shared_ptr<Car> car;
     std::shared_ptr<Road> road;
+    std::vector<std::shared_ptr<Road>> roads;
     std::shared_ptr<Barrier> barrier;
     std::shared_ptr<Coin> coin;
     std::shared_ptr<FuelCanister> fuel_canister;

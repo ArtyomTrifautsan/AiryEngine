@@ -45,3 +45,33 @@ GameRound::GameRound(std::shared_ptr<AiryEngine::ResourceManager> resource_manag
 
     // std::cout << "GameRound::start finish" << std::endl;
 }
+
+
+void GameRound::generate_start_pos()
+{
+    
+}
+
+
+void GameRound::move_back_game_objects()
+{
+
+}
+
+
+void GameRound::check_barrier_collision()
+{
+
+}
+
+
+void GameRound::check_coins_collision()
+{
+
+}
+
+
+void GameRound::check_fuel_canister_collision()
+{
+
+}

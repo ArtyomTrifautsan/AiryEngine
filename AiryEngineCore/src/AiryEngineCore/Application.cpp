@@ -192,6 +192,8 @@ namespace AiryEngine {
 
         std::shared_ptr<Texture2D> model_texture = this->resource_manager->load_texture2D("model_texture", "dog.png");
 
+        this->fps_keeper = std::make_unique<FpsKeeper>(100);
+
         float frame = 0.0;
         Renderer_OpenGL::enable_depth_testing();
         // Renderer_OpenGL::enable_alpha_channel();
@@ -209,6 +211,8 @@ namespace AiryEngine {
             UIModule::on_window_draw_end();
 
             this->window->on_update();
+
+            this->fps_keeper->keep_fps();
         }
 
         return 0;
