@@ -10,35 +10,38 @@
 
 
 namespace AiryEngine {
-    FpsKeeper::FpsKeeper(double FPS)
+    FpsKeeper::FpsKeeper()
     {
-        this->FPS = FPS;
-        this->delta_time = (double) 1 / this->FPS;
-        this->start_loop_timepoint = Timer::get_current_time();
+        // m_FPS = FPS;
+        m_delta_time = (double) 1 / m_FPS;
+        m_start_loop_timepoint = Timer::get_current_time();
 
-        this->current_fps = 0;
+        m_current_fps = 0;
     }
 
 
-    void FpsKeeper::set_fps(double FPS)
-    {
-        this->FPS = FPS;
-        this->delta_time = 1 / this->FPS;
-    }
+    // voidFpsKeeper::set_fps(double FPS)
+    // {
+    //     this->::m_FPS = FPS;
+    //     this->::m_delta_time = (double) 1 / m_FPS;
+    //     this->::m_start_loop_timepoint = Timer::get_current_time();
+
+    //     this->::m_current_fps = 0;
+    // }
 
 
     void FpsKeeper::keep_fps()
     {
-        this->delta = Timer::get_current_time() - this->start_loop_timepoint;
-        if (this->delta < this->delta_time)
+        this->m_delta = Timer::get_current_time() - this->m_start_loop_timepoint;
+        if (this->m_delta < this->m_delta_time)
         {
-            this->sleep_time = (int)((this->delta_time - this->delta) * 1000);
-            std::this_thread::sleep_for(std::chrono::milliseconds(this->sleep_time));
+            this->m_sleep_time = (int)((this->m_delta_time - this->m_delta) * 1000);
+            std::this_thread::sleep_for(std::chrono::milliseconds(this->m_sleep_time));
 
-            // std::cout << "FPS: " << 1 / (Timer::get_current_time() - this->start_loop_timepoint) << std::endl;
-            this->current_fps = 1 / (Timer::get_current_time() - this->start_loop_timepoint);
+            // std::cout << "FPS: " << 1 / (Timer::get_current_time() - m_start_loop_timepoint) << std::endl;
+            this->m_current_fps = 1 / (Timer::get_current_time() - this->m_start_loop_timepoint);
 
-            this->start_loop_timepoint = Timer::get_current_time();
+            this->m_start_loop_timepoint = Timer::get_current_time();
         }
     }
 }

@@ -6,20 +6,20 @@ namespace AiryEngine {
     class FpsKeeper
     {
     public:
-        FpsKeeper(double FPS = 60.0);
-        void set_fps(double FPS);
-        double get_fps() const { return this->FPS; }
+        FpsKeeper();
+        // static void set_fps(double FPS = 60.0);
+        static double get_fps() { return m_FPS; }
         void keep_fps();
 
     private:
-        double FPS;
-        double delta_time;
+        static inline double m_FPS = 100;
+        double m_delta_time;
 
-        double delta;
-        int sleep_time;
-        double start_loop_timepoint;
+        double m_delta;
+        int m_sleep_time;
+        double m_start_loop_timepoint;
 
-        double current_fps;
+        double m_current_fps;
     };
 
 }

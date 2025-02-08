@@ -35,14 +35,18 @@ void GameApplication::on_update()
 
     _detect_collisions();
 
-    this->game_round->move_back_game_objects();
-    this->game_round->rotate_coins_and_fuel_canister();
+    this->game_round->update_game_round();
+
+    // this->game_round->move_back_game_objects();
+    // this->game_round->rotate_coins_and_fuel_canister();
 }
 
 void GameApplication::_handle_events()
 {
     glm::vec3 movement_delta{ 0, 0, 0 };
     glm::vec3 rotation_delta{ 0, 0, 0 };
+
+    this->game_round->get_car()->handle_events();
 
     // Go Forward
     float camera_step = 0.05f;
@@ -99,13 +103,13 @@ void GameApplication::_handle_events()
     // Rotation Left
     if (AiryEngine::Input::IsKeyPressed(AiryEngine::KeyCode::KEY_LEFT))
     {
-        rotation_delta.z -= 0.5f;
+        // rotation_delta.z -= 0.5f;
     }
 
     // Rotation Right
     if (AiryEngine::Input::IsKeyPressed(AiryEngine::KeyCode::KEY_RIGHT))
     {
-        rotation_delta.z += 0.5f;
+        // rotation_delta.z += 0.5f;
     }
 
     // Rotation 1

@@ -46,8 +46,7 @@ public:
 
     void set_start_pos();
 
-    void move_back_game_objects();
-    void rotate_coins_and_fuel_canister();
+    void update_game_round();
 
     void check_barrier_collision();
     void check_coins_collision();
@@ -65,6 +64,10 @@ public:
     std::shared_ptr<FuelCanister> get_fuel_canister() const { return this->fuel_canister; }
 
 private:
+    void move_back_game_objects();
+    void rotate_coins_and_fuel_canister();
+    void drive_car();
+
     void create_car(std::shared_ptr<AiryEngine::ResourceManager> resource_manager);
     void create_roads(std::shared_ptr<AiryEngine::ResourceManager> resource_manager);
     void create_barriers(std::shared_ptr<AiryEngine::ResourceManager> resource_manager);
@@ -98,9 +101,7 @@ private:
     std::shared_ptr<FuelCanister> fuel_canister;
 
     float road_offset = 4.317f * 2 - 0.1f;
-    float game_objects_step = 0.07f;
+    float game_objects_step = 0.1f;
 
     float rotate_delta_angle = 1.0f;
-
-    float car_step = 0.89225f;
 };

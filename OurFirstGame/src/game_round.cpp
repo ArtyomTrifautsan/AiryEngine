@@ -22,6 +22,14 @@ GameRound::GameRound(std::shared_ptr<AiryEngine::ResourceManager> resource_manag
 }
 
 
+void GameRound::update_game_round()
+{
+    move_back_game_objects();
+    rotate_coins_and_fuel_canister();
+    drive_car();
+}
+
+
 void GameRound::create_car(std::shared_ptr<AiryEngine::ResourceManager> resource_manager)
 {
     this->car = std::make_shared<Car>(
@@ -307,6 +315,12 @@ void GameRound::rotate_coins_and_fuel_canister()
         delta_angle_y,
         fuel_canister_rotate.z
     );
+}
+
+
+void GameRound::drive_car()
+{
+    this->car->update_moving_state();
 }
 
 
