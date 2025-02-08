@@ -17,7 +17,7 @@ namespace AiryEngine {
 
     Renderer::Renderer(std::shared_ptr<ResourceManager> resource_manager)
     {
-        LOG_INFO("Start shaders");
+        // LOG_INFO("Start shaders");
         this->default_shader_program = resource_manager->load_shaders("default_shaders", "default_vertex_shader.txt", "default_fragment_shader.txt");
         if (!this->default_shader_program->is_compiled()) 
         {
@@ -48,7 +48,7 @@ namespace AiryEngine {
             LOG_CRITICAL("Failed to compile model3D_texture Shader Program");
         }
 
-        LOG_INFO("Finish shaders");
+        // LOG_INFO("Finish shaders");
     }
 
 

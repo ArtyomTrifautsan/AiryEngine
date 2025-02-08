@@ -14,7 +14,7 @@ namespace AiryEngine {
     {
         this->is_collided = false;
 
-        this->anchor_point = glm::vec3(-1, -1, -1); 
+        this->anchor_point = glm::vec3(-1, -1, -1);
 
         this->x_vector = glm::vec3(2, 0, 0);
         this->y_vector = glm::vec3(0, 2, 0);
@@ -33,13 +33,13 @@ namespace AiryEngine {
 
     void CubeCollidingObject::update_coords()
     {
-        this->start_point = this->anchor_point + this->translate;
-
         glm::mat3 scale_matrix(
             this->scale[0], 0,              0,
             0,              this->scale[1], 0,
             0,              0,              this->scale[2]
         );
+
+        this->start_point = scale_matrix * this->anchor_point + this->translate;
 
         this->x_shifted_point = this->start_point + scale_matrix * this->x_vector;
         this->y_shifted_point = this->start_point + scale_matrix * this->y_vector;

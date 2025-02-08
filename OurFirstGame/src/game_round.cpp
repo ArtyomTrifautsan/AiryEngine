@@ -1,6 +1,10 @@
 #include "game_round.hpp"
 
 
+#include <AiryEngineCore/Physics/CollisionDetector.hpp>
+#include <AiryEngineCore/Physics/CollidingObjects/CubeCollidingObject.hpp>
+#include <AiryEngineCore/Input.hpp>
+
 #include <iostream>
 
 
@@ -24,9 +28,35 @@ GameRound::GameRound(std::shared_ptr<AiryEngine::ResourceManager> resource_manag
 
 void GameRound::update_game_round()
 {
-    move_back_game_objects();
-    rotate_coins_and_fuel_canister();
+    if (!this->pause)
+    {
+        move_back_game_objects();
+        rotate_coins_and_fuel_canister();
+    }
+    
     drive_car();
+
+    check_collisions();
+}
+
+
+void GameRound::handle_events()
+{
+    if (AiryEngine::Input::IsKeyPressed(AiryEngine::KeyCode::KEY_C))
+    {
+        // std::cout << "KEY_C pressed" << std::endl; 
+        // // if (AiryEngine::Timer::get_current_time() - this->last_pause_change_time <= 0.08f)
+        //     // return;
+
+        // std::cout << "Pause changed" << std::endl; 
+        if (this->pause) this->pause = false;
+        else this->pause = true;
+        this->able_to_change_pause = false;
+    }
+    else 
+    {
+        this->able_to_change_pause = true;
+    }
 }
 
 
@@ -179,6 +209,13 @@ void GameRound::set_coins_start_pos()
     for (int i = 0; i < this->coins->size(); i++)
     {
         (*this->coins)[i]->set_position(-2.0f, 0, this->road_offset * i + 1.0f);
+
+        glm::vec3 rot = (*this->coins)[i]->get_rotate();
+        (*this->coins)[i]->set_rotate(
+            rot.x, 
+            rot.y + i * 25.0f,  
+            rot.z
+        );
     }
 }
 
@@ -324,19 +361,63 @@ void GameRound::drive_car()
 }
 
 
+void GameRound::check_collisions()
+{
+    std::shared_ptr<AiryEngine::CubeCollidingObject> car_coll_cube = this->car->get_colliding_cube();
+    car_coll_cube->set_is_collided(false);
+
+    check_barrier_collision();
+    check_coins_collision();
+    check_fuel_canister_collision();
+}
+
+
 void GameRound::check_barrier_collision()
 {
+    std::shared_ptr<AiryEngine::CubeCollidingObject> car_coll_cube = this->car->get_colliding_cube();
 
+    for (std::shared_ptr<Barrier> barrier : *this->barriers)
+    {
+        std::shared_ptr<AiryEngine::CubeCollidingObject> barrier_coll_cube = barrier->get_colliding_cube();
+        barrier_coll_cube->set_is_collided(false);
+
+        if (AiryEngine::CollisionDetector::cube_cube_collision(*car_coll_cube, *barrier_coll_cube))
+        {
+            car_coll_cube->set_is_collided(true);
+            barrier_coll_cube->set_is_collided(true);
+        }
+    }
 }
 
 
 void GameRound::check_coins_collision()
 {
+    std::shared_ptr<AiryEngine::CubeCollidingObject> car_coll_cube = this->car->get_colliding_cube();
 
+    for (std::shared_ptr<Coin> coin : *this->coins)
+    {
+        std::shared_ptr<AiryEngine::CubeCollidingObject> coin_coll_cube = coin->get_colliding_cube();
+        coin_coll_cube->set_is_collided(false);
+
+        if (AiryEngine::CollisionDetector::cube_cube_collision(*car_coll_cube, *coin_coll_cube))
+        {
+            car_coll_cube->set_is_collided(true);
+            coin_coll_cube->set_is_collided(true);
+        }
+    }
 }
 
 
 void GameRound::check_fuel_canister_collision()
 {
+    std::shared_ptr<AiryEngine::CubeCollidingObject> car_coll_cube = this->car->get_colliding_cube();
 
+    std::shared_ptr<AiryEngine::CubeCollidingObject> fuel_canister_coll_cube = this->fuel_canister->get_colliding_cube();
+    fuel_canister_coll_cube->set_is_collided(false);
+
+    if (AiryEngine::CollisionDetector::cube_cube_collision(*car_coll_cube, *fuel_canister_coll_cube))
+    {
+        car_coll_cube->set_is_collided(true);
+        fuel_canister_coll_cube->set_is_collided(true);
+    }
 }

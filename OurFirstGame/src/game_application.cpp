@@ -46,6 +46,7 @@ void GameApplication::_handle_events()
     glm::vec3 movement_delta{ 0, 0, 0 };
     glm::vec3 rotation_delta{ 0, 0, 0 };
 
+    this->game_round->handle_events();
     this->game_round->get_car()->handle_events();
 
     // Go Forward
@@ -91,13 +92,13 @@ void GameApplication::_handle_events()
     // Rotation Up
     if (AiryEngine::Input::IsKeyPressed(AiryEngine::KeyCode::KEY_UP))
     {
-        rotation_delta.y -= 0.5f;
+        // rotation_delta.y -= 0.5f;
     }
 
     // Rotation Down
     if (AiryEngine::Input::IsKeyPressed(AiryEngine::KeyCode::KEY_DOWN))
     {
-        rotation_delta.y += 0.5f;
+        // rotation_delta.y += 0.5f;
     }
 
     // Rotation Left
@@ -115,13 +116,13 @@ void GameApplication::_handle_events()
     // Rotation 1
     if (AiryEngine::Input::IsKeyPressed(AiryEngine::KeyCode::KEY_P))
     {
-        rotation_delta.x += 0.5f;
+        // rotation_delta.x += 0.5f;
     }
 
     // Rotation 2
     if (AiryEngine::Input::IsKeyPressed(AiryEngine::KeyCode::KEY_O))
     {
-        rotation_delta.x -= 0.5f;
+        // rotation_delta.x -= 0.5f;
     }
 
 

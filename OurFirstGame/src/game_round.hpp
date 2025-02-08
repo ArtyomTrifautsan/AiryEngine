@@ -19,7 +19,8 @@
 
 #include <AiryEngineCore/ResourceManager.hpp>
 #include <AiryEngineCore/Renderer.hpp>
-#include "AiryEngineCore/Camera.hpp"
+#include <AiryEngineCore/Camera.hpp>
+#include <AiryEngineCore/timer.hpp>
 
 
 // Файлы игры
@@ -48,9 +49,7 @@ public:
 
     void update_game_round();
 
-    void check_barrier_collision();
-    void check_coins_collision();
-    void check_fuel_canister_collision();
+    void handle_events();
 
     std::shared_ptr<Car> get_car() const { return this->car; }
     // std::shared_ptr<Road> get_road() const { return this->road; }
@@ -68,6 +67,11 @@ private:
     void rotate_coins_and_fuel_canister();
     void drive_car();
 
+    void check_collisions();
+    void check_barrier_collision();
+    void check_coins_collision();
+    void check_fuel_canister_collision();
+
     void create_car(std::shared_ptr<AiryEngine::ResourceManager> resource_manager);
     void create_roads(std::shared_ptr<AiryEngine::ResourceManager> resource_manager);
     void create_barriers(std::shared_ptr<AiryEngine::ResourceManager> resource_manager);
@@ -84,6 +88,9 @@ private:
     void move_back_barriers();
     void move_back_coins();
     void move_back_fuel_canister();
+
+    bool pause = false;
+    bool able_to_change_pause = true;
 
     std::shared_ptr<Car> car;
     // std::shared_ptr<Road> road;
